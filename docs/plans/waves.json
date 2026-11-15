@@ -204,6 +204,7 @@
       "wave_id": "0-4",
       "build": "0",
       "name": "Publish UC Skills: 4 skills to hls_fde_dev.uw_genie + workspace copy",
+      "runtime_gate": ["genie_space"],
       "validate_bundles": [
         {"root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie/uw-genie-infra", "target": "dev"},
         {"root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie/uw-genie-agent", "target": "dev"}
