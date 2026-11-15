@@ -21,7 +21,7 @@
       "resource_key": "setup_demo",
       "bundle_root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie/uw-genie-infra",
       "bundle_target": "dev",
-      "deploy_commands": ["bundle deploy --target dev"],
+      "deploy_commands": ["bundle deploy --target dev", "bundle run setup_demo --target dev"],
       "stability": {"soak_minutes": 0}
     },
     "groups_table": {
@@ -161,7 +161,8 @@
           "title": "Deploy infra: bundle deploy runs setup_demo, fix until all tables and tests pass",
           "plan_file": "build-0/06_deploy_infra.md",
           "mode": "converge",
-          "scope": "Deploy uw-genie-infra to dev. The setup_demo job runs create_tables, generate_synthetic_book, upload_packages, build_nb_quote_scenarios, run_tests. Find the setup_demo run, wait for it, read its output. Verify: groups table has 60 rows; broker_submissions has Northwind v1 BLOCKED and v2 READY_WITH_WARNINGS; nb_quote_scenarios has 18 rows for Northwind with base premium_pmpm 625.32; tests pass (golden CSV comparison). Fix the DDL, SQL, notebooks, or job YAML within owned_paths and repeat until the run succeeds and all tables exist with correct row counts and the tests pass. Run databricks bundle validate --strict --target dev before every deploy.",
+          "scope": "Deploy uw-genie-infra to dev. The setup_demo job runs create_tables, generate_synthetic_book, upload_packages, build_nb_quote_scenarios, run_tests. Trigger setup_demo job (run-now on job 989657833792246), wait for it, read its output. Verify: groups table has 60 rows; broker_submissions has Northwind v1 BLOCKED and v2 READY_WITH_WARNINGS; nb_quote_scenarios has 18 rows for Northwind with base premium_pmpm 625.32; tests pass (golden CSV comparison). Fix the DDL, SQL, notebooks, or job YAML within owned_paths and repeat until the run succeeds and all tables exist with correct row counts and the tests pass. Run databricks bundle validate --strict --target dev before every deploy.",
+          "context_notes": "setup_demo job_id is 989657833792246. The owner has authorized the session to trigger this job via run-now.",
           "runtime_targets": ["setup_demo_job"],
           "owned_paths": ["uw-genie-infra/**"],
           "max_attempts": 5,
