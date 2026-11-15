@@ -18,10 +18,10 @@ All data, names and emails are synthetic (`data_class=synthetic`, `.example` dom
 | --- | --- |
 | Design package v1.0-draft (research, semantics, pitch, L100–L400) | Done — 2026-11-15 |
 | Review gate + SVG/HTML rendering | Done — design approved, 12 assumed decisions stand |
-| Build wave 1 (S1 bundle/schema, S2 synthetic data) | **Next** |
-| Waves 2–4 (rating function, semantics + Genie Agent, Genie One skills/artifact) | Not started |
+| Build 0 plan (waves.json, 9 session plans, Devin monitor prompt) | Done — 2026-11-15 |
+| Build 0 execution (Genie Build Waves: 2 edit + 3 converge + 1 docs wave) | **Next** |
 
-The repo currently contains documentation and demo assets only. Bundle code (`databricks.yml`, `resources/`, `src/`) is created during build wave 1 per [L400-03](docs/design/L400-03_dab_deployment_and_reset.md).
+The repo contains documentation, demo assets, and the build 0 plan (`docs/plans/`). Bundle code (`uw-genie-infra/`, `uw-genie-agent/`) is authored by Devin during build 0 per the [wave plan](docs/plans/INDEX.md).
 
 ## Demo beats
 
