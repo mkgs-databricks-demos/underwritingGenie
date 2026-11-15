@@ -3,14 +3,14 @@
 Matthew Giglia | Field Engineering · v0.1 · 2026-11-15 · Synthetic, carrier-neutral Databricks point of view
 
 
-Build the whole demo with **8 interactive Genie Code sessions in 4 waves** inside the DAB repo (L400-03). Sessions within a wave can run in parallel. Each session: paste the **Session prompt**, attach the listed docs, let Genie Code work, then verify **Acceptance criteria** before closing. Log each session in `docs/sessions/YYYY-MM-DD_<slug>.md` (Goal, Changes, Decisions, Verification, Observations, Follow-ups).
+Build the whole demo with **8 interactive Genie Code sessions in 4 waves** inside the Declarative Automation Bundle repo `underwritingGenie` (L400-03). Sessions within a wave can run in parallel. Each session: paste the **Session prompt**, attach the listed docs, let Genie Code work, then verify **Acceptance criteria** before closing. Log each session in `docs/sessions/YYYY-MM-DD_<slug>.md` (Goal, Changes, Decisions, Verification, Observations, Follow-ups).
 
 > See [diagrams/mermaid/07_build_waves_gantt.md](../diagrams/mermaid/07_build_waves_gantt.md).
 
 ## Universal session preamble (prepend to every session prompt)
 ```
 Context: carrier-neutral synthetic demo "Underwriting Cockpit — Large Group Experience Rating with Genie One".
-Repo: genie-one-large-group-underwriting (DAB). Read docs/design/L100_demo_overview.md first.
+Repo: underwritingGenie (Declarative Automation Bundle). Read docs/design/L100_demo_overview.md first.
 Rules: no real carrier/customer/vendor/employee names; all data synthetic and tagged data_class=synthetic;
 use bundle variables ${var.catalog} / ${var.schema} / ${var.warehouse_id}; never hardcode workspace URLs;
 write a session log to docs/sessions/ when done. Ask me before deleting anything outside the target schema.
@@ -20,7 +20,7 @@ write a session log to docs/sessions/ when done. Ask me before deleting anything
 ### S1 Bundle, catalog and schema
 **Inputs:** L400-03, L100 §5–7. **Prompt:**
 ```
-Create the Databricks Asset Bundle per docs/design/L400-03 §1: databricks.yml with targets dev (default) and demo,
+Create the Declarative Automation Bundle per docs/design/L400-03 §1: databricks.yml with targets dev (default) and demo,
 variables catalog (default lg_underwriting_dev), schema (default demo), warehouse_id; resources: schema, volume
 broker_packages, jobs setup_demo (tasks: create_tables, generate_synthetic_book, upload_packages,
 build_nb_quote_scenarios, run_tests) and reset_demo. Add src/sql/00_ddl.sql from L300-01. Validate the bundle.

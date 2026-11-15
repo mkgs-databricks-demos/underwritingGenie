@@ -51,7 +51,7 @@ All components can be built in 4 waves; within a wave, sessions run in parallel 
 | Rating math | UC SQL table function + materialized scenarios | Deterministic, testable, lineage, verified answers |
 | Artifact data | Precomputed snapshot (18 scenarios) | Artifacts have no live queries yet |
 | Document handling (demo) | Chat upload | Lowest risk; production uses `ai_parse_document` pipeline |
-| Deployment | DAB with variables `catalog`, `schema`, `warehouse_id` | Portable; reset job |
+| Deployment | Declarative Automation Bundle with variables `catalog`, `schema`, `warehouse_id` | Portable; reset job |
 | Build method | 8 Genie Code sessions, 4 waves | Repeatable by any FDE |
 
 ## 7. Cross-cutting patterns
