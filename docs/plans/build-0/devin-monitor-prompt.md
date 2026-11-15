@@ -12,7 +12,7 @@ Follow the published UC skill `hls_fde_dev.dev_matthew_giglia_build_waves.genie_
 
 | Input | Value |
 |---|---|
-| `job_id` | `<SETUP_FILLS>` |
+| `job_id` | `309617019935041` |
 | `build_root` | `/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie` |
 | `manifest_path` | `<build_root>/docs/plans/waves.json` |
 | `repo`, `build_branch` | `mkgs-databricks-demos/underwritingGenie`, `mg-genie-uw-genie-build-1` |
