@@ -6,7 +6,8 @@
 -- nb_quote_scenarios, nb_quote_waterfall, renewal_book_scenarios, metric views)
 -- live in 10_rate_new_business.sql and 20_metric_views.sql.
 -- Tags applied via EXECUTE IMMEDIATE at the end (domain_tag is a SQL named parameter;
--- '{{param}}' is notebook widget syntax and does NOT substitute in SQL file tasks).
+-- do not put double-curly param placeholders in this file, even in comments: the SQL file
+-- task substitutes them as raw text, which broke quoting in setup_demo run 663765351824011).
 
 USE CATALOG IDENTIFIER(:catalog);
 USE SCHEMA IDENTIFIER(:schema);
@@ -220,21 +221,21 @@ DECLARE OR REPLACE VARIABLE _t    STRING;
 SET VAR _t = '`' || _cat || '`.`' || _sch || '`';
 DECLARE OR REPLACE VARIABLE _sql  STRING;
 
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`groups` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`census_members` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER VIEW '  || _t || '.`group_tier_counts` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`claims_monthly` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`large_claimants` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`plan_designs` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`completion_factors` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`trend_assumptions` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`pooling_points` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`manual_rate_factors` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`retention_targets` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`tier_factors` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`persistency_curve` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`renewal_pipeline` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`broker_submissions` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`submission_findings` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`trend_monitor` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`intake_checklist` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`groups` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`census_members` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER VIEW '  || _t || '.`group_tier_counts` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`claims_monthly` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`large_claimants` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`plan_designs` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`completion_factors` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`trend_assumptions` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`pooling_points` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`manual_rate_factors` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`retention_targets` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`tier_factors` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`persistency_curve` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`renewal_pipeline` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`broker_submissions` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`submission_findings` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`trend_monitor` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`intake_checklist` SET TAGS (\'' || _dt || '\' = \'core\')'; EXECUTE IMMEDIATE _sql;

@@ -60,7 +60,7 @@ DECLARE OR REPLACE VARIABLE _sch  STRING DEFAULT :schema;
 DECLARE OR REPLACE VARIABLE _t    STRING;
 SET VAR _t = '`' || _cat || '`.`' || _sch || '`';
 DECLARE OR REPLACE VARIABLE _sql  STRING;
-SET VAR _sql = 'ALTER VIEW ' || _t || '.`renewal_book_scenarios` SET TAGS (''' || _dt || ''' = ''uw_finance'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER VIEW ' || _t || '.`renewal_book_scenarios` SET TAGS (\'' || _dt || '\' = \'uw_finance\')'; EXECUTE IMMEDIATE _sql;
 
 -- 2. mv_renewal_book (over renewal_book_scenarios)
 SET VAR uw_sql = replace('
@@ -240,6 +240,6 @@ $$', '__FQ__', uw_fq);
 EXECUTE IMMEDIATE uw_sql;
 
 -- 5. Certified + governance tags on the metric views.
-SET VAR _sql = 'ALTER VIEW ' || _t || '.`mv_renewal_book` SET TAGS (''certified'' = ''true'', ''' || _dt || ''' = ''uw_finance'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER VIEW ' || _t || '.`mv_quote_outcomes` SET TAGS (''certified'' = ''true'', ''' || _dt || ''' = ''intake_quote'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER VIEW ' || _t || '.`mv_intake_ops` SET TAGS (''certified'' = ''true'', ''' || _dt || ''' = ''intake_quote'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER VIEW ' || _t || '.`mv_renewal_book` SET TAGS (\'certified\' = \'true\', \'' || _dt || '\' = \'uw_finance\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER VIEW ' || _t || '.`mv_quote_outcomes` SET TAGS (\'certified\' = \'true\', \'' || _dt || '\' = \'intake_quote\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER VIEW ' || _t || '.`mv_intake_ops` SET TAGS (\'certified\' = \'true\', \'' || _dt || '\' = \'intake_quote\')'; EXECUTE IMMEDIATE _sql;

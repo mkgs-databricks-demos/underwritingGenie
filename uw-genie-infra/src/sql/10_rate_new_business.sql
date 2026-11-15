@@ -301,6 +301,6 @@ DECLARE OR REPLACE VARIABLE _t    STRING;
 SET VAR _t = '`' || _cat || '`.`' || _sch || '`';
 DECLARE OR REPLACE VARIABLE _sql  STRING;
 
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`nb_quote_scenarios` SET TAGS (''' || _dt || ''' = ''uw_finance'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER VIEW '  || _t || '.`nb_quote_waterfall` SET TAGS (''' || _dt || ''' = ''uw_finance'')'; EXECUTE IMMEDIATE _sql;
-SET VAR _sql = 'ALTER TABLE ' || _t || '.`renewal_scenarios` SET TAGS (''' || _dt || ''' = ''uw_finance'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`nb_quote_scenarios` SET TAGS (\'' || _dt || '\' = \'uw_finance\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER VIEW '  || _t || '.`nb_quote_waterfall` SET TAGS (\'' || _dt || '\' = \'uw_finance\')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`renewal_scenarios` SET TAGS (\'' || _dt || '\' = \'uw_finance\')'; EXECUTE IMMEDIATE _sql;
