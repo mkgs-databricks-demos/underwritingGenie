@@ -127,7 +127,6 @@ FROM s4;
 -- the SELECT below for the block above.
 CREATE OR REPLACE TABLE nb_quote_scenarios
 COMMENT 'Governed new business quote scenarios for Northwind Manufacturing: 3 pooling points x 3 trend scenarios x 2 plan options = 18 rows, materialized from rate_new_business() (synthetic)'
-TBLPROPERTIES ('{{domain_tag}}' = 'uw_finance')
 AS
 SELECT r.*, current_timestamp() AS generated_at, 'rate_new_business v1' AS method_version
 FROM (
@@ -156,7 +155,6 @@ FROM (
 -- =====================================================================================
 CREATE OR REPLACE VIEW nb_quote_waterfall
 COMMENT 'Ten-step rating waterfall (paid -> IBNR -> pooling -> experience -> projection -> manual -> credibility -> blend -> premium -> composite) for every nb_quote_scenarios row (synthetic)'
-TBLPROPERTIES ('{{domain_tag}}' = 'uw_finance')
 AS
 SELECT group_id, pooling_point, trend_scenario, plan_option, assumption_version, step_order, step_name, step_value, unit FROM (
   SELECT *, stack(10,
@@ -280,7 +278,6 @@ FROM s4;
 -- =====================================================================================
 CREATE OR REPLACE TABLE renewal_scenarios
 COMMENT 'Governed renewal scenarios for Lakeview Logistics (GRP-LV-002, renewal 2027-01-01): 3 pooling points x 3 trend scenarios = 9 rows, materialized from rate_renewal() for the Lakeview renewal beat (synthetic)'
-TBLPROPERTIES ('{{domain_tag}}' = 'uw_finance')
 AS
 SELECT r.*, current_timestamp() AS generated_at, 'rate_renewal v1' AS method_version
 FROM (
@@ -295,7 +292,15 @@ FROM (
   SELECT * FROM rate_renewal('GRP-LV-002', 500000, 'high', 'AV-2027.1')
 ) r;
 
--- Unity Catalog governed tags on the derived tables and view (functions take no tags).
-ALTER TABLE nb_quote_scenarios SET TAGS ('{{domain_tag}}' = 'uw_finance');
-ALTER VIEW nb_quote_waterfall SET TAGS ('{{domain_tag}}' = 'uw_finance');
-ALTER TABLE renewal_scenarios SET TAGS ('{{domain_tag}}' = 'uw_finance');
+-- Unity Catalog governed tags (functions take no tags).
+-- EXECUTE IMMEDIATE builds the SQL so :domain_tag becomes the tag key name.
+DECLARE OR REPLACE VARIABLE _dt   STRING DEFAULT :domain_tag;
+DECLARE OR REPLACE VARIABLE _cat  STRING DEFAULT :catalog;
+DECLARE OR REPLACE VARIABLE _sch  STRING DEFAULT :schema;
+DECLARE OR REPLACE VARIABLE _t    STRING;
+SET VAR _t = '`' || _cat || '`.`' || _sch || '`';
+DECLARE OR REPLACE VARIABLE _sql  STRING;
+
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`nb_quote_scenarios` SET TAGS (''' || _dt || ''' = ''uw_finance'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER VIEW '  || _t || '.`nb_quote_waterfall` SET TAGS (''' || _dt || ''' = ''uw_finance'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`renewal_scenarios` SET TAGS (''' || _dt || ''' = ''uw_finance'')'; EXECUTE IMMEDIATE _sql;

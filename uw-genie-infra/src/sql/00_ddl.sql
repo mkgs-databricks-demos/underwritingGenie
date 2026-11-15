@@ -5,8 +5,8 @@
 -- generate_synthetic_book reloads them. Derived objects (rate_new_business,
 -- nb_quote_scenarios, nb_quote_waterfall, renewal_book_scenarios, metric views)
 -- live in 10_rate_new_business.sql and 20_metric_views.sql.
--- All objects: TBLPROPERTIES + UC tags '{{domain_tag}}'='core' (domain_tag is a job parameter;
--- default 'underwriting', overridden per deployment target, e.g. 'mkgs_underwriting').
+-- Tags applied via EXECUTE IMMEDIATE at the end (domain_tag is a SQL named parameter;
+-- '{{param}}' is notebook widget syntax and does NOT substitute in SQL file tasks).
 
 USE CATALOG IDENTIFIER(:catalog);
 USE SCHEMA IDENTIFIER(:schema);
@@ -31,8 +31,7 @@ CREATE OR REPLACE TABLE groups (
   broker_contact STRING COMMENT 'Fictional broker contact',
   broker_email STRING COMMENT 'Broker email (.example domain only)'
 )
-COMMENT 'Employer groups in the synthetic Lakeside Health Plan book'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'Employer groups in the synthetic Lakeside Health Plan book';
 
 -- 2. census_members
 CREATE OR REPLACE TABLE census_members (
@@ -45,13 +44,11 @@ CREATE OR REPLACE TABLE census_members (
   zip3 STRING COMMENT 'First three digits of the member ZIP code',
   census_version STRING COMMENT 'v1 (broker original) | v2 (corrected)'
 )
-COMMENT 'Member-level census per group and census version (synthetic)'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'Member-level census per group and census version (synthetic)';
 
 -- 3. group_tier_counts (view)
 CREATE OR REPLACE VIEW group_tier_counts
 COMMENT 'Enrolled employees by coverage tier from the corrected (v2) census'
-TBLPROPERTIES ('{{domain_tag}}' = 'core')
 AS
 SELECT group_id, tier, COUNT(*) AS enrolled
 FROM census_members
@@ -67,8 +64,7 @@ CREATE OR REPLACE TABLE claims_monthly (
   paid_to_date DOUBLE COMMENT 'Claims paid to date for the incurred month',
   basis STRING COMMENT 'INCURRED|PAID'
 )
-COMMENT 'Monthly claims experience per group (synthetic)'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'Monthly claims experience per group (synthetic)';
 
 -- 5. large_claimants
 CREATE OR REPLACE TABLE large_claimants (
@@ -79,8 +75,7 @@ CREATE OR REPLACE TABLE large_claimants (
   total_claims DOUBLE COMMENT 'Experience-period total paid',
   package_version STRING COMMENT 'Broker package version the row came from (v1|v2)'
 )
-COMMENT 'Large claimant report per group and package version (synthetic)'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'Large claimant report per group and package version (synthetic)';
 
 -- 6. plan_designs
 CREATE OR REPLACE TABLE plan_designs (
@@ -92,8 +87,7 @@ CREATE OR REPLACE TABLE plan_designs (
   coinsurance DOUBLE COMMENT 'Member coinsurance',
   relativity DOUBLE COMMENT 'Benefit relativity vs the requested plan'
 )
-COMMENT 'Requested and alternate plan designs per group'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'Requested and alternate plan designs per group';
 
 -- 7. completion_factors
 CREATE OR REPLACE TABLE completion_factors (
@@ -101,8 +95,7 @@ CREATE OR REPLACE TABLE completion_factors (
   lag_months INT COMMENT 'Months between incurred month and paid-through month',
   factor DOUBLE COMMENT 'Completion (IBNR) factor'
 )
-COMMENT 'Claims completion factors by lag (assumption table)'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'Claims completion factors by lag (assumption table)';
 
 -- 8. trend_assumptions
 CREATE OR REPLACE TABLE trend_assumptions (
@@ -111,8 +104,7 @@ CREATE OR REPLACE TABLE trend_assumptions (
   annual_rate DOUBLE COMMENT 'Annual medical trend rate',
   trend_years DOUBLE COMMENT 'Years of trend from experience midpoint to rating midpoint'
 )
-COMMENT 'Trend scenarios (assumption table)'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'Trend scenarios (assumption table)';
 
 -- 9. pooling_points
 CREATE OR REPLACE TABLE pooling_points (
@@ -121,8 +113,7 @@ CREATE OR REPLACE TABLE pooling_points (
   pooling_charge_pmpm DOUBLE COMMENT 'Pooling charge PMPM added back',
   full_credibility_mm BIGINT COMMENT 'Member months for full credibility at this pooling point'
 )
-COMMENT 'Pooling points, pooling charges and full-credibility standards (assumption table)'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'Pooling points, pooling charges and full-credibility standards (assumption table)';
 
 -- 10. manual_rate_factors
 CREATE OR REPLACE TABLE manual_rate_factors (
@@ -133,8 +124,7 @@ CREATE OR REPLACE TABLE manual_rate_factors (
   demographic_factor DOUBLE COMMENT 'Demographic factor',
   industry_factor DOUBLE COMMENT 'Industry factor'
 )
-COMMENT 'Manual rate inputs per group (assumption table)'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'Manual rate inputs per group (assumption table)';
 
 -- 11. retention_targets
 CREATE OR REPLACE TABLE retention_targets (
@@ -142,8 +132,7 @@ CREATE OR REPLACE TABLE retention_targets (
   retention DOUBLE COMMENT 'Retention (administration, risk and margin) as share of premium',
   target_loss_ratio DOUBLE COMMENT 'Target loss ratio = 1 - retention'
 )
-COMMENT 'Retention and target loss ratio (assumption table)'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'Retention and target loss ratio (assumption table)';
 
 -- 12. tier_factors
 CREATE OR REPLACE TABLE tier_factors (
@@ -151,8 +140,7 @@ CREATE OR REPLACE TABLE tier_factors (
   tier STRING COMMENT 'EE|ES|EC|EF',
   tier_factor DOUBLE COMMENT 'Tier rating factor relative to EE'
 )
-COMMENT 'Coverage tier factors (assumption table)'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'Coverage tier factors (assumption table)';
 
 -- 13. persistency_curve
 CREATE OR REPLACE TABLE persistency_curve (
@@ -161,8 +149,7 @@ CREATE OR REPLACE TABLE persistency_curve (
   band_max DOUBLE COMMENT 'Band upper bound (rate action)',
   persistency DOUBLE COMMENT 'Expected share of groups that renew at this rate action'
 )
-COMMENT 'Renewal persistency by rate action band (assumption table)'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'Renewal persistency by rate action band (assumption table)';
 
 -- 14. renewal_pipeline
 CREATE OR REPLACE TABLE renewal_pipeline (
@@ -179,8 +166,7 @@ CREATE OR REPLACE TABLE renewal_pipeline (
   quote_due_date DATE COMMENT 'Renewal quote due date',
   owner STRING COMMENT 'Assigned underwriter (fictional)'
 )
-COMMENT 'In-force renewal pipeline (synthetic)'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'In-force renewal pipeline (synthetic)';
 
 -- 15. broker_submissions
 CREATE OR REPLACE TABLE broker_submissions (
@@ -193,8 +179,7 @@ CREATE OR REPLACE TABLE broker_submissions (
   top_missing_item STRING COMMENT 'Most important missing checklist item',
   owner STRING COMMENT 'Assigned intake owner (fictional)'
 )
-COMMENT 'New business broker submissions and intake completeness status (synthetic)'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'New business broker submissions and intake completeness status (synthetic)';
 
 -- 16. submission_findings
 CREATE OR REPLACE TABLE submission_findings (
@@ -204,8 +189,7 @@ CREATE OR REPLACE TABLE submission_findings (
   evidence STRING COMMENT 'Evidence for the finding (file, page, field)',
   created_ts TIMESTAMP COMMENT 'Time the finding was recorded'
 )
-COMMENT 'Intake checklist findings per submission (written during the demo; truncated by reset_demo)'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'Intake checklist findings per submission (written during the demo; truncated by reset_demo)';
 
 -- 17. trend_monitor
 CREATE OR REPLACE TABLE trend_monitor (
@@ -215,8 +199,7 @@ CREATE OR REPLACE TABLE trend_monitor (
   assumed_annual_trend DOUBLE COMMENT 'Annual trend in the assumption set',
   assumption_version STRING COMMENT 'Assumption set, e.g. AV-2027.1'
 )
-COMMENT 'Actual vs assumed trend signals for the morning brief (synthetic)'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'Actual vs assumed trend signals for the morning brief (synthetic)';
 
 -- 18. intake_checklist
 CREATE OR REPLACE TABLE intake_checklist (
@@ -226,25 +209,32 @@ CREATE OR REPLACE TABLE intake_checklist (
   rule_text STRING COMMENT 'Rule used to judge the item',
   broker_ask_template STRING COMMENT 'Template for the broker follow-up ask'
 )
-COMMENT 'Large group new business intake checklist (14 items)'
-TBLPROPERTIES ('{{domain_tag}}' = 'core');
+COMMENT 'Large group new business intake checklist (14 items)';
 
--- Unity Catalog governed tags on every object.
-ALTER TABLE groups SET TAGS ('{{domain_tag}}' = 'core');
-ALTER TABLE census_members SET TAGS ('{{domain_tag}}' = 'core');
-ALTER VIEW group_tier_counts SET TAGS ('{{domain_tag}}' = 'core');
-ALTER TABLE claims_monthly SET TAGS ('{{domain_tag}}' = 'core');
-ALTER TABLE large_claimants SET TAGS ('{{domain_tag}}' = 'core');
-ALTER TABLE plan_designs SET TAGS ('{{domain_tag}}' = 'core');
-ALTER TABLE completion_factors SET TAGS ('{{domain_tag}}' = 'core');
-ALTER TABLE trend_assumptions SET TAGS ('{{domain_tag}}' = 'core');
-ALTER TABLE pooling_points SET TAGS ('{{domain_tag}}' = 'core');
-ALTER TABLE manual_rate_factors SET TAGS ('{{domain_tag}}' = 'core');
-ALTER TABLE retention_targets SET TAGS ('{{domain_tag}}' = 'core');
-ALTER TABLE tier_factors SET TAGS ('{{domain_tag}}' = 'core');
-ALTER TABLE persistency_curve SET TAGS ('{{domain_tag}}' = 'core');
-ALTER TABLE renewal_pipeline SET TAGS ('{{domain_tag}}' = 'core');
-ALTER TABLE broker_submissions SET TAGS ('{{domain_tag}}' = 'core');
-ALTER TABLE submission_findings SET TAGS ('{{domain_tag}}' = 'core');
-ALTER TABLE trend_monitor SET TAGS ('{{domain_tag}}' = 'core');
-ALTER TABLE intake_checklist SET TAGS ('{{domain_tag}}' = 'core');
+-- Unity Catalog governed tags — EXECUTE IMMEDIATE builds the SQL so :domain_tag
+-- (a SQL named parameter) becomes the tag key name after string substitution.
+DECLARE OR REPLACE VARIABLE _dt   STRING DEFAULT :domain_tag;
+DECLARE OR REPLACE VARIABLE _cat  STRING DEFAULT :catalog;
+DECLARE OR REPLACE VARIABLE _sch  STRING DEFAULT :schema;
+DECLARE OR REPLACE VARIABLE _t    STRING;
+SET VAR _t = '`' || _cat || '`.`' || _sch || '`';
+DECLARE OR REPLACE VARIABLE _sql  STRING;
+
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`groups` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`census_members` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER VIEW '  || _t || '.`group_tier_counts` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`claims_monthly` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`large_claimants` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`plan_designs` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`completion_factors` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`trend_assumptions` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`pooling_points` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`manual_rate_factors` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`retention_targets` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`tier_factors` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`persistency_curve` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`renewal_pipeline` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`broker_submissions` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`submission_findings` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`trend_monitor` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
+SET VAR _sql = 'ALTER TABLE ' || _t || '.`intake_checklist` SET TAGS (''' || _dt || ''' = ''core'')'; EXECUTE IMMEDIATE _sql;
