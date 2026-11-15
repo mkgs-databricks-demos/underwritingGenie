@@ -67,11 +67,9 @@
       "wave_id": "0-0",
       "build": "0",
       "name": "Foundation: infra bundle (schema, warehouse, jobs, DDL) and agent bundle (parallel)",
-      "validate_bundles": [
-        {"root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie/uw-genie-infra", "target": "dev"}
-      ],
+      "validate_bundles": [],
       "gate": [
-        "databricks bundle validate --strict --target dev passes in uw-genie-infra after all wave 0-0 files are in place",
+        "uw-genie-infra is NOT in validate_bundles for this wave: job YAMLs reference notebooks (generate_synthetic_book.py, upload_packages.py, reset_demo.py) that are only created in wave 0-1 (sessions 03/05); bundle validate --strict is deferred to wave 0-1",
         "uw-genie-agent is not in validate_bundles for this wave: its warehouse_id lookup needs the infra warehouse, which wave 0-2 deploys. Session 02 reports bundle validate --strict --target dev --var=warehouse_id=0000000000000000 in its status instead; the agent bundle is validated by waves 0-3 and 0-5",
         "Files exist: .gitignore (contains .build-status/ and .databricks/), uw-genie-infra/databricks.yml, uw-genie-infra/resources/schemas/uw_genie.schema.yml, uw-genie-infra/resources/sql_warehouses/uw_genie.sql_warehouse.yml, uw-genie-infra/resources/volumes/broker_packages.yml",
         "Files exist: uw-genie-infra/resources/jobs/setup_demo.job.yml, uw-genie-infra/resources/jobs/reset_demo.job.yml, uw-genie-infra/src/sql/00_ddl.sql",
@@ -85,7 +83,7 @@
           "title": "Infra bundle foundation: databricks.yml, schema, volume, SQL warehouse, jobs, DDL",
           "plan_file": "build-0/01_infra_bundle.md",
           "mode": "edit",
-          "scope": "In uw-genie-infra/: write databricks.yml (bundle uw-genie-infra, databricks_cli_version >= 1.23.0, engine direct, include resources/**/*.yml, variables catalog/schema/warehouse_id, targets dev (default, development mode, catalog hls_fde_dev) and demo (production mode, catalog hls_fde), workspace.root_path /Workspace/.bundle/${bundle.name}/${bundle.target}, workspace.sync_mode overwrite, presets.tags per target). Write the schema resource uw_genie (catalog hls_fde_dev, schema uw_genie), the volume broker_packages, the 2X-Small serverless SQL warehouse uw_genie_warehouse, the jobs setup_demo (5 SQL/notebook tasks: create_tables, generate_synthetic_book, upload_packages, build_nb_quote_scenarios, run_tests on the warehouse, max_concurrent_runs 1, queue enabled) and reset_demo (truncate submission_findings, restore broker_submissions statuses, rebuild scenarios, run_tests). Write src/sql/00_ddl.sql from L300-01 (all 18 objects, CREATE OR REPLACE, schema from ${var.catalog}.${var.schema}, all tagged domain=underwriting data_class=synthetic). At the repo root: .gitignore with .build-status/ and .databricks/. Do not deploy. Run databricks bundle validate --strict --target dev in uw-genie-infra.",
+          "scope": "In uw-genie-infra/: write databricks.yml (bundle uw-genie-infra, databricks_cli_version >= 1.23.0, engine direct, include resources/**/*.yml, variables catalog/schema/warehouse_id, targets dev (default, development mode, catalog hls_fde_dev) and demo (production mode, catalog hls_fde), workspace.root_path /Workspace/.bundle/${bundle.name}/${bundle.target}, workspace.sync_mode overwrite, presets.tags per target). Write the schema resource uw_genie (catalog hls_fde_dev, schema uw_genie), the volume broker_packages, the 2X-Small serverless SQL warehouse uw_genie_warehouse, the jobs setup_demo (5 SQL/notebook tasks: create_tables, generate_synthetic_book, upload_packages, build_nb_quote_scenarios, run_tests on the warehouse, max_concurrent_runs 1, queue enabled) and reset_demo (truncate submission_findings, restore broker_submissions statuses, rebuild scenarios, run_tests). Write src/sql/00_ddl.sql from L300-01 (all 18 objects, CREATE OR REPLACE, schema from ${var.catalog}.${var.schema}, all tagged domain=underwriting data_class=synthetic). At the repo root: .gitignore with .build-status/ and .databricks/. Do not deploy. Do not run bundle validate in wave 0-0 — job YAMLs reference notebooks only created in wave 0-1 session 05; validate is deferred to wave 0-1.",
           "owned_paths": ["uw-genie-infra/databricks.yml", "uw-genie-infra/resources/**", "uw-genie-infra/src/sql/00_ddl.sql", ".gitignore"]
         },
         {
