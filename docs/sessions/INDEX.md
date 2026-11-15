@@ -1,5 +1,7 @@
 # Session index (newest first)
 
+- 2026-11-15 — wave 0-0 / session 02 — [Agent bundle: databricks.yml and the Genie Agent serialized space file](2026-11-15_w0-0-02-agent-bundle.md) (edit, pass)
+- 2026-11-15 — wave 0-0 / session 01 — [Infra bundle foundation: databricks.yml, schema, volume, SQL warehouse, jobs, DDL](2026-11-15_w0-0-01-infra-bundle-foundation.md) (edit, blocked)
 - 2026-11-15 — [Build 0 deploy, waves.json fixes, Devin monitor session](2026-11-15_build0_deploy_and_devin_monitor.md)
 - 2026-11-15 — [Naming sweep: Underwriting Cockpit → Underwriting Genie](2026-11-15_underwriting_genie_naming_sweep.md)
 - 2026-11-15 — [Project onboarding: README, PROJECT_MEMORY, naming sweep, feature branch](2026-11-15_project_onboarding.md)

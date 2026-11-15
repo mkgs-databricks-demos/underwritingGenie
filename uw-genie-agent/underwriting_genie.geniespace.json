@@ -1,0 +1,209 @@
+{
+  "version": 2,
+  "config": {
+    "sample_questions": [
+      {"id": "a0000000000000000000000000000001", "question": ["What is the Family rate for Northwind Manufacturing at $250K pooling, base trend, requested plan?"]},
+      {"id": "a0000000000000000000000000000002", "question": ["What is Northwind credibility at $150K, $250K, and $500K pooling points?"]},
+      {"id": "a0000000000000000000000000000003", "question": ["What is Northwind premium change vs current, base case?"]},
+      {"id": "a0000000000000000000000000000004", "question": ["What is the Northwind premium PMPM on the alternate plan, base case?"]},
+      {"id": "a0000000000000000000000000000005", "question": ["How much was removed by pooling at $250K for Northwind?"]},
+      {"id": "a0000000000000000000000000000006", "question": ["Is Northwind v1 submission ready to quote?"]},
+      {"id": "a0000000000000000000000000000007", "question": ["Which renewals in the next 90 days have a rate action above 15%?"]},
+      {"id": "a0000000000000000000000000000008", "question": ["What is Q1 2027 premium at risk with a 12% cap vs uncapped?"]},
+      {"id": "a0000000000000000000000000000009", "question": ["What is the IBNR for Northwind?"]},
+      {"id": "a0000000000000000000000000000010", "question": ["How many member months does Northwind have?"]},
+      {"id": "a0000000000000000000000000000011", "question": ["What is the Northwind manual rate, base case?"]},
+      {"id": "a0000000000000000000000000000012", "question": ["What is the Northwind composite PEPM, base case?"]},
+      {"id": "a0000000000000000000000000000013", "question": ["Which brokers have the most blocked submissions?"]},
+      {"id": "a0000000000000000000000000000014", "question": ["What is the target loss ratio?"]},
+      {"id": "a0000000000000000000000000000015", "question": ["What is the highest-premium scenario for Northwind?"]}
+    ]
+  },
+  "data_sources": {
+    "tables": [
+      {
+        "identifier": "hls_fde_dev.uw_genie.broker_submissions",
+        "description": ["Broker submissions received for large group quotes (synthetic). One row per submission package version; completeness_status comes from the intake checklist review."],
+        "column_configs": [
+          {"column_name": "completeness_status", "description": ["READY | READY_WITH_WARNINGS | BLOCKED. BLOCKED means at least one BLOCKING checklist item is missing; the submission is not ready to quote."]},
+          {"column_name": "group_id", "description": ["Group key, e.g. GRP-NW-001 (Northwind Manufacturing)."]},
+          {"column_name": "package_version", "description": ["v1 = broker original package, v2 = corrected package."]},
+          {"column_name": "top_missing_item", "description": ["Most important missing checklist item for the submission."]}
+        ]
+      },
+      {"identifier": "hls_fde_dev.uw_genie.census_members", "description": ["Census members per group and census version (v1 broker original, v2 corrected). Tier only on EMPLOYEE rows."]},
+      {
+        "identifier": "hls_fde_dev.uw_genie.claims_monthly",
+        "description": ["Monthly paid-to-date claims per group by incurred month (24-month experience period)."],
+        "column_configs": [
+          {"column_name": "basis", "description": ["INCURRED or PAID basis of the reported claims."]},
+          {"column_name": "paid_to_date", "description": ["Claims paid to date for the incurred month, before completion (IBNR) adjustment."]}
+        ]
+      },
+      {"identifier": "hls_fde_dev.uw_genie.completion_factors", "description": ["Governed completion factors by lag month (assumption set AV-2027.1) used to estimate IBNR."]},
+      {"identifier": "hls_fde_dev.uw_genie.group_tier_counts", "description": ["Enrolled employees per group and coverage tier (EE, ES, EC, EF) from the corrected v2 census."]},
+      {
+        "identifier": "hls_fde_dev.uw_genie.groups",
+        "description": ["Employer groups in the synthetic Lakeside Health Plan large group book: prospects and in-force groups."],
+        "column_configs": [
+          {"column_name": "group_id", "description": ["Group key, e.g. GRP-NW-001 (Northwind Manufacturing), GRP-LV-002 (Lakeview Logistics)."]},
+          {"column_name": "incumbent_premium_pmpm", "description": ["Current premium PMPM with the incumbent carrier (prospects) or the current plan (in force)."]},
+          {"column_name": "incumbent_renewal_offer_pct", "description": ["Incumbent renewal offer reported by the broker (prospects), as a decimal."]},
+          {"column_name": "member_months", "description": ["Experience-period member months."]},
+          {"column_name": "status", "description": ["PROSPECT or IN_FORCE."]}
+        ]
+      },
+      {"identifier": "hls_fde_dev.uw_genie.intake_checklist", "description": ["Broker package intake checklist (14 items). severity BLOCKING items must be present before quoting; WARNING items are requested but do not block."]},
+      {
+        "identifier": "hls_fde_dev.uw_genie.large_claimants",
+        "description": ["Large claimant report per group and package version; claims above the pooling point are removed from experience."],
+        "column_configs": [
+          {"column_name": "package_version", "description": ["v1 = broker original, v2 = corrected. Rating uses v2."]},
+          {"column_name": "status", "description": ["ACTIVE | ONGOING | RESOLVED | UNKNOWN."]},
+          {"column_name": "total_claims", "description": ["Experience-period total paid for the claimant."]}
+        ]
+      },
+      {"identifier": "hls_fde_dev.uw_genie.manual_rate_factors", "description": ["Manual rate inputs per group: base manual PMPM and area, demographic and industry factors."]},
+      {"identifier": "hls_fde_dev.uw_genie.mv_intake_ops", "description": ["Metric view: broker intake operations (submissions, first-pass completeness, blocked submissions) by broker, status and week."]},
+      {"identifier": "hls_fde_dev.uw_genie.mv_quote_outcomes", "description": ["Metric view: governed new business quote outcomes (premium PMPM, composite PEPM, credibility, rate change vs current, projected loss ratio) by group, pooling point, trend scenario and plan option."]},
+      {"identifier": "hls_fde_dev.uw_genie.mv_renewal_book", "description": ["Metric view: renewal book outcomes (renewing premium, projected loss ratio and premium at risk, uncapped and with a 12% cap) by renewal quarter, size band and industry. Target loss ratio 88%."]},
+      {
+        "identifier": "hls_fde_dev.uw_genie.nb_quote_scenarios",
+        "description": ["Governed new business quote scenarios materialized from rate_new_business(): 3 pooling points x 3 trend scenarios x 2 plan options. The ONLY approved source of quoted rates."],
+        "column_configs": [
+          {"column_name": "composite_pepm", "description": ["Composite rate per employee per month."]},
+          {"column_name": "credibility", "description": ["Square-root credibility Z of the group's experience at this pooling point."]},
+          {"column_name": "excess_pooled", "description": ["Large claimant dollars above the pooling point removed from experience."]},
+          {"column_name": "ibnr", "description": ["Incurred but not reported: completed claims minus paid to date."]},
+          {"column_name": "manual_pmpm", "description": ["Manual rate PMPM."]},
+          {"column_name": "plan_option", "description": ["requested or alternate plan design."]},
+          {"column_name": "pooling_point", "description": ["Per-claimant pooling point: 150000, 250000 (default) or 500000."]},
+          {"column_name": "premium_pmpm", "description": ["Premium per member per month after retention."]},
+          {"column_name": "rate_change_vs_incumbent", "description": ["Quoted premium vs incumbent current premium, as a decimal (0.022 = +2.2%)."]},
+          {"column_name": "rate_ef", "description": ["Family (EF) tier monthly rate."]},
+          {"column_name": "trend_scenario", "description": ["low | base (default) | high."]}
+        ]
+      },
+      {
+        "identifier": "hls_fde_dev.uw_genie.nb_quote_waterfall",
+        "description": ["Rating waterfall (10 steps) per quote scenario, from paid claims to composite PEPM."],
+        "column_configs": [
+          {"column_name": "step_name", "description": ["Waterfall step label."]},
+          {"column_name": "step_order", "description": ["Step order 1..10."]},
+          {"column_name": "step_value", "description": ["Step value in the step's unit."]},
+          {"column_name": "unit", "description": ["USD, PMPM, PEPM or ratio."]}
+        ]
+      },
+      {"identifier": "hls_fde_dev.uw_genie.persistency_curve", "description": ["Expected renewal persistency by rate action band."]},
+      {"identifier": "hls_fde_dev.uw_genie.plan_designs", "description": ["Plan designs per group (requested, alternate) with benefit relativity."]},
+      {"identifier": "hls_fde_dev.uw_genie.pooling_points", "description": ["Governed pooling points with pooling charge PMPM and full-credibility member months standard."]},
+      {
+        "identifier": "hls_fde_dev.uw_genie.renewal_pipeline",
+        "description": ["In-force groups renewing in 2027 with current premium, projected claims and recommended rate action."],
+        "column_configs": [
+          {"column_name": "recommended_rate_action", "description": ["Recommended renewal rate action, as a decimal (0.15 = 15%)."]},
+          {"column_name": "renewal_date", "description": ["Renewal effective date."]},
+          {"column_name": "renewal_quarter", "description": ["Renewal quarter label, e.g. 2027-Q1."]}
+        ]
+      },
+      {"identifier": "hls_fde_dev.uw_genie.renewal_scenarios", "description": ["Governed renewal scenarios materialized from rate_renewal()."]},
+      {"identifier": "hls_fde_dev.uw_genie.retention_targets", "description": ["Retention (12%) and target loss ratio (88%) per assumption set."]},
+      {
+        "identifier": "hls_fde_dev.uw_genie.submission_findings",
+        "description": ["Checklist findings per broker submission."],
+        "column_configs": [
+          {"column_name": "finding", "description": ["PRESENT | MISSING | PARTIAL."]}
+        ]
+      },
+      {"identifier": "hls_fde_dev.uw_genie.tier_factors", "description": ["Tier factors: EE 1.00, ES 2.00, EC 1.85, EF 2.85."]},
+      {"identifier": "hls_fde_dev.uw_genie.trend_assumptions", "description": ["Governed annual trend by scenario (low 7.5%, base 9.0%, high 10.5%) and trend years."]},
+      {"identifier": "hls_fde_dev.uw_genie.trend_monitor", "description": ["Actual vs assumed annual trend monitoring signals."]}
+    ]
+  },
+  "instructions": {
+    "text_instructions": [
+      {
+        "id": "b0000000000000000000000000000001",
+        "content": [
+          "Underwriting Genie: underwriting coworker for Lakeside Health Plan large group business (synthetic). Answers questions about broker submissions, new business quotes, renewals and book outcomes using governed rating results.\n",
+          "- All data is synthetic for Lakeside Health Plan. Say \"synthetic\" if asked about data origin.\n",
+          "- Quoted rates, credibility, pooling and trend results come ONLY from nb_quote_scenarios / rate_new_business or renewal_scenarios / rate_renewal. Never derive rates with ad-hoc arithmetic.\n",
+          "- Default scenario: pooling_point 250000, trend_scenario 'base', plan_option 'requested', assumption_version 'AV-2027.1'.\n",
+          "- \"Loss ratio\" = completed incurred, pooled claims / premium. Target loss ratio = 88%. Large group MLR floor = 85% (book level).\n",
+          "- \"Premium at risk\" = persistency-weighted lapsing renewal premium (mv_renewal_book).\n",
+          "- \"Rate change\" for prospects compares to incumbent current premium; also mention incumbent_renewal_offer_pct when relevant.\n",
+          "- Tier codes: EE=Employee only, ES=Employee+Spouse, EC=Employee+Child(ren), EF=Family.\n",
+          "- Format money with $ and 2 decimals for rates; percentages with 1 decimal.\n",
+          "- Northwind Manufacturing is group_id 'GRP-NW-001'; Lakeview Logistics is 'GRP-LV-002'."
+        ]
+      }
+    ],
+    "example_question_sqls": [
+      {
+        "id": "c0000000000000000000000000000001",
+        "question": ["What are the recommended tier rates for Northwind at a 250000 pooling point?"],
+        "sql": [
+          "SELECT rate_ee, rate_es, rate_ec, rate_ef, composite_pepm, premium_pmpm\n",
+          "FROM hls_fde_dev.uw_genie.nb_quote_scenarios\n",
+          "WHERE group_id = 'GRP-NW-001' AND pooling_point = 250000 AND trend_scenario = 'base' AND plan_option = 'requested'"
+        ]
+      },
+      {
+        "id": "c0000000000000000000000000000002",
+        "question": ["Show the rating waterfall for Northwind"],
+        "sql": [
+          "SELECT step_order, step_name, step_value, unit\n",
+          "FROM hls_fde_dev.uw_genie.nb_quote_waterfall\n",
+          "WHERE group_id = 'GRP-NW-001' AND pooling_point = 250000 AND trend_scenario = 'base' AND plan_option = 'requested'\n",
+          "ORDER BY step_order"
+        ]
+      },
+      {
+        "id": "c0000000000000000000000000000003",
+        "question": ["Compare pooling points for Northwind"],
+        "sql": [
+          "SELECT pooling_point, plan_option, credibility, excess_pooled, premium_pmpm, composite_pepm, rate_change_vs_incumbent\n",
+          "FROM hls_fde_dev.uw_genie.nb_quote_scenarios\n",
+          "WHERE group_id = 'GRP-NW-001' AND trend_scenario = 'base'\n",
+          "ORDER BY pooling_point, plan_option"
+        ]
+      },
+      {
+        "id": "c0000000000000000000000000000004",
+        "question": ["Which submissions are blocked and why?"],
+        "sql": [
+          "SELECT broker_name, group_id, top_missing_item, received_ts\n",
+          "FROM hls_fde_dev.uw_genie.broker_submissions\n",
+          "WHERE completeness_status = 'BLOCKED'\n",
+          "ORDER BY received_ts"
+        ]
+      },
+      {
+        "id": "c0000000000000000000000000000005",
+        "question": ["Renewals in the next 90 days likely above 15%"],
+        "sql": [
+          "SELECT group_id, industry, renewal_date, size_band, current_annual_premium, recommended_rate_action, owner\n",
+          "FROM hls_fde_dev.uw_genie.renewal_pipeline\n",
+          "WHERE renewal_date <= date_add(current_date(), 90) AND recommended_rate_action > 0.15\n",
+          "ORDER BY renewal_date"
+        ]
+      },
+      {
+        "id": "c0000000000000000000000000000006",
+        "question": ["Q1 projected loss ratio and premium at risk with a 12% cap"],
+        "sql": [
+          "SELECT MEASURE(`Projected Loss Ratio (Uncapped)`) AS projected_loss_ratio_uncapped,\n",
+          "       MEASURE(`Projected Loss Ratio (12% Cap)`) AS projected_loss_ratio_capped,\n",
+          "       MEASURE(`Premium at Risk (Uncapped)`) AS premium_at_risk_uncapped,\n",
+          "       MEASURE(`Premium at Risk (12% Cap)`) AS premium_at_risk_capped\n",
+          "FROM hls_fde_dev.uw_genie.mv_renewal_book\n",
+          "WHERE `Renewal Quarter` = '2027-Q1'"
+        ]
+      }
+    ],
+    "sql_functions": [
+      {"id": "d0000000000000000000000000000001", "identifier": "hls_fde_dev.uw_genie.rate_new_business"},
+      {"id": "d0000000000000000000000000000002", "identifier": "hls_fde_dev.uw_genie.rate_renewal"}
+    ]
+  }
+}
