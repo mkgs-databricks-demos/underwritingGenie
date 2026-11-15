@@ -31,7 +31,7 @@ Run `reset_demo`; save the live artifact link if the audience should receive it;
 Paste into Genie One:
 ```
 Create a Genie Artifact titled "Underwriting Cockpit Demo — Design Review" from the files in
-brainstorming/genie-one-documents/genie-one-large-group-underwriting/docs: render the 7 Mermaid diagrams in
+underwritingGenie/docs: render the 7 Mermaid diagrams in
 docs/diagrams/mermaid, summarize the L100 (sections 1–8, including the base-case number table), list the 12
 assumed decisions from research/06 as review questions with Approve / Change options, and show the build wave plan.
 Save it to the shared genie_artifacts folder.

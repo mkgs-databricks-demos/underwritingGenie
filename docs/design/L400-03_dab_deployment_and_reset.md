@@ -1,11 +1,11 @@
-# L400-03 — DAB Deployment, Reset and Cost
+# L400-03 — Declarative Automation Bundle Deployment, Reset and Cost
 
 Matthew Giglia | Field Engineering · v0.1 · 2026-11-15 · Synthetic, carrier-neutral Databricks point of view
 
 
 ## 1. Repo layout
 ```
-genie-one-large-group-underwriting/
+underwritingGenie/
 ├── databricks.yml                 # targets: dev (default), demo
 ├── resources/
 │   ├── schema.yml                 # schema + volume broker_packages
