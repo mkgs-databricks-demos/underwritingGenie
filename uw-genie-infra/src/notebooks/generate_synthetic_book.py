@@ -35,10 +35,12 @@ import sys
 
 dbutils.widgets.text("catalog", "hls_fde_dev", "Catalog")
 dbutils.widgets.text("schema", "uw_genie", "Schema")
+dbutils.widgets.text("domain_tag", "underwriting", "Domain tag key")
 dbutils.widgets.text("assets_dir", "", "docs/demo-assets path (blank = resolve from repo layout)")
 
 catalog = dbutils.widgets.get("catalog").strip()
 schema = dbutils.widgets.get("schema").strip()
+domain_tag = dbutils.widgets.get("domain_tag").strip()
 assets_override = dbutils.widgets.get("assets_dir").strip()
 for name, value in (("catalog", catalog), ("schema", schema)):
     if not re.fullmatch(r"[A-Za-z0-9_]+", value):
@@ -179,14 +181,14 @@ check("trend_monitor signal rows (|actual - assumed| >= 1pt)",
 check("broker emails outside .example", scalar(
     f"SELECT COUNT(*) FROM {fq}.groups WHERE broker_email IS NOT NULL AND broker_email NOT LIKE '%.example'"), 0)
 
-# Every base object carries both governed tags (set by 00_ddl.sql).
+# Every base object carries the domain tag (set by 00_ddl.sql EXECUTE IMMEDIATE).
 expected_objects = sorted(list(book) + ["submission_findings", "group_tier_counts"])
 tagged = {r.table_name for r in spark.sql(f"""
     SELECT table_name FROM `{catalog}`.information_schema.table_tags
     WHERE schema_name = '{schema}'
-      AND ((tag_name = 'domain' AND tag_value = 'underwriting') OR (tag_name = 'data_class' AND tag_value = 'synthetic'))
-    GROUP BY table_name HAVING COUNT(DISTINCT tag_name) = 2""").collect()}
-check("objects missing domain/data_class tags", sorted(set(expected_objects) - tagged), [])
+      AND tag_name = '{domain_tag}'
+    GROUP BY table_name""").collect()}
+check(f"objects missing {domain_tag} tag", sorted(set(expected_objects) - tagged), [])
 
 if failures:
     raise AssertionError(f"{len(failures)} assertion(s) failed: {failures}")

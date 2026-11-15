@@ -43,6 +43,7 @@ resources:
             base_parameters:
               catalog: "{{job.parameters.catalog}}"
               schema: "{{job.parameters.schema}}"
+              domain_tag: "{{job.parameters.domain_tag}}"
 
         - task_key: upload_packages
           depends_on:
