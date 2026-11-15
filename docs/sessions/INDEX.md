@@ -1,5 +1,6 @@
 # Session index (newest first)
 
+- 2026-11-15 — wave 0-2 / session 06 (run 1060969502993602) — [Deploy infra: bundle deploy runs setup_demo, fix until all tables and tests pass](2026-11-15_w0-2-06-deploy-infra.md) (converge, blocked)
 - 2026-11-15 — wave 0-2 / session 06 (run 581746600380456) — [Deploy infra: bundle deploy runs setup_demo, fix until all tables and tests pass](2026-11-15_w0-2-06-deploy-infra.md) (converge, blocked)
 - 2026-11-15 — wave 0-1 / session 05 (run 581746600380456) — [Notebooks: generate_synthetic_book, upload_packages, reset_demo](2026-11-15_w0-1-05-notebooks.md) (edit, pass)
 - 2026-11-15 — wave 0-1 / session 04 (run 581746600380456) — [Metric views (3 views + renewal_book_scenarios)](2026-11-15_w0-1-04-metric-views.md) (edit, pass)
