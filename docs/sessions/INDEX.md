@@ -1,5 +1,8 @@
 # Session index (newest first)
 
+- 2026-11-15 — wave 0-1 / session 05 (run 581746600380456) — [Notebooks: generate_synthetic_book, upload_packages, reset_demo](2026-11-15_w0-1-05-notebooks.md) (edit, pass)
+- 2026-11-15 — wave 0-1 / session 04 (run 581746600380456) — [Metric views (3 views + renewal_book_scenarios)](2026-11-15_w0-1-04-metric-views.md) (edit, pass)
+- 2026-11-15 — wave 0-1 / session 03 (run 581746600380456) — [Rating function + golden CSV tests](2026-11-15_w0-1-03-rating-function.md) (edit, pass)
 - 2026-11-15 — wave 0-0 / session 02 (run 581746600380456) — [Agent bundle: databricks.yml and the Genie Agent serialized space file](2026-11-15_w0-0-02-agent-bundle.md) (edit, pass)
 - 2026-11-15 — wave 0-0 / session 01 (run 581746600380456) — [Infra bundle foundation: databricks.yml, schema, volume, SQL warehouse, jobs, DDL](2026-11-15_w0-0-01-infra-bundle-foundation.md) (edit, pass)
 - 2026-11-15 — wave 0-0 / session 02 — [Agent bundle: databricks.yml and the Genie Agent serialized space file](2026-11-15_w0-0-02-agent-bundle.md) (edit, pass)
