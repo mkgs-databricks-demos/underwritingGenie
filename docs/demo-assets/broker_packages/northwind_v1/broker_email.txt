@@ -1,0 +1,18 @@
+From: Jordan Ellis <jordan.ellis@harborbenefits.example>
+To: Large Group Underwriting <lg-underwriting@lakesidehealth.example>
+Subject: New business request - Northwind Manufacturing - 1/1/2027
+
+Hi team,
+
+Please quote Northwind Manufacturing (Manufacturing, SIC 3599) for a 1/1/2027 effective date, fully insured medical.
+About 420 enrolled employees across 5 locations. The incumbent carrier came in at +14.2% at renewal and the client
+is looking for options. They'd like to see their current PPO (Choice PPO 1000 equivalent) and a higher-deductible
+alternate.
+
+Attached: census, claims experience, large claimant report, and the RFP questionnaire.
+We'd love rates back by the end of next week.
+
+Thanks,
+Jordan Ellis
+Harbor Benefits Partners
+(SYNTHETIC DEMO DATA - fictional broker and employer)

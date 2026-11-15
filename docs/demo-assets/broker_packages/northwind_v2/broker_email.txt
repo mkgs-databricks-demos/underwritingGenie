@@ -1,0 +1,17 @@
+From: Jordan Ellis <jordan.ellis@harborbenefits.example>
+To: Large Group Underwriting <lg-underwriting@lakesidehealth.example>
+Subject: RE: New business request - Northwind Manufacturing - 1/1/2027 - missing items
+
+Hi team,
+
+Thanks for the quick and specific list. Attached:
+- 24 months of claims on an incurred basis (Jul 2024 - Jun 2026, paid through Aug 2026) plus the lag report
+- Corrected census (dates of birth and coverage tiers filled in)
+- Updated large claimant report with status for every claimant
+- Benefit summaries for the current plan (Choice PPO 1000) and the alternate (Choice PPO 2500)
+
+Current composite premium with the incumbent is $612.00 PMPM.
+
+Thanks,
+Jordan
+(SYNTHETIC DEMO DATA)

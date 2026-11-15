@@ -1,0 +1,5 @@
+claimant_id,condition_category,total_paid_24mo,status
+LC-01,Neonatal intensive care,612000,RESOLVED
+LC-02,Oncology,410000,ACTIVE
+LC-03,Hemophilia (specialty Rx),268000,ONGOING
+LC-04,Orthopedic surgery,185000,RESOLVED
