@@ -1,0 +1,53 @@
+# reset_demo: return the demo to its pre-demo state in < 5 minutes.
+# reset_state (truncate submission_findings, restore broker_submissions statuses)
+#   -> build_nb_quote_scenarios -> run_tests
+# The notebook runs on serverless jobs compute; the SQL tasks run on the bundle warehouse.
+resources:
+  jobs:
+    reset_demo:
+      name: "${var.name_prefix}Underwriting Genie: Reset Demo"
+      description: Truncates submission_findings, restores broker_submissions statuses, rebuilds the NB quote scenarios and re-runs the golden-CSV tests.
+      max_concurrent_runs: 1
+      queue:
+        enabled: true
+      timeout_seconds: 600
+      tags:
+        domain: underwriting
+        data_class: synthetic
+      parameters:
+        - name: catalog
+          default: ${resources.schemas.uw_genie.catalog_name}
+        - name: schema
+          default: ${resources.schemas.uw_genie.name}
+      tasks:
+        - task_key: reset_state
+          notebook_task:
+            notebook_path: ../../src/notebooks/reset_demo.py
+            source: WORKSPACE
+            base_parameters:
+              catalog: "{{job.parameters.catalog}}"
+              schema: "{{job.parameters.schema}}"
+
+        - task_key: build_nb_quote_scenarios
+          depends_on:
+            - task_key: reset_state
+          sql_task:
+            warehouse_id: ${resources.sql_warehouses.uw_genie_warehouse.id}
+            file:
+              path: ../../src/sql/10_rate_new_business.sql
+              source: WORKSPACE
+            parameters:
+              catalog: "{{job.parameters.catalog}}"
+              schema: "{{job.parameters.schema}}"
+
+        - task_key: run_tests
+          depends_on:
+            - task_key: build_nb_quote_scenarios
+          sql_task:
+            warehouse_id: ${resources.sql_warehouses.uw_genie_warehouse.id}
+            file:
+              path: ../../src/sql/90_tests.sql
+              source: WORKSPACE
+            parameters:
+              catalog: "{{job.parameters.catalog}}"
+              schema: "{{job.parameters.schema}}"

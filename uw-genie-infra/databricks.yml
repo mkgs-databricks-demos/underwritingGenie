@@ -1,0 +1,66 @@
+# uw-genie-infra: Underwriting Genie shared infrastructure.
+# Owns the UC schema, the broker_packages volume, the serverless SQL warehouse,
+# the SQL/notebook sources and the setup_demo / reset_demo jobs.
+# Deploy BEFORE uw-genie-agent (the agent bundle looks up this warehouse by name).
+
+bundle:
+  name: uw-genie-infra
+  databricks_cli_version: ">= 1.23.0"
+  engine: direct
+
+include:
+  - resources/**/*.yml
+
+variables:
+  catalog:
+    description: Unity Catalog catalog for all Underwriting Genie objects
+    default: hls_fde_dev
+  schema:
+    description: Unity Catalog schema for all Underwriting Genie objects
+    default: uw_genie
+  warehouse_id:
+    description: Serverless SQL warehouse (the bundle-managed uw_genie_warehouse is used by the jobs; this variable is kept for overrides and docs)
+    default: ""
+  name_prefix:
+    description: >-
+      Display-name prefix for jobs and the SQL warehouse. Replaces the development-mode
+      name prefix, which would also rename the UC schema to dev_<user>_uw_genie and break
+      the hls_fde_dev.uw_genie contract used by uw-genie-agent and the build runtime targets.
+    default: ""
+
+workspace:
+  root_path: /Workspace/.bundle/${bundle.name}/${bundle.target}
+  sync_mode: overwrite
+
+targets:
+  dev:
+    default: true
+    mode: development
+    # Development mode requires a per-user root_path.
+    workspace:
+      root_path: ~/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      catalog: hls_fde_dev
+      schema: uw_genie
+      name_prefix: "[dev ${workspace.current_user.short_name}] "
+    presets:
+      # Keep the schema name unprefixed (hls_fde_dev.uw_genie); jobs and the warehouse
+      # get the usual "[dev <user>] " prefix through var.name_prefix instead.
+      name_prefix: ""
+      tags:
+        domain: underwriting
+        data_class: synthetic
+        project: underwriting_genie
+        env: dev
+
+  demo:
+    mode: production
+    variables:
+      catalog: hls_fde
+      schema: uw_genie
+    presets:
+      tags:
+        domain: underwriting
+        data_class: synthetic
+        project: underwriting_genie
+        env: demo

@@ -1,0 +1,9 @@
+resources:
+  schemas:
+    uw_genie:
+      catalog_name: ${var.catalog}
+      name: ${var.schema}
+      comment: Underwriting Genie synthetic demo data
+      properties:
+        domain: underwriting
+        data_class: synthetic

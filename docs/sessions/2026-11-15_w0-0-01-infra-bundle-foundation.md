@@ -1,6 +1,19 @@
 # Session 01 (wave 0-0): infra bundle foundation
 
-Run `1076347254049076` · branch `mg-genie-uw-genie-build-1` · mode `edit` · status **blocked**
+Run `581746600380456` (re-run; first run `1076347254049076` was blocked) · branch `mg-genie-uw-genie-build-1` · mode `edit` · status **pass**
+
+## Run 581746600380456 (this run)
+
+The owner fixed the manifest (commit 2c8c5a2): `bundle validate` for uw-genie-infra moved to wave 0-1, and session 01 must not run it in wave 0-0. That clears the blocker from the first run. I kept the 8 files the first run left uncommitted and fixed two problems found since then:
+
+* **Dev root_path.** Session 02 showed that development mode rejects `/Workspace/.bundle/...`. The `dev` target now sets `workspace.root_path: ~/.bundle/${bundle.name}/${bundle.target}`. `demo` keeps the shared path. (This differs from the scope text, which gives one root_path for all targets; development mode will not accept that path.)
+* **Dev schema prefix.** Development mode prefixes every non-file resource, and UC schemas become `dev_<user>_<name>`. In this workspace, lakeLoom and scAuditor deployed that way. That would create `hls_fde_dev.dev_matthew_giglia_uw_genie`, which breaks the `hls_fde_dev.uw_genie` runtime targets and the agent bundle. Fix: the `dev` target sets `presets.name_prefix: ""`, and a new variable `name_prefix` (dev: `"[dev ${workspace.current_user.short_name}] "`, default empty) goes in front of the job names and the warehouse name. So the deployed names still match the manifest and agent lookup: `[dev matthew_giglia] Underwriting Genie: Setup Demo` and `[dev matthew_giglia] uw_genie_warehouse`. The schema stays `uw_genie`. Development mode's other behaviors are unchanged: paused triggers, dev tags, no lock. Both jobs set `max_concurrent_runs: 1` explicitly.
+
+Files edited this run: `uw-genie-infra/databricks.yml`, `resources/jobs/setup_demo.job.yml`, `resources/jobs/reset_demo.job.yml`, `resources/sql_warehouses/uw_genie.sql_warehouse.yml`.
+
+Checks this run: all 8 files exist; all YAML parses; setup_demo has 5 tasks in the scoped order and reset_demo has 3; both have max_concurrent_runs 1 and queue enabled; 00_ddl.sql has 18 CREATE OR REPLACE statements and 18 SET TAGS on the same object set, with no IF NOT EXISTS; the `groups` and `broker_submissions` DDL has every `required_columns` from the runtime targets; `.gitignore` has both entries; git status shows changes only under owned paths (plus session 02's summary, which is not mine). `bundle validate` was **not run**, per the scope (deferred to wave 0-1). A diagnostic validate of a /tmp subset was also not approved, so the name_prefix fix is untested until wave 0-1. Wave 0-1 should confirm `bundle validate -o json` resolves schema `uw_genie`, warehouse `[dev matthew_giglia] uw_genie_warehouse` and the job name `[dev matthew_giglia] Underwriting Genie: Setup Demo`.
+
+## First run (1076347254049076)
 
 ## Changes
 

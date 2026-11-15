@@ -1,0 +1,75 @@
+# setup_demo: build the whole synthetic Underwriting Genie demo from scratch.
+# create_tables -> generate_synthetic_book -> upload_packages -> build_nb_quote_scenarios -> run_tests
+# SQL tasks run on the bundle warehouse; Python notebook tasks run on serverless jobs compute
+# (a Python notebook cannot run on a SQL warehouse).
+resources:
+  jobs:
+    setup_demo:
+      name: "${var.name_prefix}Underwriting Genie: Setup Demo"
+      description: Creates all Underwriting Genie tables, loads the synthetic book and broker packages, materializes the 18 NB quote scenarios and runs the golden-CSV tests.
+      max_concurrent_runs: 1
+      queue:
+        enabled: true
+      timeout_seconds: 1800
+      tags:
+        domain: underwriting
+        data_class: synthetic
+      parameters:
+        - name: catalog
+          default: ${resources.schemas.uw_genie.catalog_name}
+        - name: schema
+          default: ${resources.schemas.uw_genie.name}
+      tasks:
+        - task_key: create_tables
+          sql_task:
+            warehouse_id: ${resources.sql_warehouses.uw_genie_warehouse.id}
+            file:
+              path: ../../src/sql/00_ddl.sql
+              source: WORKSPACE
+            parameters:
+              catalog: "{{job.parameters.catalog}}"
+              schema: "{{job.parameters.schema}}"
+
+        - task_key: generate_synthetic_book
+          depends_on:
+            - task_key: create_tables
+          notebook_task:
+            notebook_path: ../../src/notebooks/generate_synthetic_book.py
+            source: WORKSPACE
+            base_parameters:
+              catalog: "{{job.parameters.catalog}}"
+              schema: "{{job.parameters.schema}}"
+
+        - task_key: upload_packages
+          depends_on:
+            - task_key: generate_synthetic_book
+          notebook_task:
+            notebook_path: ../../src/notebooks/upload_packages.py
+            source: WORKSPACE
+            base_parameters:
+              catalog: "{{job.parameters.catalog}}"
+              schema: "{{job.parameters.schema}}"
+
+        - task_key: build_nb_quote_scenarios
+          depends_on:
+            - task_key: upload_packages
+          sql_task:
+            warehouse_id: ${resources.sql_warehouses.uw_genie_warehouse.id}
+            file:
+              path: ../../src/sql/10_rate_new_business.sql
+              source: WORKSPACE
+            parameters:
+              catalog: "{{job.parameters.catalog}}"
+              schema: "{{job.parameters.schema}}"
+
+        - task_key: run_tests
+          depends_on:
+            - task_key: build_nb_quote_scenarios
+          sql_task:
+            warehouse_id: ${resources.sql_warehouses.uw_genie_warehouse.id}
+            file:
+              path: ../../src/sql/90_tests.sql
+              source: WORKSPACE
+            parameters:
+              catalog: "{{job.parameters.catalog}}"
+              schema: "{{job.parameters.schema}}"

@@ -1,0 +1,5 @@
+# genie-build-waves session status files (runtime only, never committed)
+.build-status/
+
+# Declarative Automation Bundles local state
+.databricks/
