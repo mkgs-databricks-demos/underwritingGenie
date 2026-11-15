@@ -13,15 +13,15 @@ underwritingGenie/
 ├── src/
 │   ├── sql/00_ddl.sql  10_rate_new_business.sql  20_metric_views.sql  90_tests.sql
 │   ├── notebooks/generate_synthetic_book.py  upload_packages.py  reset_demo.py
-│   └── genie/large_group_underwriting_cockpit.json
+│   └── genie/underwriting_genie.geniespace.json
 └── docs/  (this package; demo-assets/ holds packages, skills, golden CSV)
 ```
 ```yaml
 # databricks.yml (excerpt)
-bundle: {name: lg-underwriting-cockpit}
+bundle: {name: uw-genie-infra}
 variables:
-  catalog: {default: lg_underwriting_dev}
-  schema: {default: demo}
+  catalog: {default: hls_fde_dev}
+  schema: {default: uw_genie}
   warehouse_id: {description: Serverless SQL warehouse}
 targets:
   dev:  {default: true, mode: development}

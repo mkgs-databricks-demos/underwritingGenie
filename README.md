@@ -1,6 +1,6 @@
 # underwritingGenie
 
-**Underwriting Cockpit — Large Group Experience Rating with Genie One**
+**Underwriting Genie — Large Group Experience Rating with Genie One**
 
 A 12–15 minute, carrier-neutral, synthetic-data Databricks demo showing *underwriting of the future* for fully insured, experience-rated large group health business:
 
@@ -39,7 +39,7 @@ The repo currently contains documentation and demo assets only. Bundle code (`da
 | --- | --- | --- |
 | C1 | Synthetic data foundation (tables, volume, broker packages) | [L200-01](docs/design/L200-01_synthetic_data_foundation.md) |
 | C2 | Governed rating engine (`rate_new_business`, `nb_quote_scenarios`, renewal view) | [L200-02](docs/design/L200-02_governed_rating_engine.md) |
-| C3 | Semantics + Genie Agent "Large Group Underwriting Cockpit" (metric views, UC Pages, benchmarks) | [L200-03](docs/design/L200-03_semantics_and_genie_agent.md) |
+| C3 | Semantics + Genie Agent "Underwriting Genie" (metric views, UC Pages, benchmarks) | [L200-03](docs/design/L200-03_semantics_and_genie_agent.md) |
 | C4 | Genie One skills (intake checklist, rating explainer, morning brief) | [L200-04](docs/design/L200-04_genie_one_skills.md) |
 | C5 | Interactive New Business Quote artifact | [L200-05](docs/design/L200-05_nb_quote_artifact.md) |
 | C6 | Scheduled Morning Brief | [L200-06](docs/design/L200-06_scheduled_morning_brief.md) |
@@ -75,20 +75,13 @@ underwritingGenie/
 
 ## Build plan
 
-The demo is built with **8 Genie Code sessions in 4 waves** ([L400-01](docs/design/L400-01_genie_code_build_sessions.md)); sessions within a wave run in parallel.
+The demo is built with **Genie Build Waves (build 0)** ([L400-01](docs/design/L400-01_genie_code_build_sessions.md)); sessions within a wave run in parallel. See `docs/plans/` for the build 0 wave plan (genie-build-waves framework).
 
-| Wave | Sessions |
-| --- | --- |
-| 1 Foundation | S1 bundle, catalog, schema · S2 synthetic data |
-| 2 Governed math + documents | S3 rating function and scenarios · S4 broker documents and volume |
-| 3 Semantics | S5 metric views and UC Pages · S6 Genie Agent and benchmarks |
-| 4 Genie One | S7 skills and scheduled task · S8 artifact, backup and dry runs |
-
-Exit criteria: all **Must** criteria in L200-07 pass in 3 consecutive dry runs; reset job restores state in < 5 min; neutrality grep is clean.
+Exit criteria: all **Must** criteria in L200-07 pass in 3 consecutive dry runs; reset job restores state in < 5 min; neutrality grep is clean. Devin monitors at level 4 (act for the owner).
 
 ## Deployment (planned)
 
-Declarative Automation Bundle `lg-underwriting-cockpit` with targets `dev` (default) and `demo`, and variables `catalog` (default `lg_underwriting_dev`), `schema` (default `demo`) and `warehouse_id`. Jobs: `setup_demo` (create tables → generate synthetic book → upload packages → build scenarios → run tests) and `reset_demo`. See [L400-03](docs/design/L400-03_dab_deployment_and_reset.md) and the presenter runbook [L400-02](docs/design/L400-02_demo_runbook.md).
+Two Declarative Automation Bundles: `uw-genie-infra` (schema, volume, warehouse, jobs, SQL, notebooks) and `uw-genie-agent` (Genie Agent via genie_spaces resource with serialized space file). Targets `dev` (default) and `demo`; variables `catalog` (default `hls_fde_dev`), `schema` (default `uw_genie`) and `warehouse_id`. Jobs: `setup_demo` (create tables, generate synthetic book, upload packages, build scenarios, run tests) and `reset_demo`. See [L400-03](docs/design/L400-03_dab_deployment_and_reset.md) and the presenter runbook [L400-02](docs/design/L400-02_demo_runbook.md).
 
 ## Contributing
 

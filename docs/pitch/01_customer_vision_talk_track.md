@@ -30,7 +30,7 @@ Audience: health plan business and data leaders (underwriting, actuarial, financ
 **Close:** "Everything you saw runs on one governed foundation. Together we'd build it on your rating manual, your intake standards and your data."
 
 ## Discovery questions
-1. Who sits in the "Underwriting Cockpit" first — underwriters, account executives/brokers, or leadership?
+1. Who sits in the "Underwriting Genie" first — underwriters, account executives/brokers, or leadership?
 2. Large group quote time today, request → quote out? Where does it stall?
 3. How do submissions arrive, and how often are they incomplete on first pass?
 4. Where does the rating method live (spreadsheets, rating engine, actuarial code)? Who owns changes?

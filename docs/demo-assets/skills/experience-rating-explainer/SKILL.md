@@ -8,7 +8,7 @@ description: Use for any request to rate, quote, price, or renew a large group, 
 Never calculate rates, credibility, pooling, trend or tier rates yourself. Use ONLY:
 - `nb_quote_scenarios` / `nb_quote_waterfall` / `rate_new_business()` for new business
 - `renewal_scenarios` / `rate_renewal()` for renewals
-via the Large Group Underwriting Cockpit Genie Agent. If a requested lever value is not in the governed scenarios, say so and offer the nearest governed option.
+via the Underwriting Genie agent. If a requested lever value is not in the governed scenarios, say so and offer the nearest governed option.
 
 ## Steps
 1. Confirm intake is READY (use lg-intake-checklist if the package was just uploaded).

@@ -1,4 +1,4 @@
-# Future State Cockpit
+# Future State Underwriting Genie
 
 ```mermaid
 flowchart LR

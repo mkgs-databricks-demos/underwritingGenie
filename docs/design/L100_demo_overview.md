@@ -1,4 +1,4 @@
-# L100 — Underwriting Cockpit: Large Group Experience Rating with Genie One (Demo Constitution)
+# L100 — Underwriting Genie: Large Group Experience Rating with Genie One (Demo Constitution)
 
 Matthew Giglia | Field Engineering · v1.0-draft · 2026-11-15 · Synthetic, carrier-neutral Databricks point of view
 
@@ -41,7 +41,7 @@ All components can be built in 4 waves; within a wave, sessions run in parallel 
 |---|---|
 | C1 → C2 | Tables in `${catalog}.${schema}` per L300-01; keys `group_id`, `incurred_month`, `claimant_id` |
 | C2 → C3/C5 | `nb_quote_scenarios` — one row per (group_id, pooling_point, trend_scenario, plan_option, assumption_version); columns per L300-02 |
-| C3 → Genie One | Genie Agent "Large Group Underwriting Cockpit"; trusted asset `rate_new_business`; metric views `mv_quote_outcomes`, `mv_renewal_book`, `mv_intake_ops` |
+| C3 → Genie One | Genie Agent "Underwriting Genie"; trusted asset `rate_new_business`; metric views `mv_quote_outcomes`, `mv_renewal_book`, `mv_intake_ops` |
 | C4/C5 → Genie One | UC Skills `lg-intake-checklist`, `experience-rating-explainer`, `nb-quote-artifact`, `uw-morning-brief` (published + workspace copy) |
 | C5 → audience | Artifact "Northwind Manufacturing — New Business Quote" (8 sections, L200-05) |
 

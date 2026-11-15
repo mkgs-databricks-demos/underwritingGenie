@@ -9,7 +9,7 @@ description: Use when a user uploads a large group broker submission (census, cl
 
 ## Steps
 1. Identify the group (name, effective date, enrolled employees, broker, contact) from the email/RFP.
-2. Read the governed checklist: `SELECT item_id, item_name, severity, rule_text, broker_ask_template FROM <catalog>.<schema>.intake_checklist` (via the Large Group Underwriting Cockpit Genie Agent).
+2. Read the governed checklist: `SELECT item_id, item_name, severity, rule_text, broker_ask_template FROM <catalog>.<schema>.intake_checklist` (via the Underwriting Genie agent).
 3. For EACH item, inspect the uploaded files and decide PRESENT / MISSING / PARTIAL with evidence (file name + location, e.g. "census.csv rows 41, 77…").
    - Experience: count incurred months; require 24. Check basis is INCURRED or a lag report is present.
    - Census: every employee row needs birth_date, gender, tier, zip3. Report the count of failing rows.

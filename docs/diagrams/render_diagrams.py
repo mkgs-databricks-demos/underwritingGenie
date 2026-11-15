@@ -18,7 +18,7 @@ header{{border-bottom:4px solid #FF3621;padding-bottom:12px;margin-bottom:24px;m
 h1{{font-size:24px;margin:0}} .sub{{color:#5A6F77;font-size:13px;margin-top:4px}}
 .card{{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(27,49,57,.08);padding:24px;max-width:1200px;overflow:auto}}
 footer{{margin-top:16px;font-size:12px;color:#5A6F77}}</style></head><body>
-<header><h1>{t}</h1><div class="sub">Underwriting Cockpit &mdash; Large Group Experience Rating with Genie One &middot; Synthetic, carrier-neutral</div></header>
+<header><h1>{t}</h1><div class="sub">Underwriting Genie &mdash; Large Group Experience Rating with Genie One &middot; Synthetic, carrier-neutral</div></header>
 <div class="card">{svg}</div><footer>Matthew Giglia | Field Engineering &middot; Source: diagrams/mermaid/{f}</footer></body></html>"""
 def main():
     import json

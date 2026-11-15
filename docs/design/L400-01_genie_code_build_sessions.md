@@ -9,7 +9,7 @@ Build the whole demo with **8 interactive Genie Code sessions in 4 waves** insid
 
 ## Universal session preamble (prepend to every session prompt)
 ```
-Context: carrier-neutral synthetic demo "Underwriting Cockpit — Large Group Experience Rating with Genie One".
+Context: carrier-neutral synthetic demo "Underwriting Genie — Large Group Experience Rating with Genie One".
 Repo: underwritingGenie (Declarative Automation Bundle). Read docs/design/L100_demo_overview.md first.
 Rules: no real carrier/customer/vendor/employee names; all data synthetic and tagged data_class=synthetic;
 use bundle variables ${var.catalog} / ${var.schema} / ${var.warehouse_id}; never hardcode workspace URLs;
@@ -21,10 +21,10 @@ write a session log to docs/sessions/ when done. Ask me before deleting anything
 **Inputs:** L400-03, L100 §5–7. **Prompt:**
 ```
 Create the Declarative Automation Bundle per docs/design/L400-03 §1: databricks.yml with targets dev (default) and demo,
-variables catalog (default lg_underwriting_dev), schema (default demo), warehouse_id; resources: schema, volume
+variables catalog (default hls_fde_dev), schema (default uw_genie), warehouse_id; resources: schema, volume
 broker_packages, jobs setup_demo (tasks: create_tables, generate_synthetic_book, upload_packages,
 build_nb_quote_scenarios, run_tests) and reset_demo. Add src/sql/00_ddl.sql from L300-01. Validate the bundle.
-If I lack CREATE CATALOG, switch the default catalog to my home catalog and schema lg_uw_demo and record it.
+If I lack CREATE CATALOG, switch the default catalog to my home catalog and schema uw_genie and record it.
 ```
 **Acceptance:** `databricks bundle validate` passes · schema + volume exist after deploy · DDL creates all 18 objects · decision on catalog recorded in session log.
 
@@ -72,10 +72,10 @@ metric views certified=true.
 ### S6 Genie Agent and benchmarks
 **Inputs:** L300-03 §4–5. **Prompt:**
 ```
-Create the Genie Agent "Large Group Underwriting Cockpit" with the data, instructions, example SQL and trusted
+Create the Genie Agent "Underwriting Genie" with the data, instructions, example SQL and trusted
 assets in L300-03 §4. Add the 15 benchmarks in §5 (fill ★7/★8 expected values from the S5 session log). Run the
 benchmarks, fix instructions until all ★ benchmarks pass, and export the agent config (serialized space) to
-src/genie/large_group_underwriting_cockpit.json.
+src/genie/underwriting_genie.geniespace.json.
 ```
 **Acceptance:** ★1–★8 pass 100%; overall ≥ 90% · answers to ★1 show verified badge (trusted asset) · config exported.
 

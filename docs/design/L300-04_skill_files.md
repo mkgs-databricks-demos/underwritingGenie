@@ -17,7 +17,7 @@ description: Use when a user uploads a large group broker submission (census, cl
 
 ## Steps
 1. Identify the group (name, effective date, enrolled employees, broker, contact) from the email/RFP.
-2. Read the governed checklist: `SELECT item_id, item_name, severity, rule_text, broker_ask_template FROM <catalog>.<schema>.intake_checklist` (via the Large Group Underwriting Cockpit Genie Agent).
+2. Read the governed checklist: `SELECT item_id, item_name, severity, rule_text, broker_ask_template FROM <catalog>.<schema>.intake_checklist` (via the Underwriting Genie agent).
 3. For EACH item, inspect the uploaded files and decide PRESENT / MISSING / PARTIAL with evidence (file name + location, e.g. "census.csv rows 41, 77…").
    - Experience: count incurred months; require 24. Check basis is INCURRED or a lag report is present.
    - Census: every employee row needs birth_date, gender, tier, zip3. Report the count of failing rows.
@@ -45,7 +45,7 @@ description: Use for any request to rate, quote, price, or renew a large group, 
 Never calculate rates, credibility, pooling, trend or tier rates yourself. Use ONLY:
 - `nb_quote_scenarios` / `nb_quote_waterfall` / `rate_new_business()` for new business
 - `renewal_scenarios` / `rate_renewal()` for renewals
-via the Large Group Underwriting Cockpit Genie Agent. If a requested lever value is not in the governed scenarios, say so and offer the nearest governed option.
+via the Underwriting Genie agent. If a requested lever value is not in the governed scenarios, say so and offer the nearest governed option.
 
 ## Steps
 1. Confirm intake is READY (use lg-intake-checklist if the package was just uploaded).
@@ -96,7 +96,7 @@ description: Use for the scheduled Large Group Underwriting Morning Brief or whe
 ---
 # Underwriting Morning Brief
 
-Produce, in this order, using the Large Group Underwriting Cockpit Genie Agent (synthetic data):
+Produce, in this order, using the Underwriting Genie agent (synthetic data):
 1. Renewals due in the next 90 and 120 days; how many are pre-built (`renewal_pipeline.prebuilt`).
 2. New-business submissions waiting on brokers: count, oldest, top missing item (`broker_submissions` where BLOCKED). Name each blocked group.
 3. Groups with a new large claimant above the pooling point (`new_large_claimant_flag`).

@@ -8,7 +8,7 @@ Matt asked: where input is needed, research, recommend, and assume the recommend
 | # | Decision | Options considered | **Recommendation (assumed)** | Rationale |
 |---|---|---|---|---|
 | D1 | Project folder | reuse an existing underwriting folder vs new | New folder `underwritingGenie/` (Git folder; originally proposed as `genie-one-large-group-underwriting/`) | Existing folders contain account-specific material; this package must be carrier-neutral |
-| D2 | Catalog / schema | dedicated catalog vs home catalog | Declarative Automation Bundle variables `catalog` / `schema`; default **`lg_underwriting_dev`.`demo`** (follows `<function>_<env>` convention); fallback `home_<user>.lg_uw_demo` if catalog creation isn't permitted | Portable to any workspace with Artifacts beta on |
+| D2 | Catalog / schema | dedicated catalog vs home catalog | Declarative Automation Bundle variables `catalog` / `schema`; default **`hls_fde_dev`.`uw_genie`** (follows `<function>_<env>` convention); fallback `home_<user>.uw_genie` if catalog creation isn't permitted | Portable to any workspace with Artifacts beta on |
 | D3 | Group size for hero quote | 1,850 EEs (v0.2 canvas) vs smaller | **Northwind Manufacturing: 420 enrolled employees, ~980 members** | At 1,850 EEs credibility would be 100% and the blend disappears; 420 EEs keeps Z between 0.63 and 0.89 |
 | D4 | Credibility rule | square-root, Bühlmann, recursive multi-year | **Square-root, full-credibility standard keyed by pooling point (30K/42K/60K MM)** | Simplest explainable rule; pooling-dependent standard mirrors filed practice |
 | D5 | Trend scenarios | single vs 3 scenarios | **Low 7.5% / Base 9.0% / High 10.5% blended annual, 2.0 trend years** | Base anchored to public 2027 group trend projection |

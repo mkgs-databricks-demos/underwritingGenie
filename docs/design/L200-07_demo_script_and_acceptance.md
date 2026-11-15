@@ -9,7 +9,7 @@ Exact Genie One session setup, prompts, expected behavior and pass/fail criteria
 ## 1. Genie One session setup (do 30 min before)
 1. Workspace with **Artifacts** preview on; signed in as presenter; Gmail connector connected.
 2. Skills active (Settings → Skills): `lg-intake-checklist`, `experience-rating-explainer`, `nb-quote-artifact`, `uw-morning-brief`. Turn off unrelated skills to stay well under the 50-skill limit and avoid misrouting.
-3. Open **three tabs**: (a) the completed Morning Brief chat, (b) a **new, empty Genie One chat** titled "Underwriting Cockpit — live", (c) backup artifact "Northwind Manufacturing — New Business Quote".
+3. Open **three tabs**: (a) the completed Morning Brief chat, (b) a **new, empty Genie One chat** titled "Underwriting Genie — live", (c) backup artifact "Northwind Manufacturing — New Business Quote".
 4. Local folder with `northwind_v1/` and `northwind_v2/` files (downloaded from the Volume) ready to drag.
 5. Run the reset job (L400-03) so no prior drafts/artifacts confuse Genie.
 6. Font zoom 125%; notifications off.
@@ -17,7 +17,7 @@ Exact Genie One session setup, prompts, expected behavior and pass/fail criteria
 ### Session-level instruction (paste as first message in tab b, before the audience joins)
 ```
 For this session you are my underwriting coworker for Lakeside Health Plan (synthetic demo data).
-Use the Large Group Underwriting Cockpit Genie Agent for all data. Never calculate rates yourself:
+Use the Underwriting Genie agent for all data. Never calculate rates yourself:
 rates, credibility, pooling and trend come only from nb_quote_scenarios / rate_new_business().
 Keep answers short and business-focused, no SQL unless I ask. Draft emails only — never send.
 Reply "Ready." and nothing else.

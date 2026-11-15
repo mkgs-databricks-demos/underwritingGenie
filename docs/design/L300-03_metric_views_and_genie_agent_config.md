@@ -79,7 +79,7 @@ measures:
 ## 3. UC Pages
 Publish every term in `semantics/01–03` as a UC Page under domain **Underwriting**, subdomains Rating & Experience / Intake & Quote / Underwriting Finance; link each to its table/column/measure.
 
-## 4. Genie Agent — "Large Group Underwriting Cockpit"
+## 4. Genie Agent — "Underwriting Genie"
 **Description:** Underwriting coworker for Lakeside Health Plan large group business (synthetic). Answers questions about broker submissions, new business quotes, renewals and book outcomes using governed rating results.
 
 **Data:** all C1 tables (except raw volume), `nb_quote_scenarios`, `nb_quote_waterfall`, `renewal_scenarios`, three metric views. **Trusted assets:** `rate_new_business`, `rate_renewal`, example SQL below.
