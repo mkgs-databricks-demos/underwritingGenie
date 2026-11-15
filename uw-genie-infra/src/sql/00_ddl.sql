@@ -5,7 +5,8 @@
 -- generate_synthetic_book reloads them. Derived objects (rate_new_business,
 -- nb_quote_scenarios, nb_quote_waterfall, renewal_book_scenarios, metric views)
 -- live in 10_rate_new_business.sql and 20_metric_views.sql.
--- All objects: TBLPROPERTIES + UC tags domain=underwriting, data_class=synthetic.
+-- All objects: TBLPROPERTIES + UC tags '{{domain_tag}}'='core' (domain_tag is a job parameter;
+-- default 'underwriting', overridden per deployment target, e.g. 'mkgs_underwriting').
 
 USE CATALOG IDENTIFIER(:catalog);
 USE SCHEMA IDENTIFIER(:schema);
@@ -31,7 +32,7 @@ CREATE OR REPLACE TABLE groups (
   broker_email STRING COMMENT 'Broker email (.example domain only)'
 )
 COMMENT 'Employer groups in the synthetic Lakeside Health Plan book'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- 2. census_members
 CREATE OR REPLACE TABLE census_members (
@@ -45,12 +46,12 @@ CREATE OR REPLACE TABLE census_members (
   census_version STRING COMMENT 'v1 (broker original) | v2 (corrected)'
 )
 COMMENT 'Member-level census per group and census version (synthetic)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- 3. group_tier_counts (view)
 CREATE OR REPLACE VIEW group_tier_counts
 COMMENT 'Enrolled employees by coverage tier from the corrected (v2) census'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic')
+TBLPROPERTIES ('{{domain_tag}}' = 'core')
 AS
 SELECT group_id, tier, COUNT(*) AS enrolled
 FROM census_members
@@ -62,12 +63,12 @@ CREATE OR REPLACE TABLE claims_monthly (
   group_id STRING COMMENT 'Group key',
   incurred_month DATE COMMENT 'First of month',
   paid_through DATE COMMENT 'First of paid-through month',
-  service_category STRING COMMENT 'MEDICAL|RX',
+  service_category STRING COMMENT 'MEDICAL|RX|ALL (ALL = medical + Rx total)',
   paid_to_date DOUBLE COMMENT 'Claims paid to date for the incurred month',
   basis STRING COMMENT 'INCURRED|PAID'
 )
 COMMENT 'Monthly claims experience per group (synthetic)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- 5. large_claimants
 CREATE OR REPLACE TABLE large_claimants (
@@ -79,7 +80,7 @@ CREATE OR REPLACE TABLE large_claimants (
   package_version STRING COMMENT 'Broker package version the row came from (v1|v2)'
 )
 COMMENT 'Large claimant report per group and package version (synthetic)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- 6. plan_designs
 CREATE OR REPLACE TABLE plan_designs (
@@ -92,7 +93,7 @@ CREATE OR REPLACE TABLE plan_designs (
   relativity DOUBLE COMMENT 'Benefit relativity vs the requested plan'
 )
 COMMENT 'Requested and alternate plan designs per group'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- 7. completion_factors
 CREATE OR REPLACE TABLE completion_factors (
@@ -101,7 +102,7 @@ CREATE OR REPLACE TABLE completion_factors (
   factor DOUBLE COMMENT 'Completion (IBNR) factor'
 )
 COMMENT 'Claims completion factors by lag (assumption table)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- 8. trend_assumptions
 CREATE OR REPLACE TABLE trend_assumptions (
@@ -111,7 +112,7 @@ CREATE OR REPLACE TABLE trend_assumptions (
   trend_years DOUBLE COMMENT 'Years of trend from experience midpoint to rating midpoint'
 )
 COMMENT 'Trend scenarios (assumption table)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- 9. pooling_points
 CREATE OR REPLACE TABLE pooling_points (
@@ -121,7 +122,7 @@ CREATE OR REPLACE TABLE pooling_points (
   full_credibility_mm BIGINT COMMENT 'Member months for full credibility at this pooling point'
 )
 COMMENT 'Pooling points, pooling charges and full-credibility standards (assumption table)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- 10. manual_rate_factors
 CREATE OR REPLACE TABLE manual_rate_factors (
@@ -133,7 +134,7 @@ CREATE OR REPLACE TABLE manual_rate_factors (
   industry_factor DOUBLE COMMENT 'Industry factor'
 )
 COMMENT 'Manual rate inputs per group (assumption table)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- 11. retention_targets
 CREATE OR REPLACE TABLE retention_targets (
@@ -142,7 +143,7 @@ CREATE OR REPLACE TABLE retention_targets (
   target_loss_ratio DOUBLE COMMENT 'Target loss ratio = 1 - retention'
 )
 COMMENT 'Retention and target loss ratio (assumption table)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- 12. tier_factors
 CREATE OR REPLACE TABLE tier_factors (
@@ -151,7 +152,7 @@ CREATE OR REPLACE TABLE tier_factors (
   tier_factor DOUBLE COMMENT 'Tier rating factor relative to EE'
 )
 COMMENT 'Coverage tier factors (assumption table)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- 13. persistency_curve
 CREATE OR REPLACE TABLE persistency_curve (
@@ -161,7 +162,7 @@ CREATE OR REPLACE TABLE persistency_curve (
   persistency DOUBLE COMMENT 'Expected share of groups that renew at this rate action'
 )
 COMMENT 'Renewal persistency by rate action band (assumption table)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- 14. renewal_pipeline
 CREATE OR REPLACE TABLE renewal_pipeline (
@@ -179,7 +180,7 @@ CREATE OR REPLACE TABLE renewal_pipeline (
   owner STRING COMMENT 'Assigned underwriter (fictional)'
 )
 COMMENT 'In-force renewal pipeline (synthetic)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- 15. broker_submissions
 CREATE OR REPLACE TABLE broker_submissions (
@@ -193,7 +194,7 @@ CREATE OR REPLACE TABLE broker_submissions (
   owner STRING COMMENT 'Assigned intake owner (fictional)'
 )
 COMMENT 'New business broker submissions and intake completeness status (synthetic)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- 16. submission_findings
 CREATE OR REPLACE TABLE submission_findings (
@@ -204,7 +205,7 @@ CREATE OR REPLACE TABLE submission_findings (
   created_ts TIMESTAMP COMMENT 'Time the finding was recorded'
 )
 COMMENT 'Intake checklist findings per submission (written during the demo; truncated by reset_demo)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- 17. trend_monitor
 CREATE OR REPLACE TABLE trend_monitor (
@@ -215,7 +216,7 @@ CREATE OR REPLACE TABLE trend_monitor (
   assumption_version STRING COMMENT 'Assumption set, e.g. AV-2027.1'
 )
 COMMENT 'Actual vs assumed trend signals for the morning brief (synthetic)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- 18. intake_checklist
 CREATE OR REPLACE TABLE intake_checklist (
@@ -226,24 +227,24 @@ CREATE OR REPLACE TABLE intake_checklist (
   broker_ask_template STRING COMMENT 'Template for the broker follow-up ask'
 )
 COMMENT 'Large group new business intake checklist (14 items)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic');
+TBLPROPERTIES ('{{domain_tag}}' = 'core');
 
 -- Unity Catalog governed tags on every object.
-ALTER TABLE groups SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE census_members SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER VIEW group_tier_counts SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE claims_monthly SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE large_claimants SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE plan_designs SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE completion_factors SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE trend_assumptions SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE pooling_points SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE manual_rate_factors SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE retention_targets SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE tier_factors SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE persistency_curve SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE renewal_pipeline SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE broker_submissions SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE submission_findings SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE trend_monitor SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE intake_checklist SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
+ALTER TABLE groups SET TAGS ('{{domain_tag}}' = 'core');
+ALTER TABLE census_members SET TAGS ('{{domain_tag}}' = 'core');
+ALTER VIEW group_tier_counts SET TAGS ('{{domain_tag}}' = 'core');
+ALTER TABLE claims_monthly SET TAGS ('{{domain_tag}}' = 'core');
+ALTER TABLE large_claimants SET TAGS ('{{domain_tag}}' = 'core');
+ALTER TABLE plan_designs SET TAGS ('{{domain_tag}}' = 'core');
+ALTER TABLE completion_factors SET TAGS ('{{domain_tag}}' = 'core');
+ALTER TABLE trend_assumptions SET TAGS ('{{domain_tag}}' = 'core');
+ALTER TABLE pooling_points SET TAGS ('{{domain_tag}}' = 'core');
+ALTER TABLE manual_rate_factors SET TAGS ('{{domain_tag}}' = 'core');
+ALTER TABLE retention_targets SET TAGS ('{{domain_tag}}' = 'core');
+ALTER TABLE tier_factors SET TAGS ('{{domain_tag}}' = 'core');
+ALTER TABLE persistency_curve SET TAGS ('{{domain_tag}}' = 'core');
+ALTER TABLE renewal_pipeline SET TAGS ('{{domain_tag}}' = 'core');
+ALTER TABLE broker_submissions SET TAGS ('{{domain_tag}}' = 'core');
+ALTER TABLE submission_findings SET TAGS ('{{domain_tag}}' = 'core');
+ALTER TABLE trend_monitor SET TAGS ('{{domain_tag}}' = 'core');
+ALTER TABLE intake_checklist SET TAGS ('{{domain_tag}}' = 'core');

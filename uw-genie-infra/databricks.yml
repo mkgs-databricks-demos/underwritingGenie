@@ -27,26 +27,42 @@ variables:
       name prefix, which would also rename the UC schema to dev_<user>_uw_genie and break
       the hls_fde_dev.uw_genie contract used by uw-genie-agent and the build runtime targets.
     default: ""
+  domain_tag:
+    description: >-
+      UC governed tag key used to classify all Underwriting Genie objects.
+      Default 'underwriting' is the canonical cross-workspace key; workspace-specific
+      deployments (e.g. this workspace) use a namespaced key like 'mkgs_underwriting'
+      so each team can promote their own governed tag to a domain without colliding.
+    default: underwriting
 
 workspace:
   root_path: /Workspace/.bundle/${bundle.name}/${bundle.target}
   sync_mode: overwrite
 
+# The notebooks read the broker packages from <repo>/docs/demo-assets (uw_seed.resolve_assets_dir).
+# Adding it to sync.paths makes the repo root the sync root, so the deployed layout keeps
+# <root>/uw-genie-infra/src/notebooks next to <root>/docs/demo-assets.
+sync:
+  paths:
+    - .
+    - ../docs/demo-assets
+
 targets:
   dev:
     default: true
-    mode: development
-    # Development mode requires a per-user root_path.
+    # No `mode: development`: development mode always prefixes UC schemas with dev_<user>_
+    # (an empty presets.name_prefix is treated as unset), which would rename the schema to
+    # dev_<user>_uw_genie and break the hls_fde_dev.uw_genie contract. The presets below set
+    # what dev needs explicitly; jobs and the warehouse get "[dev <user>] " via var.name_prefix.
     workspace:
       root_path: ~/.bundle/${bundle.name}/${bundle.target}
     variables:
       catalog: hls_fde_dev
       schema: uw_genie
       name_prefix: "[dev ${workspace.current_user.short_name}] "
+      domain_tag: mkgs_underwriting
     presets:
-      # Keep the schema name unprefixed (hls_fde_dev.uw_genie); jobs and the warehouse
-      # get the usual "[dev <user>] " prefix through var.name_prefix instead.
-      name_prefix: ""
+      trigger_pause_status: PAUSED
       tags:
         domain: underwriting
         data_class: synthetic
@@ -58,6 +74,7 @@ targets:
     variables:
       catalog: hls_fde
       schema: uw_genie
+      domain_tag: mkgs_underwriting
     presets:
       tags:
         domain: underwriting

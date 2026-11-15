@@ -127,7 +127,7 @@ FROM s4;
 -- the SELECT below for the block above.
 CREATE OR REPLACE TABLE nb_quote_scenarios
 COMMENT 'Governed new business quote scenarios for Northwind Manufacturing: 3 pooling points x 3 trend scenarios x 2 plan options = 18 rows, materialized from rate_new_business() (synthetic)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic')
+TBLPROPERTIES ('{{domain_tag}}' = 'uw_finance')
 AS
 SELECT r.*, current_timestamp() AS generated_at, 'rate_new_business v1' AS method_version
 FROM (
@@ -156,7 +156,7 @@ FROM (
 -- =====================================================================================
 CREATE OR REPLACE VIEW nb_quote_waterfall
 COMMENT 'Ten-step rating waterfall (paid -> IBNR -> pooling -> experience -> projection -> manual -> credibility -> blend -> premium -> composite) for every nb_quote_scenarios row (synthetic)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic')
+TBLPROPERTIES ('{{domain_tag}}' = 'uw_finance')
 AS
 SELECT group_id, pooling_point, trend_scenario, plan_option, assumption_version, step_order, step_name, step_value, unit FROM (
   SELECT *, stack(10,
@@ -280,7 +280,7 @@ FROM s4;
 -- =====================================================================================
 CREATE OR REPLACE TABLE renewal_scenarios
 COMMENT 'Governed renewal scenarios for Lakeview Logistics (GRP-LV-002, renewal 2027-01-01): 3 pooling points x 3 trend scenarios = 9 rows, materialized from rate_renewal() for the Lakeview renewal beat (synthetic)'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic')
+TBLPROPERTIES ('{{domain_tag}}' = 'uw_finance')
 AS
 SELECT r.*, current_timestamp() AS generated_at, 'rate_renewal v1' AS method_version
 FROM (
@@ -296,6 +296,6 @@ FROM (
 ) r;
 
 -- Unity Catalog governed tags on the derived tables and view (functions take no tags).
-ALTER TABLE nb_quote_scenarios SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER VIEW nb_quote_waterfall SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
-ALTER TABLE renewal_scenarios SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic');
+ALTER TABLE nb_quote_scenarios SET TAGS ('{{domain_tag}}' = 'uw_finance');
+ALTER VIEW nb_quote_waterfall SET TAGS ('{{domain_tag}}' = 'uw_finance');
+ALTER TABLE renewal_scenarios SET TAGS ('{{domain_tag}}' = 'uw_finance');

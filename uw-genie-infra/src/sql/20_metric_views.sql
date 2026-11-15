@@ -7,7 +7,8 @@
 -- catalog.schema (double-quoted in YAML: a plain scalar cannot start with a backtick) and run with EXECUTE IMMEDIATE. All text inside the templates avoids apostrophes;
 -- SQL string literals inside YAML expressions are escaped as \'.
 -- CREATE OR REPLACE keeps setup idempotent (setup_demo rebuilds everything; grants are reapplied by the bundle/job).
--- Tags: domain=underwriting, data_class=synthetic on every object; certified=true on the metric views.
+-- Tags: '{{domain_tag}}'=<sub-value> on every object; certified=true on the metric views.
+-- domain_tag is a job parameter (default 'underwriting', e.g. 'mkgs_underwriting' in this workspace).
 -- Measure and column comments follow docs/semantics/01-03.
 
 USE CATALOG IDENTIFIER(:catalog);
@@ -40,7 +41,7 @@ CREATE OR REPLACE VIEW renewal_book_scenarios (
   renewal_premium_capped COMMENT 'Current annual premium x (1 + capped rate action)'
 )
 COMMENT 'Renewal book scenarios (synthetic): renewal pipeline joined to the persistency curve at the uncapped and 12%-capped rate actions. Source of mv_renewal_book.'
-TBLPROPERTIES ('domain' = 'underwriting', 'data_class' = 'synthetic')
+TBLPROPERTIES ('{{domain_tag}}' = 'uw_finance')
 AS
 SELECT r.*,
        LEAST(r.recommended_rate_action, 0.12) AS capped_rate_action,
@@ -54,7 +55,7 @@ JOIN persistency_curve pu
 JOIN persistency_curve pc
   ON LEAST(r.recommended_rate_action, 0.12) >= pc.band_min AND LEAST(r.recommended_rate_action, 0.12) < pc.band_max;
 
-ALTER VIEW renewal_book_scenarios SET TAGS ('domain' = 'underwriting', 'data_class' = 'synthetic', 'subdomain' = 'uw_finance');
+ALTER VIEW renewal_book_scenarios SET TAGS ('{{domain_tag}}' = 'uw_finance');
 
 -- 2. mv_renewal_book (over renewal_book_scenarios)
 SET VAR uw_sql = replace('
@@ -234,6 +235,6 @@ $$', '__FQ__', uw_fq);
 EXECUTE IMMEDIATE uw_sql;
 
 -- 5. Certified + governance tags on the metric views.
-ALTER VIEW mv_renewal_book SET TAGS ('certified' = 'true', 'domain' = 'underwriting', 'data_class' = 'synthetic', 'subdomain' = 'uw_finance');
-ALTER VIEW mv_quote_outcomes SET TAGS ('certified' = 'true', 'domain' = 'underwriting', 'data_class' = 'synthetic', 'subdomain' = 'intake_quote');
-ALTER VIEW mv_intake_ops SET TAGS ('certified' = 'true', 'domain' = 'underwriting', 'data_class' = 'synthetic', 'subdomain' = 'intake_quote');
+ALTER VIEW mv_renewal_book SET TAGS ('certified' = 'true', '{{domain_tag}}' = 'uw_finance');
+ALTER VIEW mv_quote_outcomes SET TAGS ('certified' = 'true', '{{domain_tag}}' = 'intake_quote');
+ALTER VIEW mv_intake_ops SET TAGS ('certified' = 'true', '{{domain_tag}}' = 'intake_quote');

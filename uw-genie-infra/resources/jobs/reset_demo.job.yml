@@ -19,6 +19,8 @@ resources:
           default: ${resources.schemas.uw_genie.catalog_name}
         - name: schema
           default: ${resources.schemas.uw_genie.name}
+        - name: domain_tag
+          default: ${var.domain_tag}
       tasks:
         - task_key: reset_state
           notebook_task:
@@ -39,6 +41,7 @@ resources:
             parameters:
               catalog: "{{job.parameters.catalog}}"
               schema: "{{job.parameters.schema}}"
+              domain_tag: "{{job.parameters.domain_tag}}"
 
         - task_key: run_tests
           depends_on:

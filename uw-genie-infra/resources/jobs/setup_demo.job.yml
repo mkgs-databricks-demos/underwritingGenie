@@ -1,5 +1,6 @@
 # setup_demo: build the whole synthetic Underwriting Genie demo from scratch.
-# create_tables -> generate_synthetic_book -> upload_packages -> build_nb_quote_scenarios -> run_tests
+# create_tables -> generate_synthetic_book -> upload_packages -> build_nb_quote_scenarios
+#   -> create_metric_views -> run_tests
 # SQL tasks run on the bundle warehouse; Python notebook tasks run on serverless jobs compute
 # (a Python notebook cannot run on a SQL warehouse).
 resources:
@@ -19,6 +20,8 @@ resources:
           default: ${resources.schemas.uw_genie.catalog_name}
         - name: schema
           default: ${resources.schemas.uw_genie.name}
+        - name: domain_tag
+          default: ${var.domain_tag}
       tasks:
         - task_key: create_tables
           sql_task:
@@ -29,6 +32,7 @@ resources:
             parameters:
               catalog: "{{job.parameters.catalog}}"
               schema: "{{job.parameters.schema}}"
+              domain_tag: "{{job.parameters.domain_tag}}"
 
         - task_key: generate_synthetic_book
           depends_on:
@@ -61,10 +65,24 @@ resources:
             parameters:
               catalog: "{{job.parameters.catalog}}"
               schema: "{{job.parameters.schema}}"
+              domain_tag: "{{job.parameters.domain_tag}}"
+
+        - task_key: create_metric_views
+          depends_on:
+            - task_key: build_nb_quote_scenarios
+          sql_task:
+            warehouse_id: ${resources.sql_warehouses.uw_genie_warehouse.id}
+            file:
+              path: ../../src/sql/20_metric_views.sql
+              source: WORKSPACE
+            parameters:
+              catalog: "{{job.parameters.catalog}}"
+              schema: "{{job.parameters.schema}}"
+              domain_tag: "{{job.parameters.domain_tag}}"
 
         - task_key: run_tests
           depends_on:
-            - task_key: build_nb_quote_scenarios
+            - task_key: create_metric_views
           sql_task:
             warehouse_id: ${resources.sql_warehouses.uw_genie_warehouse.id}
             file:
