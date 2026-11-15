@@ -14,8 +14,11 @@ Working memory for Genie Code sessions. Read this, then `docs/design/L100_demo_o
 ## Status (as of 2026-11-15)
 
 * Design package v1.0-draft complete (53 files under `docs/`); review gate passed; 7 diagrams rendered to SVG/HTML.
-* **No bundle code yet** — `databricks.yml`, `resources/`, `src/` are created in build 0.
-* **Next:** Build 0 — parallel wave sessions author the two bundles, per `docs/plans/build-0/`.
+* Build 0 plan complete: `docs/plans/waves.json` (6 waves, 9 sessions), `docs/plans/build-waves.vars.json`, 9 session plan files, Devin monitor prompt.
+* **No bundle code yet** — `databricks.yml`, `resources/`, `src/` are created in build 0 by Genie Code sessions.
+* **genie-build-waves deployed:** build job `309617019935041` (`uw-genie: Build Waves`), 55 tasks. Setup succeeded 2026-11-15.
+* **Devin monitor session running:** `691668f25c744b66a13d30d15c94f93b` (run A, level 4).
+* **Next:** Monitor Devin run A. After run A: run B (smoke/disabled waves), then run C (PR open + comment).
 
 ## Non-negotiable rules
 
@@ -58,7 +61,18 @@ D1 folder name updated in docs to the actual repo `underwritingGenie/` (original
 * **Artifact:** "Northwind Manufacturing — New Business Quote" (8 sections), backup in shared `genie_artifacts`.
 * **Permissions:** demo users group — USE CATALOG/SCHEMA, SELECT, EXECUTE on rating functions, READ VOLUME, CAN RUN on Genie Agent.
 
-Record actual IDs (job IDs, Genie space ID, warehouse ID) here once deployed.
+Record actual IDs (Genie space ID, warehouse ID, UC skill FQNs) here once build 0 converge waves complete.
+
+**genie-build-waves job IDs (deployed 2026-11-15, instance `-uw-genie`):**
+
+| Job | ID |
+|---|---|
+| `uw-genie: Build Waves` | `309617019935041` |
+| `uw-genie: Build Waves Setup` | `609015504722082` |
+| `uw-genie: Build Waves Smoke Test` | `946512050297997` |
+
+**Devin monitor session:** `691668f25c744b66a13d30d15c94f93b`  
+**Monitor skill:** `hls_fde_dev.dev_matthew_giglia_build_waves.genie_build_monitor`
 
 ## Reference numbers (base scenario)
 
@@ -88,3 +102,7 @@ S2 checks: Northwind paid_to_date sum 10,480,000.00; tier counts 168/76/59/117; 
 * Feature branches `mg-genie-<short-description>`; never commit to `main`.
 * Session logs in `docs/sessions/YYYY-MM-DD_<slug>.md` (Goal, Changes, Decisions, Verification, Observations, Follow-ups); update `INDEX.md` newest first.
 * No `hi_genie/` collaboration folder exists yet.
+* **SDK on serverless:** use `WorkspaceClient(host=_host, token=_token)` with credentials from `dbutils.notebook.entry_point`. Default `WorkspaceClient()` auth fails on serverless (no REPL context).
+* **CLI on serverless:** `databricks bundle deploy/run` is blocked. Use web terminal or trigger jobs via REST API (`w.jobs.run_now()`).
+* **waves.json converge sessions:** every converge session needs a non-empty `runtime_targets` list; every key in that list must also appear in the wave's `runtime_gate`. Catch both with the pre-flight cell in `Genie Code Session Starter - DO NOT EDIT.ipynb`.
+* **bundle run --var flags:** always pass the same `--var` flags to `bundle run` as to `bundle deploy`. Without `--var=instance_suffix=-uw-genie`, the CLI defaults to the global instance and may trigger a different project's setup job.
