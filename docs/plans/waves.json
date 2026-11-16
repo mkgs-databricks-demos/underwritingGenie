@@ -222,6 +222,7 @@
           "mode": "converge",
           "runtime_targets": ["genie_space"],
           "scope": "Publish the four skills from docs/demo-assets/skills/ to UC Skills at hls_fde_dev.uw_genie using the same method as the genie-build-waves setup job: w.ai_gateway.create_skill(parent=schemas/hls_fde_dev.uw_genie, skill_id=<name>, skill=Skill(comment=...)), w.files.upload(/Skills/hls_fde_dev/uw_genie/<name>/<relpath>, ...), w.ai_gateway.finalize_skill(name=skills/hls_fde_dev.uw_genie.<name>). Copy each SKILL.md to /Workspace/Users/matthew.giglia@databricks.com/.assistant/skills/<name>/SKILL.md. Replace <catalog>.<schema> placeholders with hls_fde_dev.uw_genie in all skill files. Do not deploy bundles.",
+          "context_notes": "The owner has explicitly authorized all UC Skills publish operations: w.ai_gateway.create_skill, w.files.upload to /Skills/hls_fde_dev/uw_genie/, w.ai_gateway.finalize_skill, and copying SKILL.md files to /Workspace/Users/matthew.giglia@databricks.com/.assistant/skills/. Publish all four skills (lg-intake-checklist, experience-rating-explainer, nb-quote-artifact, uw-morning-brief) to hls_fde_dev.uw_genie.",
           "owned_paths": ["docs/demo-assets/skills/**"],
           "max_attempts": 3,
           "timeout_minutes": 60,
