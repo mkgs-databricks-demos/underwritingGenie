@@ -16,6 +16,7 @@ The build 1 plan (`docs/plans/waves.json`, session plans) should be written from
 | [R1-08](R1-08_intake-checklist-fixes.md) | Intake checklist, broker package and demo-setup fixes from the Genie One test | Data, skills, demo script | Open (IC-01 is a design bug) | 2026-11-16 |
 | [R1-09](R1-09_governed-benefit-changes.md) | Governed path for benefit changes: relativity source, `add_plan_option` procedure, `rate_renewal` plan parameter | Rating, data, skills | Open (needs actuarial decision) | 2026-11-16 |
 | [R1-10](R1-10_benchmark-as-of-date.md) | Governed `demo_as_of_date` for "next N days" windows (benchmark ★7), lower bound on past renewals | Data, Genie space, skills | Open | 2026-11-16 |
+| [R1-11](R1-11_renewal-rates-and-morning-brief.md) | Renewal rate actions from `rate_renewal()` (1 of 59 match today) with calibration; renewal "why" from the governed build-up; Morning Brief keeps every blocked submission | Data, rating, skills | Open (design bug; calibration decision) | 2026-11-16 |
 
 ## Suggested grouping for build 1
 
