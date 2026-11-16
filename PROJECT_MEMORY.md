@@ -101,6 +101,8 @@ S2 checks: Northwind paid_to_date sum 10,480,000.00; tier counts 168/76/59/117; 
 * `docs/demo-assets/nb_quote_scenarios_expected.csv` — golden 18-scenario results
 * `docs/diagrams/render_diagrams.py` — Playwright + local mermaid.js renderer
 * `docs/requests/build-1/INDEX.md` — detailed build 1 requests (R1-01..R1-11); source for the build 1 plan
+* `docs/setup/uc-domain-and-pages/README.md` — manual setup of the governed domain tag (dev: `mkgs_underwriting`, values core / intake_quote / uw_finance), the Discover "Underwriting" domain and the UC glossary pages; done on dev 2026-11-16 (Genie Agent tagged manually)
+* `docs/prompts/genie-one-demo-briefing-artifact.md` — Genie One prompts for the Morning Brief routine and the customer-facing demo artifact
 
 ## Known gaps / open items
 
