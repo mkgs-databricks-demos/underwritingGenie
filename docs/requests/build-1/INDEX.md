@@ -14,11 +14,13 @@ The build 1 plan (`docs/plans/waves.json`, session plans) should be written from
 | [R1-06](R1-06_nb-quote-artifact-fixes.md) | `nb-quote-artifact` skill fixes from the Genie One test | Skills | Open | 2026-11-16 |
 | [R1-07](R1-07_experience-rating-explainer-fixes.md) | `experience-rating-explainer` fixes and L200-07 beat 2b prompt | Skills, demo script | Open | 2026-11-16 |
 | [R1-08](R1-08_intake-checklist-fixes.md) | Intake checklist, broker package and demo-setup fixes from the Genie One test | Data, skills, demo script | Open (IC-01 is a design bug) | 2026-11-16 |
+| [R1-09](R1-09_governed-benefit-changes.md) | Governed path for benefit changes: relativity source, `add_plan_option` procedure, `rate_renewal` plan parameter | Rating, data, skills | Open (needs actuarial decision) | 2026-11-16 |
 
 ## Suggested grouping for build 1
 
 * **Do together:** R1-01, R1-02 and R1-04. Switching to development mode renames the schema, which is the moment to remove every hard-coded name.
 * **Infra wave:** R1-03 (metric view job) and the data/rule parts of R1-05 (renewal comparison columns) and R1-08 (IC-01 rule, v1/v2 package text).
+* **Governed write paths:** R1-08 item 7 (intake findings / exceptions) and R1-09 item 2 (add plan option) should share one design (stored procedures with EXECUTE grants, approver and timestamp).
 * **Skills and docs wave:** R1-05 rule text, R1-06, R1-07, and the L200-07 / L300-05 / L400-02 parts of R1-08.
 
 ## Conventions

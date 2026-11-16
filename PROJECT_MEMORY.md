@@ -100,7 +100,7 @@ S2 checks: Northwind paid_to_date sum 10,480,000.00; tier counts 168/76/59/117; 
 * `docs/design/L300-01..05` — data model, rating spec, metric views/agent config, skills, broker docs
 * `docs/demo-assets/nb_quote_scenarios_expected.csv` — golden 18-scenario results
 * `docs/diagrams/render_diagrams.py` — Playwright + local mermaid.js renderer
-* `docs/requests/build-1/INDEX.md` — detailed build 1 requests (R1-01..R1-08); source for the build 1 plan
+* `docs/requests/build-1/INDEX.md` — detailed build 1 requests (R1-01..R1-09); source for the build 1 plan
 
 ## Known gaps / open items
 
@@ -117,6 +117,7 @@ S2 checks: Northwind paid_to_date sum 10,480,000.00; tier counts 168/76/59/117; 
   * R1-06: `nb-quote-artifact` fixes (plan_designs / plan names / benefits, section 4 wording, claimant excess, readiness from findings, KPI box 5, footnote, notes).
   * R1-07: `experience-rating-explainer` fixes (tier rates, trend years, loss-ratio framing, list completeness) and the L200-07 beat 2b drivers prompt.
   * R1-08: intake fixes; **IC-01 rule vs v2 data is a design bug** (v2 strictly fails the 3-month rule); v1 has 6 blocking findings; IC-10; Gmail draft scope; write `submission_findings`.
+  * R1-09: governed path for benefit changes (no relativity model today; unknown plans return 0 rows; `rate_renewal` has no plan parameter and defaults a missing relativity to 1.0); needs an actuarial decision.
 
 ## Conventions
 
