@@ -9,7 +9,7 @@
 
 **How to use:**
 
-1. **Prompt A:** in a new Genie One chat with the `uw-morning-brief` skill on, paste everything between the `===== A` lines. Confirm the routine was created and that its first run finished. Leave that chat or run open as Tab A.
+1. **Prompt A:** in a new Genie One chat with the `uw-morning-brief` skill on, first type `@` and select the agent **`[dev matthew_giglia] Underwriting Genie`** (the dev deployment's title includes this prefix), then paste everything between the `===== A` lines after it. Confirm the routine was created and that its first run finished. Leave that chat or run open as Tab A.
 2. **Prompt B:** in another new Genie One chat, paste everything between the `===== B` lines. Present from the resulting artifact.
 
 ===== A
@@ -18,7 +18,7 @@ Set up a recurring routine for me called **"Large Group Underwriting Morning Bri
 
 Each run should do exactly this (all data is synthetic for Lakeside Health Plan):
 
-Use the `uw-morning-brief` skill and the Underwriting Genie agent to produce today's Large Group Underwriting Morning Brief, in this order:
+Use the `uw-morning-brief` skill and the Genie agent titled **"[dev matthew_giglia] Underwriting Genie"** (space ID `01f1e1554179173991a4a487c2ae28ef`; the skill calls it "the Underwriting Genie agent") to produce today's Large Group Underwriting Morning Brief. If you cannot attach that agent, query the governed tables in `hls_fde_dev.uw_genie` directly (`renewal_pipeline`, `broker_submissions`, `groups`, `trend_monitor`). Produce it in this order:
 
 1. Renewals due in the next 90 and 120 days, and how many are pre-built.
 2. New business submissions waiting on brokers: count **every** submission with status BLOCKED in `broker_submissions`, including prospects that have no row in `groups` (show the group ID and broker when no group name exists); give the oldest one and the most common missing item; name Northwind Manufacturing if it is blocked.
@@ -26,7 +26,7 @@ Use the `uw-morning-brief` skill and the Underwriting Genie agent to produce tod
 4. Renewal quotes past their quote due date, with owners (summarize; no more than 6 rows).
 5. One trend flag from `trend_monitor`: actual vs assumed, in points.
 
-End with "Who owns what today" (no more than 5 bullets). Keep it to one screen, business language, no SQL, no dashboard links, no table longer than 6 rows. Do not explain why a renewal's rate action is what it is; list facts only. Take every number from the Underwriting Genie agent; do not calculate numbers in the text.
+End with "Who owns what today" (no more than 5 bullets). Keep it to one screen, business language, no SQL, no dashboard links, no table longer than 6 rows. Do not explain why a renewal's rate action is what it is; list facts only. Take every number from that agent or those tables; do not calculate numbers in the text.
 
 After creating the routine, tell me its name, schedule and when the first run finished, and show me that first brief.
 
@@ -202,7 +202,7 @@ Eyebrow "Roadmap". Show 4 cards (not shown live today): **Renewal workbench** (t
 
 ---
 
-Optional check: if the Underwriting Genie agent is available in this chat, confirm the Northwind base-scenario numbers on page 2 against `nb_quote_scenarios` (group `GRP-NW-001`, pooling point 250000, trend `base`, plan `requested`) and tell me in chat if any differ. Do not change the numbers in the artifact yourself.
+Optional check: if the Genie agent "[dev matthew_giglia] Underwriting Genie" is available in this chat, confirm the Northwind base-scenario numbers on page 2 against `nb_quote_scenarios` (group `GRP-NW-001`, pooling point 250000, trend `base`, plan `requested`) and tell me in chat if any differ. Do not change the numbers in the artifact yourself.
 
 ===== B
 
@@ -219,6 +219,7 @@ Optional check: if the Underwriting Genie agent is available in this chat, confi
 
 | Step | If this happens | Do this |
 | --- | --- | --- |
+| A | "Can't find the Underwriting Genie agent" | Type `@` and select `[dev matthew_giglia] Underwriting Genie`, then resend; the prompt also falls back to the `hls_fde_dev.uw_genie` tables (that is how all 2026-11-16 tests got their numbers) |
 | 1 | The routine could not be created from chat, or did not run | Run the brief on demand in Tab A with the step 1 prompt (tested) |
 | 1 | The brief shows only 1 blocked submission (Northwind) | Ask (tested): `How many broker submissions are blocked in total, including any whose group isn't in the groups table? List them with broker, received date and top missing item.` Expect 8; oldest SUB-2026-0118, Summit Ridge Benefits Group, Oct 8; Intake Desk 1 owns 6 |
 | 2 | Someone asks why a renewal needs more than 15% | Stay with facts on screen (loss history, large claimants, pre-built status); do not ask Genie "why" (R1-11) |
