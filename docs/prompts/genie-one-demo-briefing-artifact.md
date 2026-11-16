@@ -26,7 +26,7 @@ Use the `uw-morning-brief` skill and the Genie agent titled **"[dev matthew_gigl
 4. Renewal quotes past their quote due date, with owners (summarize; no more than 6 rows).
 5. One trend flag from `trend_monitor`: actual vs assumed, in points.
 
-End with "Who owns what today" (no more than 5 bullets). Keep it to one screen, business language, no SQL, no dashboard links, no table longer than 6 rows. Do not explain why a renewal's rate action is what it is; list facts only. Take every number from that agent or those tables; do not calculate numbers in the text.
+End with "Who owns what today" (no more than 5 bullets). Keep it to one screen, business language, no SQL, no dashboard links, no table longer than 6 rows. Do not explain why a renewal's rate action is what it is; list facts only. Take every number from that agent or those tables; do not calculate numbers in the text. Always show the group name from `groups` for every group that has one, everywhere in the brief (tables and bullets); show the group ID only for the prospects with no group name.
 
 After creating the routine, tell me its name, schedule and when the first run finished, and show me that first brief.
 
@@ -232,7 +232,7 @@ Optional check: if the Genie agent "[dev matthew_giglia] Underwriting Genie" is 
 
 **Why some wording differs from the tests:**
 
-* Prompt A **tested 2026-11-16 ~4:15 AM ET** (with the `@` agent mention): Genie One created the routine (Active, Mon-Fri 07:00 America/New_York) and the first run matched every governed count, including **8 blocked submissions** (undercount fixed), oldest GRP-NB-118 (39 days), Northwind named. Quirk: it showed `GRP-LV-002` instead of "Lakeview Logistics" for the largest large-claimant group; if you want names, edit the routine's instructions to add "Show group names wherever a name exists; use the ID only when no name exists."
+* Prompt A **tested 2026-11-16 ~4:15 AM ET** (with the `@` agent mention): Genie One created the routine (Active, Mon-Fri 07:00 America/New_York) and the first run matched every governed count, including **8 blocked submissions** (undercount fixed), oldest GRP-NB-118 (39 days), Northwind named. Quirk: the canvas showed group IDs instead of names for all 6 large-claimant groups (for example `GRP-BK-021` = Quarry Hill Credit Union, `GRP-LV-002` = Lakeview Logistics); every value was correct. Prompt A now includes the "always show the group name" sentence; for the routine created at 4:13 AM, add that sentence with **Edit** on the routine's Instructions.
 * Step 2 drops "and why" from the tested AC-1-4 prompt (interim guidance in R1-11). The list result is verified: benchmark ★7 = 3 as of 2026-11-16 (4 from Dec 1, R1-10).
 * Step 4's prompt wording is equivalent to, not identical to, the 2026-11-16 test (the package was uploaded and re-checked in the same chat); the result is verified.
 * Backup artifact: the purpose-built backup (L200-05) is not built yet; use the Northwind quote artifact from test chat `04e80baad93c48fc9dfcfe4f9ffda27a` (same base numbers, verified).
