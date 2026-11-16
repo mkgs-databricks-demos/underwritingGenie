@@ -100,7 +100,7 @@ S2 checks: Northwind paid_to_date sum 10,480,000.00; tier counts 168/76/59/117; 
 * `docs/design/L300-01..05` — data model, rating spec, metric views/agent config, skills, broker docs
 * `docs/demo-assets/nb_quote_scenarios_expected.csv` — golden 18-scenario results
 * `docs/diagrams/render_diagrams.py` — Playwright + local mermaid.js renderer
-* `docs/requests/build-1/INDEX.md` — detailed build 1 requests (R1-01..R1-12); source for the build 1 plan
+* `docs/requests/build-1/INDEX.md` — detailed build 1 requests (R1-01..R1-14); source for the build 1 plan
 * `docs/setup/uc-domain-and-pages/README.md` — manual setup of the governed domain tag (dev: `mkgs_underwriting`, values core / intake_quote / uw_finance), the Discover "Underwriting" domain and the UC glossary pages; done on dev 2026-11-16 (Genie Agent tagged manually)
 * `docs/prompts/genie-one-demo-briefing-artifact.md` — Genie One prompts for the Morning Brief routine and the customer-facing demo artifact
 
@@ -123,6 +123,8 @@ S2 checks: Northwind paid_to_date sum 10,480,000.00; tier counts 168/76/59/117; 
   * R1-10: governed `demo_as_of_date` for "next N days" windows (★7 changes with the run date today; example SQL has no lower bound).
   * R1-11: **renewal rate actions are not governed** (stored `renewal_pipeline` matches live `rate_renewal()` for 1 of 59; calibrate the generator, then populate from the function and re-record ★7/★8); renewal "why" from the governed build-up; Morning Brief must keep blocked submissions with no `groups` row (showed 1 of 8). Owner: fix in build 1, not now.
   * R1-12: UC wiki drafts for all 25 objects in `hls_fde_dev.uw_genie` (no public wiki API: paste per table or fill from Genie Code on the table page); re-apply after R1-01's schema rename and update renewal caveats after R1-11.
+  * R1-13: beats 3-4 (both pass on values): fix what-if causes, no reply-text dollar impacts, AE rationale template, one loss-ratio definition (Genie One follows the glossary page), `mv_renewal_book` count measure, chart + 85% MLR floor, number formatting.
+  * R1-14: beats 1-2 carryovers: Morning Brief routine rules into the skill (names, not IDs), backup artifact, measure AC-2b-10, domain tagging in setup, demo prompt file per target.
 
 ## UC glossary pages (domain `mkgs_underwriting`)
 

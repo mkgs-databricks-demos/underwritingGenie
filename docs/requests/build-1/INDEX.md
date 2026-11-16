@@ -18,6 +18,8 @@ The build 1 plan (`docs/plans/waves.json`, session plans) should be written from
 | [R1-10](R1-10_benchmark-as-of-date.md) | Governed `demo_as_of_date` for "next N days" windows (benchmark ★7), lower bound on past renewals | Data, Genie space, skills | Open | 2026-11-16 |
 | [R1-11](R1-11_renewal-rates-and-morning-brief.md) | Renewal rate actions from `rate_renewal()` (1 of 59 match today) with calibration; renewal "why" from the governed build-up; Morning Brief keeps every blocked submission | Data, rating, skills | Open (design bug; calibration decision) | 2026-11-16 |
 | [R1-12](R1-12_uc-table-wikis.md) | UC wiki drafts for all 25 objects in `hls_fde_dev.uw_genie` | Data, docs | Open (drafts ready) | 2026-11-16 |
+| [R1-13](R1-13_renewal-explainer-and-decisions-to-dollars.md) | Beats 3-4: what-if causes, dollar impacts as governed values, AE rationale template, one loss-ratio definition, `mv_renewal_book` count measure, chart + MLR floor, number formatting | Skills, metric views, Genie space, docs | Open | 2026-11-16 |
+| [R1-14](R1-14_demo-readiness-carryovers.md) | Beats 1-2 carryovers: Morning Brief routine rules into the skill, backup artifact, measure AC-2b-10, domain tagging in setup, demo prompt file per target | Skills, setup, docs | Open | 2026-11-16 |
 
 ## Suggested grouping for build 1
 
