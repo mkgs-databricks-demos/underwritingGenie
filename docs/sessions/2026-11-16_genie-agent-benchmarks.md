@@ -37,5 +37,6 @@ Run the 15 agent benchmarks (8 demo-critical) that build 0 defined but never ran
 
 ## Follow-ups
 
-* Run the runner once as a notebook (set `space_id`) to confirm the widget, display and assertion cells.
+* **Done (second run, same day):** the runner's cells were executed in order in a serverless notebook session with `space_id` set through the widget cell (as a job's base parameter would). All 15 completed (13-20 seconds each); output `values: 15/15 pass; names missing on: ['7']`; no assertion raised; the results table displayed 15 rows. The `%pip` / restart cells were skipped (SDK 0.122 already installed). In this run benchmark 1 was answered by a live `rate_new_business()` call with no answer text, and passed on the result rows.
+* The runner is stored as a workspace **file**, not a notebook, so it cannot yet run as a job notebook task. Re-import it as a notebook (source format, same path) before adding it as a post-deploy task (R1-15 item 3).
 * Still untested from build 0: AC-0-1 session instruction, AC-2b-10 timing (R1-14), Gmail draft-capable connector (R1-08), Reset Demo re-run.
