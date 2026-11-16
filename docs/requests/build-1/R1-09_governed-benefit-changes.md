@@ -17,15 +17,21 @@ A broker or customer asking for a different benefit design (for example a $1,500
 * **The live path works in Genie One.** The owner's test ran `SELECT * FROM hls_fde_dev.uw_genie.rate_new_business('GRP-NW-001', 250000, 'base', 'requested', 'AV-2027.1')` live and matched the stored scenario on all 20 fields. A new plan row would therefore be priced live with no function change.
 * **Renewals are worse.** `rate_renewal()` has no plan parameter at all: it always uses the group's `current` plan (`COALESCE(MAX(CASE WHEN plan_option = 'current' THEN relativity END), 1.0)`), so a benefit change at renewal cannot be priced, and a missing relativity silently becomes 1.0 instead of failing.
 
-## Expected Genie behavior today (to test)
+## Genie behavior today (tested)
 
 The `experience-rating-explainer` skill says: "If a requested lever value is not in the governed scenarios, say so and offer the nearest governed option." The correct answer to a new design is: not a governed plan; here are Choice PPO 1000 ($625.32) and Choice PPO 2500 ($589.02); an actuary needs to price the new design. The risk is Genie interpolating between 1.00 and 0.94, which is arithmetic in the reply (tier 3 of R1-05, never allowed).
 
-Test prompt (not yet run):
+Test prompt:
 
 > The client wants a $1,500 deductible version of the plan. What would that cost?
 
 Pass: no price for the new design; the governed alternatives are offered; it says a priced plan design is needed. Fail: any estimated rate or relativity for the new design.
+
+**Result (owner, 2026-11-16, chat `4fbc87afae364d29bdcda97dbaedecd2`): PASS.** Genie said the function only accepts plan options in `plan_designs`, that "the skill rules don't allow me to calculate or interpolate rates myself", and showed both governed plans (values verified: $625.32 / $589.02; EE $803.58 / $756.94; Family $2,290.21 / $2,157.28; +2.2% / -3.8%; relativity 1.00 / 0.94). Nits for the skill text:
+
+* It said the new relativity would be "somewhere between 0.94 and 1.00". Not a number, but an actuarial assumption (a new design may also change OOP max, coinsurance or copays). Skill rule: only an approved relativity source sets a relativity; give no ranges.
+* It offered to "ask the actuarial team", which it has no channel for. Offer to draft the request instead.
+* It said to "add a new row to `plan_designs`". Point to the governed `add_plan_option` path (requested change 2) once it exists, not a direct insert.
 
 ## Requested change
 
