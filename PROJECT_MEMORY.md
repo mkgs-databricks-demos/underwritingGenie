@@ -123,6 +123,20 @@ S2 checks: Northwind paid_to_date sum 10,480,000.00; tier counts 168/76/59/117; 
   * R1-10: governed `demo_as_of_date` for "next N days" windows (★7 changes with the run date today; example SQL has no lower bound).
   * R1-11: **renewal rate actions are not governed** (stored `renewal_pipeline` matches live `rate_renewal()` for 1 of 59; calibrate the generator, then populate from the function and re-record ★7/★8); renewal "why" from the governed build-up; Morning Brief must keep blocked submissions with no `groups` row (showed 1 of 8). Owner: fix in build 1, not now.
 
+## UC glossary pages (domain `mkgs_underwriting`)
+
+30 draft pages (all 30 verified) in domain `mkgs_underwriting` (domain ID `61901539-1958-4b2e-8266-070462db8291`), created 2026-11-16 from `docs/semantics/01..03` and reworked by hand into a general format. Session log with page IDs: `docs/sessions/2026-11-16_uc-glossary-pages.md`. Rules for creating or editing these pages:
+
+* **Format:** no "Synthetic demo content" banner. Sections: Definition · Business context · **Where to find it** · Related terms (ending "*Other pages in the Underwriting domain may also be related.*") · External references (where present). End with one line: *Linked data assets contain synthetic data.* No `---` rule (the editor shows it as literal text).
+* **General wording:** pages must be reusable beyond the demo. No "(demo: …)" values or storyline beats in descriptions, definitions or business context; workspace-specific values go in "Where to find it", labelled "in the linked data". Carrier-neutral, no real company names.
+* **Body claims:** only from `docs/semantics/` or verified against code (function/view definitions, metric view measure expressions, `information_schema`).
+* **External references:** keep existing "External references" sections and their Sources. Add new references only on request, as references only (no new body claims). Prefer ASB, SOA, American Academy of Actuaries, CMS, eCFR; skip links without confirmed citations.
+* **Related assets:** link only tables, views and metric views tagged `mkgs_underwriting` in `hls_fde_dev.uw_genie`, by full name. Never link UC functions (`rate_new_business`, `rate_renewal`): the resolver treats them as tables and 404s.
+* **Page links:** add manually from **Add related asset → Pages** (draft pages may not appear there yet). Never pass page names or IDs to the Genie Code page-form tool — three attempts linked unrelated dashboards. Keep existing page links, including "Inaccessible" ones (valid links that resolve over time). Genie Code updates omit related assets so page links are preserved.
+* **Renewal lineage:** `mv_renewal_book` is built on `renewal_book_scenarios` (`renewal_pipeline` joined to `persistency_curve` on `band_min`/`band_max`, uncapped and +12% capped). Never credit a renewal number to `rate_renewal()` unless it is read directly from `rate_renewal()` or `renewal_scenarios` (Lakeview Logistics only).
+* **Measure names:** use the metric view names as-is, e.g. "Projected Loss Ratio (Uncapped)", "Projected Loss Ratio (12% Cap)", "Premium at Risk (Uncapped)", "Premium at Risk (12% Cap)".
+* **Editing:** no API or bulk tool can edit or delete existing pages. Edit one page at a time: open it, click **Edit**, then have Genie Code update the form; save with **Save as draft**.
+
 ## Conventions
 
 * Feature branches `mg-genie-<short-description>`; never commit to `main`.
