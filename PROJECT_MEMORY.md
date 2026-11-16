@@ -125,7 +125,7 @@ S2 checks: Northwind paid_to_date sum 10,480,000.00; tier counts 168/76/59/117; 
   * R1-12: UC wiki drafts for all 25 objects in `hls_fde_dev.uw_genie` (no public wiki API: paste per table or fill from Genie Code on the table page); re-apply after R1-01's schema rename and update renewal caveats after R1-11.
   * R1-13: beats 3-4 (both pass on values): fix what-if causes, no reply-text dollar impacts, AE rationale template, one loss-ratio definition (Genie One follows the glossary page), `mv_renewal_book` count measure, chart + 85% MLR floor, number formatting.
   * R1-14: beats 1-2 carryovers: Morning Brief routine rules into the skill (names, not IDs), backup artifact, measure AC-2b-10, domain tagging in setup, demo prompt file per target.
-  * R1-15: agent benchmarks pass 15/15 on values (agent layer is sound); load the 15 with SQL answers into the Genie space, agent instruction to show group names, keep `tests/genie_benchmarks/run_genie_benchmarks.py` as the scripted check.
+  * R1-15: agent benchmarks pass 15/15 on values (agent layer is sound); load the 15 with SQL answers into the Genie space, agent instruction to show group names, keep the runner notebook `uw-genie-agent/tests/run_genie_benchmarks.ipynb` (deployed with the agent bundle) as the scripted check.
 
 ## UC glossary pages (domain `mkgs_underwriting`)
 

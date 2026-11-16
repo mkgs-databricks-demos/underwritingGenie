@@ -31,12 +31,12 @@ Run the 15 agent benchmarks (8 demo-critical) that build 0 defined but never ran
 
 ## Changes (files)
 
-* `tests/genie_benchmarks/run_genie_benchmarks.py` (new)
+* `tests/genie_benchmarks/run_genie_benchmarks.py` (new; later moved, see below)
 * `docs/requests/build-1/R1-15_genie-agent-benchmarks.md` (new), `docs/requests/build-1/INDEX.md`, `PROJECT_MEMORY.md`
 * `docs/sessions/2026-11-16_genie-agent-benchmarks.md`, `docs/sessions/INDEX.md`
 
 ## Follow-ups
 
 * **Done (second run, same day):** the runner's cells were executed in order in a serverless notebook session with `space_id` set through the widget cell (as a job's base parameter would). All 15 completed (13-20 seconds each); output `values: 15/15 pass; names missing on: ['7']`; no assertion raised; the results table displayed 15 rows. The `%pip` / restart cells were skipped (SDK 0.122 already installed). In this run benchmark 1 was answered by a live `rate_new_business()` call with no answer text, and passed on the result rows.
-* The runner is stored as a workspace **file**, not a notebook, so it cannot yet run as a job notebook task. Re-import it as a notebook (source format, same path) before adding it as a post-deploy task (R1-15 item 3).
+* **Moved (same day):** the runner was recreated as a **notebook** inside the agent bundle, `uw-genie-agent/tests/run_genie_benchmarks.ipynb` (5 cells, each verified identical to the original file's cells), so `bundle deploy` uploads it and it can be a job notebook task (R1-15 item 3). The repo-root `tests/` folder was moved to Trash. The Git folder saves new notebooks as `.ipynb`; a job task would use `tests/run_genie_benchmarks.ipynb`.
 * Still untested from build 0: AC-0-1 session instruction, AC-2b-10 timing (R1-14), Gmail draft-capable connector (R1-08), Reset Demo re-run.

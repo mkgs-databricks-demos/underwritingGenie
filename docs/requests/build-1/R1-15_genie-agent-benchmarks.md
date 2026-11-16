@@ -1,7 +1,7 @@
 # R1-15 Genie Agent benchmarks: load them into the space, and show group names
 
 **Status:** Open
-**Origin:** Genie Code run of the 15 L300-03 §5 benchmarks against the deployed dev agent, 2026-11-16 (Genie Conversation API, one new conversation per question; runner: `tests/genie_benchmarks/run_genie_benchmarks.py`)
+**Origin:** Genie Code run of the 15 L300-03 §5 benchmarks against the deployed dev agent, 2026-11-16 (Genie Conversation API, one new conversation per question; runner: `uw-genie-agent/tests/run_genie_benchmarks.ipynb`)
 **Related:** R1-04 (Genie space template), R1-10 (as-of date for benchmark 7), R1-11 (renewal values for benchmarks 7-8), R1-14 item 1 (names in the Morning Brief)
 
 ## Test result
@@ -39,14 +39,14 @@ Conclusion: the issues seen in Genie One beats 1-4 (undercount, wrong causes, re
 
 1. **Agent instruction:** "Whenever a result lists groups, show `groups.group_name` (left join on `group_id`, so prospects without a `groups` row are kept and shown by ID)." Add example SQL for benchmark 7 that joins names and uses the pinned as-of date (R1-10) with a lower bound.
 2. **Load the 15 benchmarks into the space definition** (the R1-04 template), each with its question and an exact SQL answer against the governed objects; benchmark 7 uses the as-of date. Re-run them from the Benchmarks tab (Chat mode) after each deploy, and record accuracy in the session log.
-3. **Keep the API runner** `tests/genie_benchmarks/run_genie_benchmarks.py` as the scripted check (it also reports the names check); optionally add it as a post-deploy task in `uw-genie-agent` that fails the deploy job when a values check fails.
+3. **Keep the API runner** `uw-genie-agent/tests/run_genie_benchmarks.ipynb` (a notebook in the agent bundle, deployed with it) as the scripted check (it also reports the names check); optionally add it as a post-deploy task in `uw-genie-agent` that fails the deploy job when a values check fails.
 4. **Make L300-03 §5 the single source** for questions and expected values, with exact values; have the runner and the space benchmarks read from it (or from one shared fixture file).
 5. Remove the clarifying follow-up behaviour for fully specified questions (instruction: "Do not ask a follow-up question when the question is fully specified").
 
 ## Files affected
 
 * `uw-genie-agent/underwriting_genie.geniespace.json` (or its R1-04 template): instructions, example SQL, benchmarks
-* `tests/genie_benchmarks/run_genie_benchmarks.py` (new, this request)
+* `uw-genie-agent/tests/run_genie_benchmarks.ipynb` (new, this request; a post-deploy task would reference it as `tests/run_genie_benchmarks.ipynb`)
 * `docs/design/L300-03_metric_views_and_genie_agent_config.md` §5 (exact values)
 * Optional: `uw-genie-agent/resources/*.job.yml` (post-deploy benchmark task)
 
