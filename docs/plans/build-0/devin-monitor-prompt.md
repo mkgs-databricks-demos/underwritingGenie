@@ -24,7 +24,7 @@ Follow the published UC skill `hls_fde_dev.dev_matthew_giglia_build_waves.genie_
 
 1. Run A is the build 0 run (skill section 8). Commit prefix `devin:` plus the skill's `Build-Run:` trailer.
 2. Allowed fix paths (bundle source only): `uw-genie-infra/**`, `uw-genie-agent/**`. Anything else (including `docs/plans/**` and `waves.json`) is a stop condition.
-3. Run B (after run A passes): Genie Code disables every runnable wave in the job and tells Devin. Devin starts the run, reports `BUILD_WARNING`, and decides on its own not to repair. Genie Code re-enables the waves afterwards (setup).
+3. No run B for this project (owner, 2026-11-16). The disabled-waves / `BUILD_WARNING` run came from the `devin-genie-build-waves-test` monitor prompt, where it was an acceptance test of the level 4 monitor; that test has already passed, and it is not part of the skill. This is a real project build, so do not disable waves or start a run to produce `BUILD_WARNING`.
 4. Run C (only once `GH_TOKEN` has Pull requests write): open the PR `mg-genie-uw-genie-build-1` -> `main` and post one review (event COMMENT). Never approve or merge.
-5. Runs B and C are the owner's explicit instruction (the only runs besides run A and its repairs). Report run A's final result (skill section 8, step 6) before run B.
+5. Run C is the owner's explicit instruction (the only run besides run A and its repairs). Report run A's final result (skill section 8, step 6) before run C.
 6. Build 0 is a combined build: waves 0-0 and 0-1 are `edit` (parallel, static gates), waves 0-2 through 0-4 are `converge` (sequential, runtime gates), wave 0-5 is `edit` (docs). Devin monitors all waves in one continuous run.
