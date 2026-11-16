@@ -1,20 +1,50 @@
-# Genie One prompt: Underwriting Genie demo briefing artifact
+# Genie One prompts: Morning Brief routine and Underwriting Genie demo artifact
 
-**Purpose:** paste the prompt below into a **new Genie One chat** to build a presenter-facing Genie Artifact that (1) explains the vision for underwriting, (2) previews what the audience will see and hear, (3) shows which Databricks products are used and how, with diagrams, and (4) gives the exact, copy-and-paste presenter script for the beats tested on 2026-11-16.
+**Purpose:** two Genie One prompts for the first live demo (2026-11-16):
 
-**Written:** 2026-11-16, before build 1. Every number and prompt in the script was verified in Genie One today (see `docs/sessions/2026-11-16_genie-one-test-*.md`). Beats not yet tested are listed as "not in today's script".
+* **Prompt A** sets up the Morning Brief as a scheduled Genie One routine and runs it once, so a completed brief is ready to open in beat 1.
+* **Prompt B** builds a **customer-facing** Genie Artifact in Databricks design language: the vision for underwriting, the demo story, the Databricks products and how they are used (with diagrams), and a live-demo walkthrough with the exact copy-and-paste prompts for the beats tested on 2026-11-16.
+
+**Written:** 2026-11-16, before build 1. Every number and prompt in the walkthrough was verified in Genie One today (see `docs/sessions/2026-11-16_genie-one-test-*.md`). Fallbacks and known quirks are in the presenter notes at the end of this file, not in the artifact.
 
 **How to use:**
 
-1. Open a new Genie One chat (not the live demo chat). The briefing artifact does not need any skill; the Underwriting Genie agent is optional (only for the optional number check at the end of the prompt).
-2. Copy everything between the two `=====` lines into the chat and send it.
-3. Keep the artifact open in its own tab during the demo; page 4 is the presenter script.
+1. **Prompt A:** in a new Genie One chat with the `uw-morning-brief` skill on, paste everything between the `===== A` lines. Confirm the routine was created and that its first run finished. Leave that chat or run open as Tab A.
+2. **Prompt B:** in another new Genie One chat, paste everything between the `===== B` lines. Present from the resulting artifact.
 
-=====
+===== A
 
-Build me an interactive Genie Artifact titled **"Underwriting Genie: Demo Briefing"** for a presenter. It is for me only (not for the audience). Use only the facts in this message; do not invent products, numbers or capabilities. All data is synthetic for a fictional carrier, "Lakeside Health Plan"; no real carrier, customer, broker or employee names. Show a small "SYNTHETIC DEMO DATA" badge in the header.
+Set up a recurring routine for me called **"Large Group Underwriting Morning Brief"** that runs every weekday at 7:00 AM my local time, then run it once now so I have a completed brief to open.
 
-**Design:** a clean, modern page with a navy header (#1B3139) and a red-orange accent (#FF3621), DM Sans font, plenty of white space. Use a tab or page selector with these 5 pages, in this order. Draw diagrams as inline SVG or HTML (boxes and arrows), not images. Make every prompt on page 4 a copy-able block with a "Copy" button.
+Each run should do exactly this (all data is synthetic for Lakeside Health Plan):
+
+Use the `uw-morning-brief` skill and the Underwriting Genie agent to produce today's Large Group Underwriting Morning Brief, in this order:
+
+1. Renewals due in the next 90 and 120 days, and how many are pre-built.
+2. New business submissions waiting on brokers: count **every** submission with status BLOCKED in `broker_submissions`, including prospects that have no row in `groups` (show the group ID and broker when no group name exists); give the oldest one and the most common missing item; name Northwind Manufacturing if it is blocked.
+3. Groups with a new large claimant above the pooling point, with renewal date, premium and owner.
+4. Renewal quotes past their quote due date, with owners (summarize; no more than 6 rows).
+5. One trend flag from `trend_monitor`: actual vs assumed, in points.
+
+End with "Who owns what today" (no more than 5 bullets). Keep it to one screen, business language, no SQL, no dashboard links, no table longer than 6 rows. Do not explain why a renewal's rate action is what it is; list facts only. Take every number from the Underwriting Genie agent; do not calculate numbers in the text.
+
+After creating the routine, tell me its name, schedule and when the first run finished, and show me that first brief.
+
+===== A
+
+===== B
+
+Build me an interactive Genie Artifact titled **"Underwriting Genie: The Future of Large Group Underwriting"**. I will present it to customers (underwriting, actuarial and finance leaders), so it must be customer-facing, polished and concise. Use only the facts in this message; do not invent products, numbers or capabilities. All data is synthetic for a fictional carrier, "Lakeside Health Plan"; no real carrier, customer, broker or employee names. Show a "SYNTHETIC DEMO DATA" badge in the header. No internal notes, test results, bug lists or troubleshooting text anywhere in the artifact.
+
+**Design: Databricks design language.**
+
+* **Principles:** distilled (clean, minimal, every element earns its place, generous whitespace), bold (confident headings, strong focal points, Lava accents), fresh (modern layout and spacing).
+* **Colors (use exactly):** hero / header band Navy 800 `#1B3139` with White text and a Lava 600 `#FF3621` accent line; page background Oat Light `#F9F7F4`; cards White `#FFFFFF` with 1px Gray Lines `#DCE0E2` borders and 12px radius; body text Navy 800, secondary text Gray Text `#5A6F77`; diagram nodes White or Oat Medium `#EEEDE9` with Navy 800 text and Navy 600 `#1B5162` arrows; highlight nodes and the active tab in Lava 600 (accent only, never large backgrounds). Status colors: success Green 600 `#00A972`, warning Yellow 600 `#FFAB00`, error Lava 700 `#BD2B26`, info / links Blue 600 `#2272B4`. Keep every text and background pair at WCAG AA contrast (4.5:1 for body text).
+* **Typography:** DM Sans only (Bold 700 headings, Medium 500 labels and tabs, Regular 400 body), DM Mono only for prompts and object names. Sizes on an 8px scale: hero 48-56px, page headings 32-40px, card headings 24px, body 16px, captions 12-14px; line height 1.2 for headings, 1.5 for body; left-aligned text.
+* **Components:** an eyebrow label (small, Medium, Gray Text) above each page heading; pill tabs for the 5 pages in the header band; KPI tiles (big Bold number, small caption); rounded pill badges; numbered step cards; buttons 8px radius (primary Lava 600 with White text).
+* Draw every diagram as inline SVG or HTML (rounded boxes and arrows), not images. On page 4, show every prompt in a DM Mono block on Oat Medium with a "Copy" button.
+
+Use a page selector with these 5 pages, in this order.
 
 ---
 
@@ -88,128 +118,122 @@ Add a "request flow" diagram for the quote beat: broker package (Volume / chat u
 
 ---
 
-**Page 4: Presenter script (copy-and-paste prompts)**
+**Page 4: Live demo walkthrough (copy-and-paste prompts)**
 
-At the top, a "Before you start (30 minutes before)" checklist:
+Eyebrow "See it live". Intro line: "Every step below runs live in Genie One against the governed, synthetic Lakeside Health Plan book." Show each step as a numbered card with: a short title, the persona, the exact prompt in a copy-able DM Mono block (or the action), and "What you'll see". Use exactly these steps and prompts:
 
-* Keep the Northwind quote artifact from the earlier test chat as the **backup** and open it in its own tab (Tab C). Because it exists, the live quote may be saved with a "v2" name; that is fine.
-* In Genie One, turn on the four skills: `lg-intake-checklist`, `experience-rating-explainer`, `nb-quote-artifact`, `uw-morning-brief`. Turn off unrelated skills.
-* Have `northwind_v1.zip` and `northwind_v2.zip` ready to drag in (downloaded from the `broker_packages` Volume).
-* Open the tabs: Tab A a new chat for the Morning Brief, Tab B a new empty chat titled "Underwriting Genie: live", Tab C the backup quote artifact.
-* Zoom 125%; notifications off.
+**Step 1: Morning Brief** (Underwriting leader)
 
-Then show each step as a card with: step number, tab, the exact prompt (copy-able), "What you should see" and "If it goes wrong". Use exactly these steps and prompts:
+Action: open the completed "Large Group Underwriting Morning Brief" routine run. To run it on demand instead, use the prompt: `Use uw-morning-brief to help me get started.`
 
-**Step 1 (Tab A): Morning Brief**
+What you'll see: 25 renewals in the next 90 days (12 pre-built) and 31 in 120 days (16 pre-built); broker submissions blocked and waiting on brokers, including Northwind Manufacturing; 6 groups with a new large claimant (Lakeview Logistics is the largest, $21.0M premium); 13 renewal quotes past due; Rx trend 13.4% vs 11.0% assumed (+2.4 points); "Who owns what today".
 
-Prompt: `Use uw-morning-brief to help me get started.`
-
-What you should see: 25 renewals in the next 90 days (12 pre-built) and 31 in 120 days (16 pre-built); 6 groups with a new large claimant (Lakeview Logistics is the largest, $21.0M premium); 13 quotes past due (all due Nov 2 for 1/1/2027 renewals); Rx trend 13.4% vs 11.0% assumed (+2.4 points); "Who owns what today".
-
-If it goes wrong: the brief may show only 1 blocked submission (Northwind). The governed answer is 8. Use Step 2.
-
-**Step 2 (Tab A): Blocked submissions**
-
-Prompt: `How many broker submissions are blocked in total, including any whose group isn't in the groups table? List them with broker, received date and top missing item.`
-
-What you should see: 8 blocked; the oldest is SUB-2026-0118 from Summit Ridge Benefits Group (Oct 8); the most common missing item is "24 months of claims experience" (3); Intake Desk 1 owns 6. Talk track: "Genie checks its own work when you ask."
-
-**Step 3 (Tab A, optional): Renewals above 15%**
+**Step 2: Renewals that need a big increase** (Underwriting leader)
 
 Prompt: `Which renewals in the next 90 days have a rate action above 15%?`
 
-What you should see: 3 groups: Yarrow Software +16.3%, Cedar Ridge Contractors +16.2%, Birchwood Wholesale +15.4%.
+What you'll see: 3 groups: Yarrow Software +16.3%, Cedar Ridge Contractors +16.2%, Birchwood Wholesale +15.4%.
 
-If it goes wrong: do not ask "why" for these renewals today (the renewal explanation is being reworked). If asked, stick to facts on screen: loss history, large claimants, pre-built status.
+**Step 3: Ready to quote?** (Account executive)
 
-**Step 4 (Tab B): Ready to quote?**
-
-Action: drag in `northwind_v1.zip`.
+Action: drop in the Northwind Manufacturing broker package (`northwind_v1.zip`).
 
 Prompt: `A broker just sent this new business request for Northwind Manufacturing. Is it ready to quote? If not, tell me exactly what's missing and draft a reply to the broker.`
 
-What you should see: BLOCKED with evidence from each file: only 15 of 24 months of claims; paid basis with no lag report; 22 of 420 employees missing a birth date or tier; 3 large claimants without status; the requested plan's benefit summary missing (only the PPO 2500 summary). It may also flag current rates as missing. No rate quoted. A polite reply to Jordan Ellis at Harbor Benefits Partners.
+What you'll see: BLOCKED, with evidence from each file: only 15 of 24 months of claims; paid basis with no lag report; 22 of 420 employees missing a birth date or tier; 3 large claimants without status; the requested plan's benefit summary missing. No rate quoted. A polite draft reply to the broker; nothing is sent.
 
-If it goes wrong: the Gmail connector may be read-only, so the draft appears in chat. Say: "In production this lands in Gmail as a draft; it never sends."
+**Step 4: The resubmission** (Underwriter)
 
-**Step 5 (Tab B): The resubmission**
-
-Action: drag in `northwind_v2.zip`.
+Action: drop in the resubmitted package (`northwind_v2.zip`).
 
 Prompt: `The broker sent the missing items. Re-check this package against the intake checklist before we rate it.`
 
-What you should see: every gap fixed except IC-01: 24 incurred months that end June 2026, about 5 months before the submission (the rule allows 3). Two warnings remain: no incumbent renewal exhibit (IC-08) and no statement of prior plan changes (IC-10). Genie offers two paths: ask the broker again, or an underwriting exception.
+What you'll see: every gap fixed except one rule: 24 months of experience that end about 5 months before the submission (the checklist allows 3). Two warnings remain. Genie offers two paths: ask the broker again, or an underwriting exception, because claims are paid through August and a lag report is attached.
 
-Talk track: "Genie follows the rule exactly. Claims are paid through August and a lag report is attached, so this is a judgment call for the underwriter."
-
-**Step 6 (Tab B): Approve the exception and build the quote**
+**Step 5: Approve the exception and build the quote** (Underwriter)
 
 Prompt: `Underwriting approves an exception for IC-01: claims are paid through Aug 2026 and a lag report is attached. Record the exception, then rate Northwind Manufacturing for a 1/1/2027 effective date and build me an interactive New Business Quote I can review and share with the account executive.`
 
-What you should see: status READY_WITH_WARNINGS; an artifact with 8 sections and the SYNTHETIC badge; readiness rows citing real file names, with IC-01 amber "Exception approved"; $625.32 PMPM, $1,459.07, +2.2%, credibility 0.7483, tier rates $803.58 / $1,607.16 / $1,486.63 / $2,290.21; a 10-step "How we got here" (AV-2027.1).
+What you'll see: Ready with warnings; an interactive quote with a readiness check that cites each file and marks the approved exception; $625.32 PMPM, $1,459.07 per employee per month, +2.2% vs current, credibility 0.7483; tier rates $803.58 / $1,607.16 / $1,486.63 / $2,290.21; a step-by-step "How we got here" (assumption version AV-2027.1).
 
-If it goes wrong: Genie One cannot write the exception to a table (read-only); it records it in the artifact instead. That is expected. If the artifact takes more than 3 minutes, switch to the backup artifact (Tab C); it has the same base numbers.
+**Step 6: Explore the levers** (Underwriter)
 
-**Step 7 (artifact): Levers**
+Action: in the quote, select pooling point $150K, then $500K, then the alternate plan, then reset to recommended.
 
-Action: click pooling point $150K, then $500K, then plan "Alternate", then reset to recommended.
+What you'll see: $150K = $613.84 PMPM, credibility 0.8854; $500K = $639.06, credibility 0.6261; alternate plan (Choice PPO 2500) at $250K = $589.02, -3.8% vs current.
 
-What you should see: $150K = $613.84 PMPM, credibility 0.8854, $875,000 pooled; $500K = $639.06, credibility 0.6261, $112,000 pooled; Alternate (Choice PPO 2500) at $250K = $589.02, -3.8% vs current.
-
-Talk track: "A lower pooling point moves more risk to the pool and gives Northwind's own experience more weight."
-
-**Step 8 (Tab B): Why is the quote above current?**
+**Step 7: Why is the quote above current?** (Account executive)
 
 Prompt: `Why is our quote 2.2% above the incumbent's current premium? Walk me through what drives it.`
 
-What you should see: completed claims $10,590,476.75; $540,000 pooled above $250K plus a $24.00 PMPM pooling charge; experience $427.32 PMPM; trend 9.0% for 2 years (factor 1.1881); projected $536.77; manual rate $590.45; credibility 0.7483; blended $550.28; 12% retention; $625.32.
+What you'll see: a plain-English walk through the governed build-up: completed claims $10,590,476.75; $540,000 pooled above $250K plus a $24.00 PMPM pooling charge; experience $427.32 PMPM; trend 9.0% for 2 years; projected $536.77; manual rate $590.45; credibility 0.7483; blended $550.28; 12% retention; $625.32.
 
-**Step 9 (Tab B): Broker proposal and PDF**
+**Step 8: Broker proposal** (Account executive -> Broker)
 
 Prompt: `Add a one-page broker proposal view to the artifact using the $250K pooling point and base trend, then I'll export it to PDF.`
 
-What you should see: requested and alternate rates side by side, "Rates subject to final underwriting", the SYNTHETIC badge, no internal detail. Export the PDF from the artifact.
+What you'll see: requested and alternate plan rates side by side, "Rates subject to final underwriting", the synthetic badge, no internal detail; a one-page PDF.
 
-**Step 10 (Tab B): Guardrail**
+**Step 9: Guardrail** (Account executive)
 
 Prompt: `Lower the Family rate to $2,200 so we beat the incumbent's renewal by more.`
 
-What you should see: a polite refusal; it explains the Family tier factor; it offers governed options that land at or below $2,200 (for example $2,157.28 on the alternate plan).
+What you'll see: a polite refusal, an explanation of the Family tier factor, and governed options that land at or below $2,200 (for example $2,157.28 on the alternate plan).
 
-**Step 11 (Tab B, optional): Live governed call**
+**Step 10 (optional): Governed math, live** (Actuary)
 
 Prompt: `Re-run the governed rating function live for Northwind at $250K / base / requested and confirm it matches the quote.`
 
-What you should see: a live `rate_new_business()` call; all fields match the quote (difference 0.00).
+What you'll see: a live call to the governed rating function; every field matches the quote.
 
-**Step 12 (Tab B, optional): New plan design**
+**Step 11 (optional): A new plan design** (Account executive)
 
 Prompt: `The client wants a $1,500 deductible version of the plan. What would that cost?`
 
-What you should see: no price for the new design ("not a governed plan"); it offers Choice PPO 1000 ($625.32) and Choice PPO 2500 ($589.02) and says an approved plan relativity is needed.
+What you'll see: no price for a plan that is not approved; Genie offers the two governed plans (Choice PPO 1000 $625.32, Choice PPO 2500 $589.02) and says an approved plan design is needed first.
 
-Close: "Intake in minutes, governed math explained in plain English, and the underwriter decides."
-
----
-
-**Page 5: Not in today's script, and backup**
-
-List these as "not yet tested, do not show today": the scheduled 7:00 AM Morning Brief task; the Lakeview Logistics renewal beat; the "decisions to dollars" CFO beat on the renewal metric view; asking "why" for renewal rate actions.
-
-List known quirks and the line to say: Morning Brief may undercount blocked submissions (use Step 2); the Gmail draft may appear in chat; the IC-01 exception is recorded in the artifact, not a table; the live quote may be saved with a "v2" name because the backup exists; Genie may show large numbers in scientific notation in comparison tables.
-
-Backup plan: if a step fails or the artifact takes more than 3 minutes, switch to the backup artifact (Tab C) and continue narrating from page 2.
+Close with a full-width Navy 800 band: "Intake in minutes. Governed math, explained in plain English. The underwriter decides."
 
 ---
 
-Optional check: if the Underwriting Genie agent is available in this chat, confirm the Northwind base-scenario numbers on page 2 against `nb_quote_scenarios` (group `GRP-NW-001`, pooling point 250000, trend `base`, plan `requested`) and tell me if any differ. Do not change the script numbers yourself.
+**Page 5: What's next**
 
-=====
+Eyebrow "Roadmap". Show 4 cards (not shown live today): **Renewal workbench** (the same governed method and interactive artifact for renewals, starting with Lakeview Logistics); **Decisions to dollars** (projected loss ratio vs the 88% target and premium at risk under a 12% rate cap, from the certified renewal metric view); **Governed write-back** (record intake findings, underwriting exceptions and approved plan designs with approver and timestamp); **Automated document intake** (broker packages processed in a pipeline as they arrive instead of uploaded to chat). End with a short "Why Databricks" strip: one governed platform for data, rating logic, metrics and AI; every answer traceable to Unity Catalog.
 
-## Notes for the presenter
+---
 
-* Backup artifact: the purpose-built backup (L200-05) is not built yet; use the Northwind quote artifact created in test chat `04e80baad93c48fc9dfcfe4f9ffda27a` (same base numbers, verified). Do not run "Reset Demo" right before the demo; it is not needed and has not been re-tested today.
-* Step 5's prompt wording is equivalent to, not identical to, the wording used in the 2026-11-16 test (the package was uploaded and re-checked in the same chat); the result is verified.
-* Step 3's prompt drops "and why" from the tested AC-1-4 prompt, following the interim guidance in R1-11. The list result is verified (benchmark ★7 = 3 as of 2026-11-16; it becomes 4 on Dec 1, see R1-10).
-* The "Morning Brief" numbers depend on the run date (R1-10). They are verified for 2026-11-16 and 2026-11-17 (identical counts on both dates); re-check if the demo moves to a later date.
+Optional check: if the Underwriting Genie agent is available in this chat, confirm the Northwind base-scenario numbers on page 2 against `nb_quote_scenarios` (group `GRP-NW-001`, pooling point 250000, trend `base`, plan `requested`) and tell me in chat if any differ. Do not change the numbers in the artifact yourself.
+
+===== B
+
+## Presenter notes (not in the artifact)
+
+**30 minutes before:**
+
+* Skills on in Genie One: `lg-intake-checklist`, `experience-rating-explainer`, `nb-quote-artifact`, `uw-morning-brief`; unrelated skills off.
+* Tabs: A = the Morning Brief routine run (Prompt A), B = a new empty chat "Underwriting Genie: live", C = the backup quote artifact, D = this demo artifact (Prompt B).
+* `northwind_v1.zip` and `northwind_v2.zip` downloaded from the `broker_packages` Volume and ready to drag.
+* Zoom 125%; notifications off. Do not run "Reset Demo"; it is not needed and was not re-tested today.
+
+**Fallbacks by walkthrough step:**
+
+| Step | If this happens | Do this |
+| --- | --- | --- |
+| 1 | The routine could not be created from chat, or did not run | Run the brief on demand in Tab A with the step 1 prompt (tested) |
+| 1 | The brief shows only 1 blocked submission (Northwind) | Ask (tested): `How many broker submissions are blocked in total, including any whose group isn't in the groups table? List them with broker, received date and top missing item.` Expect 8; oldest SUB-2026-0118, Summit Ridge Benefits Group, Oct 8; Intake Desk 1 owns 6 |
+| 2 | Someone asks why a renewal needs more than 15% | Stay with facts on screen (loss history, large claimants, pre-built status); do not ask Genie "why" (R1-11) |
+| 3 | The draft appears in chat instead of Gmail | Expected (Gmail connector is read-only). Say: "In production this lands in Gmail as a draft; it never sends." |
+| 3 | Genie also flags current rates as missing | Correct: v1 has no current premium (R1-08) |
+| 5 | Genie says it cannot write the exception to a table | Expected (read-only); it records the exception in the quote |
+| 5 | No artifact after 3 minutes | Switch to Tab C (backup, same base numbers) |
+| 5 | The quote is saved with a "v2" name | Fine; the backup quote already exists |
+| 10 | Large numbers appear in scientific notation | Cosmetic; read the headline values |
+
+**Why some wording differs from the tests:**
+
+* Prompt A is new and **untested**: it adds the blocked-submission and "no why" rules to the brief, which should prevent the 1-of-8 undercount. If it misbehaves, use the step 1 fallback.
+* Step 2 drops "and why" from the tested AC-1-4 prompt (interim guidance in R1-11). The list result is verified: benchmark ★7 = 3 as of 2026-11-16 (4 from Dec 1, R1-10).
+* Step 4's prompt wording is equivalent to, not identical to, the 2026-11-16 test (the package was uploaded and re-checked in the same chat); the result is verified.
+* Backup artifact: the purpose-built backup (L200-05) is not built yet; use the Northwind quote artifact from test chat `04e80baad93c48fc9dfcfe4f9ffda27a` (same base numbers, verified).
+* The Morning Brief numbers depend on the run date (R1-10). They are verified for 2026-11-16 and 2026-11-17 (identical counts); re-check if the demo moves later.
 * Source of every number: `docs/sessions/2026-11-16_genie-one-test-*.md`, `docs/requests/build-1/R1-06`, `R1-08`, `R1-09`, `R1-11`, and `docs/design/L300-03` §5.
