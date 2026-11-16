@@ -1,5 +1,6 @@
 # Session index (newest first)
 
+- 2026-11-16 — Agent benchmarks — [L300-03 §5 benchmarks via the Genie Conversation API: 15/15 on values, names missing on benchmark 7; runner saved](2026-11-16_genie-agent-benchmarks.md) (automated test; R1-15)
 - 2026-11-16 — Genie One test — [Beats 3 and 4: Lakeview renewal passes; decisions to dollars passes on values, AC-4-2 / AC-4-4 not met](2026-11-16_genie-one-test-beats-3-4.md) (manual test; R1-13, R1-14)
 - 2026-11-16 — [UC glossary pages: 30 draft pages in `mkgs_underwriting`, semantics source fixes](2026-11-16_uc-glossary-pages.md)
 - 2026-11-16 — Genie One test — [`uw-morning-brief`: sections 1/3/4/5 pass, blocked count 1 of 8, AC-1-4 drivers not governed, renewal rate mismatch found](2026-11-16_genie-one-test-uw-morning-brief.md) (manual test, partial pass; R1-11)
