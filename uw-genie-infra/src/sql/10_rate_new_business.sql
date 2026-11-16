@@ -66,8 +66,9 @@ clm AS (
     ON cf.assumption_version = p_assumption_version
    AND cf.lag_months = CAST(months_between(c.paid_through, c.incurred_month) AS INT)
   WHERE c.group_id = p_group_id),
-lc  AS (SELECT COALESCE(SUM(GREATEST(total_claims - p_pooling_point, 0)), 0) AS excess
-        FROM large_claimants WHERE group_id = p_group_id AND package_version = 'v2'),
+lc  AS (SELECT COALESCE(SUM(claimant_excess), 0) AS excess
+        FROM (SELECT GREATEST(total_claims - p_pooling_point, 0) AS claimant_excess
+              FROM large_claimants WHERE group_id = p_group_id AND package_version = 'v2')),
 pp  AS (SELECT * FROM pooling_points WHERE assumption_version = p_assumption_version AND pooling_point = p_pooling_point),
 tr  AS (SELECT * FROM trend_assumptions WHERE assumption_version = p_assumption_version AND trend_scenario = p_trend_scenario),
 trb AS (SELECT * FROM trend_assumptions WHERE assumption_version = p_assumption_version AND trend_scenario = 'base'),
@@ -228,9 +229,10 @@ clm AS (
    AND cf.lag_months = CAST(months_between(c.paid_through, c.incurred_month) AS INT)
   WHERE c.group_id = p_group_id),
 lcv AS (SELECT MAX(COALESCE(package_version, '')) AS v FROM large_claimants WHERE group_id = p_group_id),
-lc  AS (SELECT COALESCE(SUM(GREATEST(l.total_claims - p_pooling_point, 0)), 0) AS excess
-        FROM large_claimants l CROSS JOIN lcv
-        WHERE l.group_id = p_group_id AND COALESCE(l.package_version, '') = lcv.v),
+lc  AS (SELECT COALESCE(SUM(claimant_excess), 0) AS excess
+        FROM (SELECT GREATEST(l.total_claims - p_pooling_point, 0) AS claimant_excess
+              FROM large_claimants l CROSS JOIN lcv
+              WHERE l.group_id = p_group_id AND COALESCE(l.package_version, '') = lcv.v)),
 pp  AS (SELECT * FROM pooling_points WHERE assumption_version = p_assumption_version AND pooling_point = p_pooling_point),
 tr  AS (SELECT * FROM trend_assumptions WHERE assumption_version = p_assumption_version AND trend_scenario = p_trend_scenario),
 trb AS (SELECT * FROM trend_assumptions WHERE assumption_version = p_assumption_version AND trend_scenario = 'base'),
