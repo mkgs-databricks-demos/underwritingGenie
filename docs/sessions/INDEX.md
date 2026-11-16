@@ -1,5 +1,6 @@
 # Session index (newest first)
 
+- 2026-11-16 — [UC glossary pages: 30 draft pages in `mkgs_underwriting`, semantics source fixes](2026-11-16_uc-glossary-pages.md)
 - 2026-11-16 — Genie One test — [`uw-morning-brief`: sections 1/3/4/5 pass, blocked count 1 of 8, AC-1-4 drivers not governed, renewal rate mismatch found](2026-11-16_genie-one-test-uw-morning-brief.md) (manual test, partial pass; R1-11)
 - 2026-11-16 — Genie One test — [`lg-intake-checklist`: v1 BLOCKED (5/5 gaps), v2 BLOCKED on IC-01 design bug, exception path](2026-11-16_genie-one-test-lg-intake-checklist.md) (manual test, pass with design bug)
 - 2026-11-16 — Genie One test — [`experience-rating-explainer`: drivers, guardrail, live rating call, $1,500 deductible](2026-11-16_genie-one-test-experience-rating-explainer.md) (manual test, pass with nits)
