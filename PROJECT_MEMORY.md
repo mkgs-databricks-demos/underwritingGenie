@@ -11,14 +11,13 @@ Working memory for Genie Code sessions. Read this, then `docs/design/L100_demo_o
 * **License:** MIT (MKG Solutions Databricks Demos)
 * **Purpose:** 12–15 min carrier-neutral, synthetic-data demo of fully insured, experience-rated large group underwriting: intake completeness, a governed NB quote delivered as an interactive Genie Artifact, and decisions → financial outcomes.
 
-## Status (as of 2026-11-15)
+## Status (as of 2026-11-16)
 
 * Design package v1.0-draft complete (53 files under `docs/`); review gate passed; 7 diagrams rendered to SVG/HTML.
 * Build 0 plan complete: `docs/plans/waves.json` (6 waves, 9 sessions), `docs/plans/build-waves.vars.json`, 9 session plan files, Devin monitor prompt.
-* **No bundle code yet** — `databricks.yml`, `resources/`, `src/` are created in build 0 by Genie Code sessions.
-* **genie-build-waves deployed:** build job `309617019935041` (`uw-genie: Build Waves`), 55 tasks. Setup succeeded 2026-11-15.
-* **Devin monitor session running:** `691668f25c744b66a13d30d15c94f93b` (run A, level 4).
-* **Next:** Monitor Devin run A. After run A: run B (smoke/disabled waves), then run C (PR open + comment).
+* **Build 0 executed** on branch `mg-genie-uw-genie-build-1` (build job `309617019935041`): waves 0-0..0-4 passed (bundles authored, infra deployed + setup_demo green, Genie Agent deployed + 5/5 probes, 4 UC Skills published); wave 0-5 (docs) in build run `1025333002364111`. Architecture: `docs/architecture.md`.
+* **Devin monitor session:** `691668f25c744b66a13d30d15c94f93b` (level 4).
+* **Next (owner):** open the PR for `mg-genie-uw-genie-build-1`; check the 4 skills resolve in Genie One and grant them to demo users; record benchmarks; create the scheduled Morning Brief; build the NB quote artifact; demo target still needs a per-target space file for `hls_fde.uw_genie`.
 
 ## Non-negotiable rules
 
@@ -48,9 +47,9 @@ D1 folder name updated in docs to the actual repo `underwritingGenie/` (original
 
 ## Planned Databricks resources
 
-* **Bundle:** `uw-genie-infra` (schema, volume, warehouse, jobs, SQL, notebooks) and `uw-genie-agent` (Genie Agent via genie_spaces resource); targets `dev` (default, development mode), `demo` (production mode).
+* **Bundle:** `uw-genie-infra` (schema, volume, warehouse, jobs, SQL, notebooks) and `uw-genie-agent` (Genie Agent via genie_spaces resource); targets `dev` (default; development mode in uw-genie-agent only, infra uses `var.name_prefix` so the schema stays `hls_fde_dev.uw_genie`), `demo` (production mode). Deploy infra first, then agent; see `docs/architecture.md`.
 * **Schema + volume:** `${catalog}.${schema}`, volume `broker_packages`.
-* **Jobs:** `setup_demo` (create_tables → generate_synthetic_book → upload_packages → build_nb_quote_scenarios → run_tests, serverless < 10 min); `reset_demo` (< 5 min).
+* **Jobs:** `setup_demo` (create_tables → generate_synthetic_book → upload_packages → build_nb_quote_scenarios → create_metric_views → run_tests, serverless < 10 min); `reset_demo` (< 5 min).
 * **SQL:** `src/sql/00_ddl.sql` (18 objects), `10_rate_new_business.sql`, `20_metric_views.sql`, `90_tests.sql`.
 * **Notebooks:** `src/notebooks/generate_synthetic_book.py` (seed 2027), `upload_packages.py`, `reset_demo.py`.
 * **Functions:** `rate_new_business`, `rate_renewal` (Lakeview).
@@ -61,7 +60,19 @@ D1 folder name updated in docs to the actual repo `underwritingGenie/` (original
 * **Artifact:** "Northwind Manufacturing — New Business Quote" (8 sections), backup in shared `genie_artifacts`.
 * **Permissions:** demo users group — USE CATALOG/SCHEMA, SELECT, EXECUTE on rating functions, READ VOLUME, CAN RUN on Genie Agent.
 
-Record actual IDs (Genie space ID, warehouse ID, UC skill FQNs) here once build 0 converge waves complete.
+**Deployed resource IDs (target `dev`, build 0, verified 2026-11-16):**
+
+| Resource | Name | ID |
+|---|---|---|
+| UC schema | `hls_fde_dev.uw_genie` | `483077d3-6960-4824-9586-30917977d687` |
+| UC volume (managed) | `hls_fde_dev.uw_genie.broker_packages` | `bb8d00f0-34a0-4596-b78e-5e9a925a9829` |
+| SQL warehouse (serverless 2X-Small) | `[dev matthew_giglia] uw_genie_warehouse` | `dcca64ab7f26cea7` |
+| Job setup_demo | `[dev matthew_giglia] Underwriting Genie: Setup Demo` | `989657833792246` (good run `35433824231283`) |
+| Job reset_demo | `[dev matthew_giglia] Underwriting Genie: Reset Demo` | `1105533136205325` |
+| Genie Agent | `[dev matthew_giglia] Underwriting Genie` | `01f1e1554179173991a4a487c2ae28ef` |
+| UC Skills | `hls_fde_dev.uw_genie.{lg-intake-checklist, experience-rating-explainer, nb-quote-artifact, uw-morning-brief}` | finalized (session 08) |
+
+Functions `rate_new_business`, `rate_renewal` and metric views `mv_quote_outcomes`, `mv_renewal_book`, `mv_intake_ops` exist in `hls_fde_dev.uw_genie`. Genie space parent path: `underwritingGenie/.genie_agents` (gitignored).
 
 **genie-build-waves job IDs (deployed 2026-11-15, instance `-uw-genie`):**
 

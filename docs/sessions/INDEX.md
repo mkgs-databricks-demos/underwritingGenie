@@ -1,5 +1,6 @@
 # Session index (newest first)
 
+- 2026-11-16 — wave 0-5 / session 09 (run 1025333002364111) — [Update README and PROJECT_MEMORY with deployed IDs and architecture](2026-11-16_w0-5-09-docs.md) (edit, pass)
 - 2026-11-16 — wave 0-4 / session 08 (run 1025333002364111) — [Publish 4 UC Skills and copy to workspace skills folder](2026-11-16_w0-4-08-publish-skills.md) (converge, pass)
 - 2026-11-16 — wave 0-4 / session 08 (run 197898696497677) — [Publish 4 UC Skills and copy to workspace skills folder](2026-11-16_w0-4-08-publish-skills.md) (converge, blocked)
 - 2026-11-16 — wave 0-3 / session 07 (run 197898696497677) — [Deploy the Genie Agent, fix until tables, example SQL and probe questions resolve](2026-11-16_w0-3-07-deploy-agent.md) (converge, pass)
