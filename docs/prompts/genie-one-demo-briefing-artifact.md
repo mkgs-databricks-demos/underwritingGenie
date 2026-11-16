@@ -232,7 +232,7 @@ Optional check: if the Genie agent "[dev matthew_giglia] Underwriting Genie" is 
 
 **Why some wording differs from the tests:**
 
-* Prompt A is new and **untested**: it adds the blocked-submission and "no why" rules to the brief, which should prevent the 1-of-8 undercount. If it misbehaves, use the step 1 fallback.
+* Prompt A **tested 2026-11-16 ~4:15 AM ET** (with the `@` agent mention): Genie One created the routine (Active, Mon-Fri 07:00 America/New_York) and the first run matched every governed count, including **8 blocked submissions** (undercount fixed), oldest GRP-NB-118 (39 days), Northwind named. Quirk: it showed `GRP-LV-002` instead of "Lakeview Logistics" for the largest large-claimant group; if you want names, edit the routine's instructions to add "Show group names wherever a name exists; use the ID only when no name exists."
 * Step 2 drops "and why" from the tested AC-1-4 prompt (interim guidance in R1-11). The list result is verified: benchmark ★7 = 3 as of 2026-11-16 (4 from Dec 1, R1-10).
 * Step 4's prompt wording is equivalent to, not identical to, the 2026-11-16 test (the package was uploaded and re-checked in the same chat); the result is verified.
 * Backup artifact: the purpose-built backup (L200-05) is not built yet; use the Northwind quote artifact from test chat `04e80baad93c48fc9dfcfe4f9ffda27a` (same base numbers, verified).
