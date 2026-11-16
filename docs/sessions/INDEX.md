@@ -1,5 +1,6 @@
 # Session index (newest first)
 
+- 2026-11-16 — wave 0-3 / session 07 (run 197898696497677) — [Deploy the Genie Agent, fix until tables, example SQL and probe questions resolve](2026-11-16_w0-3-07-deploy-agent.md) (converge, pass)
 - 2026-11-16 — wave 0-2 / session 06 (run 197898696497677) — [Deploy infra: bundle deploy runs setup_demo, fix until all tables and tests pass](2026-11-15_w0-2-06-deploy-infra.md) (converge, pass)
 - 2026-11-15 — wave 0-2 / session 06 (run 121608533170151) — [Deploy infra: bundle deploy runs setup_demo, fix until all tables and tests pass](2026-11-15_w0-2-06-deploy-infra.md) (converge, blocked)
 - 2026-11-15 — wave 0-2 / session 06 (run 1060969502993602) — [Deploy infra: bundle deploy runs setup_demo, fix until all tables and tests pass](2026-11-15_w0-2-06-deploy-infra.md) (converge, blocked)
