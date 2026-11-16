@@ -1,5 +1,8 @@
 # Session index (newest first)
 
+- 2026-11-16 — Genie One test — [`lg-intake-checklist`: v1 BLOCKED (5/5 gaps), v2 BLOCKED on IC-01 design bug, exception path](2026-11-16_genie-one-test-lg-intake-checklist.md) (manual test, pass with design bug)
+- 2026-11-16 — Genie One test — [`experience-rating-explainer`: drivers, guardrail, live rating call, $1,500 deductible](2026-11-16_genie-one-test-experience-rating-explainer.md) (manual test, pass with nits)
+- 2026-11-16 — Genie One test — [`nb-quote-artifact`: build, levers, broker proposal + PDF, plan comparison, real intake flow](2026-11-16_genie-one-test-nb-quote-artifact.md) (manual test, pass)
 - 2026-11-16 — wave 0-5 / session 09 (run 1025333002364111) — [Update README and PROJECT_MEMORY with deployed IDs and architecture](2026-11-16_w0-5-09-docs.md) (edit, pass)
 - 2026-11-16 — wave 0-4 / session 08 (run 1025333002364111) — [Publish 4 UC Skills and copy to workspace skills folder](2026-11-16_w0-4-08-publish-skills.md) (converge, pass)
 - 2026-11-16 — wave 0-4 / session 08 (run 197898696497677) — [Publish 4 UC Skills and copy to workspace skills folder](2026-11-16_w0-4-08-publish-skills.md) (converge, blocked)
