@@ -82,13 +82,21 @@ ALTER VOLUME <CATALOG>.<SCHEMA>.broker_packages SET TAGS ('<TAG_KEY>' = 'core');
 
 The Genie Agent (Genie space) is not a Unity Catalog object, so the SQL above does not cover it. Open the deployed agent (`<AGENT_TITLE>`) and add the tag `<TAG_KEY>` = `core` in its settings. This was done manually on 2026-11-16 for the dev agent.
 
+Verify it with the workspace entity-tag API (entity type `geniespaces`):
+
+```
+GET /api/2.0/entity-tag-assignments/geniespaces/<SPACE_ID>/tags
+```
+
+Expected: one assignment with `tag_key` = `<TAG_KEY>` and `tag_value` = `core` (verified for dev space `01f1e1554179173991a4a487c2ae28ef` on 2026-11-16).
+
 Note: in development mode the agent title has a `[dev <user>]` prefix. Genie One finds the agent by title, so use the exact `<AGENT_TITLE>` (or `@`-mention it) in prompts.
 
 ## Step 5: Create the domain in Discover
 
 In **Discover**, create a domain:
 
-* **Name:** Underwriting
+* **Name:** Underwriting, or a unique name if the account already has an "Underwriting" domain (the `fevm-hls-fde` account does; the dev setup on 2026-11-16 used the name `mkgs_underwriting`, matching the tag key)
 * **Governed tag:** `<TAG_KEY>` (all 3 values)
 * **Description:** "Large group underwriting for Lakeside Health Plan (synthetic demo): intake, experience rating, quotes and renewal finance."
 
@@ -126,6 +134,18 @@ If your copy of the repo lives elsewhere, change the three source paths.
 * The governed tag page (**Catalog Explorer -> Governed tags -> `<TAG_KEY>`**) lists the tagged assets and the 3 values.
 * The Underwriting domain shows the assets, the Genie Agent and the glossary pages.
 * Each page links to objects that exist; review the list of skipped links the assistant reports.
+* Read every page before showing it. The page assistant writes its own wording and may add external references (for example ASOP links); check facts against the governed data (see the 2026-11-16 results below).
+
+### Verification results (dev, 2026-11-16)
+
+| Check | Result |
+| --- | --- |
+| Governed tag `mkgs_underwriting` (3 values, propagation default `core`) | Pass |
+| UC assets tagged | Pass: 25 tables / views (18 `core`, 2 `intake_quote`, 5 `uw_finance`), schema `core`, volume `core` |
+| Genie Agent tag | Pass: `mkgs_underwriting` = `core` on space `01f1e1554179173991a4a487c2ae28ef` |
+| Pages found by search in domain `mkgs_underwriting` | 10 of 13: Credibility (Z), Pooling Point, Pooling Charge, Manual Rate, Completion Factor, Submission Completeness, Blocking Item, Projected Loss Ratio, Target Loss Ratio, Premium at Risk. Not found yet: Incurred Claims, Census, Tier Rate |
+| Credibility (Z) page | Pass: formula `Z = min(1, sqrt(member months / full_credibility_mm))` with `pooling_points.full_credibility_mm` 30,000 / 42,000 / 60,000 reproduces Northwind's 0.8854 / 0.7483 / 0.6261 exactly |
+| Projected Loss Ratio page | **Fix needed:** says the renewal measures in `mv_renewal_book` come "from `rate_renewal()`"; they come from `renewal_pipeline`, which does not match `rate_renewal()` yet (R1-11). Replace with "(from the renewal pipeline; governed by `rate_renewal()` after build 1)" or drop the source note |
 
 ## Known issues
 
