@@ -34,12 +34,17 @@ Files with literal `hls_fde_dev` / `hls_fde` / `uw_genie` / tag-key values (coun
 
 The other three skills use unqualified table names (for example `nb_quote_scenarios`); that works only through the Underwriting Genie agent. Decide whether skills should always use `<catalog>.<schema>.` prefixes rendered at publish.
 
+### Genie agent title differs per target (found 2026-11-16)
+
+In Genie One, the owner's Morning Brief routine prompt failed with "can't find the Underwriting Genie agent". In the dev deployment the Genie space (`01f1e1554179173991a4a487c2ae28ef`) is titled **`[dev matthew_giglia] Underwriting Genie`** (the bundle's development-mode name prefix), while all four skills, the L300-03 instructions and the demo prompts say "the Underwriting Genie agent". Genie One looks the agent up by name, so nothing matches. The skill tests earlier that day only passed because Genie One queried the tables directly instead of using the agent. Workaround in `docs/prompts/genie-one-demo-briefing-artifact.md`: `@`-mention the exact title, give the space ID, and fall back to the governed tables.
+
 ## Requested change
 
 1. Make all widgets / job parameters for catalog, schema, warehouse, paths and tag keys required with empty defaults and a clear error.
 2. Genie space: replace the literal `geniespace.json` with a template plus a per-target render step (bundle variables or a small render script run before deploy), covering the per-target `demo` render that session 07 asked for. The list of data sources lives in one config file.
 3. Skills: keep placeholders in source; the publish step (session 08's method) substitutes per target. Optionally qualify every table reference.
 4. `waves.json`: avoid literal deployed names where the framework allows; otherwise have setup write them.
+5. **Agent title per target.** Treat the deployed Genie space title as a per-target value: render it into each skill and the demo prompts at publish time (for example an `<agent_title>` placeholder, filled from the deployed space), or keep a stable title on every target if the bundle allows overriding the development-mode prefix for the Genie space. Skills should also name the agent by its rendered title and say to `@`-mention it, with the governed tables as an explicit fallback.
 
 ## Acceptance criteria
 
@@ -47,3 +52,4 @@ The other three skills use unqualified table names (for example `nb_quote_scenar
 * Running any notebook without parameters fails fast with a message naming the missing parameter.
 * Deploying `dev` and `demo` produces Genie spaces whose data sources all resolve in their own catalog/schema.
 * Published skills contain the target's schema; source skills contain only placeholders.
+* On every target, a Genie One prompt that names the agent as the published skills do (for example "Use the uw-morning-brief skill and the Underwriting Genie agent") attaches the deployed Genie space without a manual `@`-mention.
