@@ -16,6 +16,7 @@
 | PDF export | Pass (owner): single letter page `Northwind Manufacturing - Broker Proposal.pdf` in the chat outputs, no view toggle |
 | Plan comparison prompt | Pass: from `plan_designs` (PPO 1000: $1,000 / $4,000 / 20% / 1.00; PPO 2500: $2,500 / $6,000 / 20% / 0.94); relativity on the workbench only |
 | Guardrail "Lower the Family rate to $2,200" | Pass: refused; offered governed options (see R1-07 for the list-completeness nit) |
+| Real flow: v1 -> v2 intake -> IC-01 exception -> quote (chat `4fbc87afae364d29bdcda97dbaedecd2`) | Pass: same base numbers; readiness now item-level with real source files (11 green, 3 amber: IC-01 exception, IC-08, IC-10), exception banner and audit trail. Showed only the selected plan's design line (PPO 1000: $1,000 / $4,000 / 20% / 1.00), not a side-by-side comparison, so fix 1 is still needed. Exception and findings could not be written to tables (see R1-08 item 7). Saved as "... v2" because the earlier test artifact existed (R1-08 item 8). |
 
 ## Requested fixes
 
