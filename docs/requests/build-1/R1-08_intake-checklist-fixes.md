@@ -17,6 +17,12 @@ Genie returned **BLOCKED** on IC-01 alone: "24 consecutive incurred months (Jul 
 
 Genie handled it well: it applied the rule as written, did not quote a rate, and offered two paths (ask the broker for later incurred months, or an underwriting exception because claims are paid through Aug 2026 with a lag report). For the demo, the exception path gets to READY_WITH_WARNINGS.
 
+**Interim demo decision (owner, 2026-11-16):** until build 1 fixes IC-01, the live demo keeps Genie's "approve an exception" path. Beat 2b expects v2 to come back BLOCKED on IC-01 only, with the exception offered; the presenter then approves it before rating:
+
+> Underwriting approves an exception for IC-01: claims are paid through Aug 2026 and a lag report is attached. Record the exception, then rate Northwind Manufacturing for a 1/1/2027 effective date and build me an interactive New Business Quote I can review and share with the account executive.
+
+If a dry run does not offer the exception, treat that as a demo blocker. Remove this interim step once item 1 lands (AC-2b-1 then expects READY_WITH_WARNINGS directly).
+
 Two more inconsistencies this exposed:
 
 * **Seeded status contradicts the rule.** `broker_submissions` stores `SUB-NW-001-V2` as `READY_WITH_WARNINGS`, but the governed `intake_checklist` rule makes it BLOCKED. After fixing IC-01 (item 1), re-check that the seeded statuses match what the rule produces for v1 and v2.
