@@ -17,7 +17,7 @@ Working memory for Genie Code sessions. Read this, then `docs/design/L100_demo_o
 * Build 0 plan complete: `docs/plans/waves.json` (6 waves, 9 sessions), `docs/plans/build-waves.vars.json`, 9 session plan files, Devin monitor prompt.
 * **Build 0 executed** on branch `mg-genie-uw-genie-build-1` (build job `309617019935041`): waves 0-0..0-4 passed (bundles authored, infra deployed + setup_demo green, Genie Agent deployed + 5/5 probes, 4 UC Skills published); wave 0-5 (docs) in build run `1025333002364111`. Architecture: `docs/architecture.md`.
 * **Devin monitor session:** `691668f25c744b66a13d30d15c94f93b` (level 4).
-* **Next (owner):** open the PR for `mg-genie-uw-genie-build-1`; check the 4 skills resolve in Genie One and grant them to demo users; record benchmarks; create the scheduled Morning Brief; build the NB quote artifact; demo target still needs a per-target space file for `hls_fde.uw_genie`.
+* **Next (owner):** merge PR #3 (`mg-genie-uw-genie-build-1` -> `main`, opened by Devin 2026-11-16); check the 4 skills resolve in Genie One (dev: the owner is the only demo user and owns every object, so no grants are needed; the demo-users group grants apply to the `demo` target only); record benchmarks; create the scheduled Morning Brief; build the NB quote artifact; demo target still needs a per-target space file for `hls_fde.uw_genie`.
 
 ## Non-negotiable rules
 
