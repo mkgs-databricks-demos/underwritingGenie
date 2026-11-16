@@ -41,3 +41,40 @@ No bundle was deployed (scope says "Do not deploy bundles"). The `genie_space` r
 ## Assets created
 
 * `/Workspace/Users/matthew.giglia@databricks.com/.assistant/skills/{lg-intake-checklist,experience-rating-explainer,nb-quote-artifact,uw-morning-brief}/SKILL.md`
+
+---
+
+# Run 1025333002364111 — PASS
+
+**Run:** 1025333002364111 · **Branch:** mg-genie-uw-genie-build-1 (HEAD 93f101e) · **Date:** 2026-11-16 · **Attempts:** 1 of 3 (this run)
+
+## Result
+
+PASS. The owner's commit 93f101e added `context_notes` to session 08 that authorize the UC Skills publish, so the blocker from run 197898696497677 is cleared.
+
+## What was done
+
+1. Re-checked the inherited work: the placeholder fix in `lg-intake-checklist/SKILL.md` is now committed (93f101e), a grep finds no `<catalog>` / `<schema>` in any skill file, and the 4 workspace skills-folder copies are still byte-identical to their sources. No file edits in this run.
+2. Published to UC with SDK 0.166.0. `list_skills(parent="schemas/hls_fde_dev.uw_genie")` was `[]` before. For each of the 4 skills: `create_skill(parent=..., skill_id=<name>, skill=Skill(comment=<frontmatter description>))`, `files.upload(/Skills/hls_fde_dev/uw_genie/<name>/SKILL.md, overwrite=True)` (each skill has one file), and `finalize_skill(name=skills/hls_fde_dev.uw_genie.<name>)`. All calls succeeded. A 403 note from the Files API while it resolved its endpoint was harmless: it fell back to the default endpoints.
+3. Checked the result a different way: `list_skills` now returns the 4 skills, `get_skill` returns each one with the expected comment, and `files.download` of each `/Skills/.../SKILL.md` is byte-identical to its source (1809 / 1548 / 2534 / 812 bytes).
+
+## Checks
+
+| Check | Result |
+| --- | --- |
+| No `<catalog>.<schema>` placeholders in skill files | pass |
+| 4 workspace skills-folder copies byte-identical | pass |
+| 4 UC skills created and finalized in hls_fde_dev.uw_genie (list + get + content download) | pass |
+| uw-genie-infra `bundle validate --strict --target dev` | pass |
+| uw-genie-agent `bundle validate --strict --target dev` | pass |
+| Skills invocable by name in Genie One | skipped (Genie Code cannot read UC Skills yet, so this needs a manual check in Genie One) |
+
+No bundle was deployed (the scope says "Do not deploy bundles"). The `genie_space` runtime target has not changed since session 07. The gate checks it with `require_fresh_deployment: false`.
+
+## Requests
+
+* owner (normal): check in Genie One that `/lg-intake-checklist`, `/experience-rating-explainer`, `/nb-quote-artifact` and `/uw-morning-brief` resolve from `hls_fde_dev.uw_genie`. Grant USE CATALOG / USE SCHEMA / READ_VOLUME on the skills to any demo users other than the owner.
+
+## Assets created
+
+* UC Skills `hls_fde_dev.uw_genie.{lg-intake-checklist,experience-rating-explainer,nb-quote-artifact,uw-morning-brief}` (finalized)
