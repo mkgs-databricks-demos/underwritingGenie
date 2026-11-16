@@ -107,6 +107,12 @@ S2 checks: Northwind paid_to_date sum 10,480,000.00; tier counts 168/76/59/117; 
 * Artifact form controls are undocumented; fallback comparison panel defined.
 * ★7/★8 benchmark expected values to be recorded after S5.
 * Optional: internal field brief HTML rendering.
+* **Post-build 0 (owner request, 2026-11-16): switch `dev` back to real development mode.** Build 0 removed `mode: development` from the `uw-genie-infra` `dev` target (`uw-genie-agent` dev is already in development mode; it owns no schema) to keep the schema name `hls_fde_dev.uw_genie` (development mode always prefixes UC schemas with `dev_<user>_`, and an empty `presets.name_prefix` is ignored). Once build 0 is complete, put `mode: development` back on infra `dev`, accept the prefixed schema (`hls_fde_dev.dev_matthew_giglia_uw_genie`, as in scAuditor), and drop the `var.name_prefix` workaround. Everything that hard-codes `hls_fde_dev.uw_genie` must follow the deployed name:
+  * `uw-genie-agent/databricks.yml` `catalog`/`schema` variables per target (cross-bundle, so they can't use `${resources...}`; they must match infra values per target).
+  * The Genie space `serialized_space` table identifiers in `uw-genie-agent/resources/genie_spaces/underwriting_genie.genie_space.yml` (render them from variables, which also covers the per-target `demo` render that session 07 asked for).
+  * The `waves.json` runtime targets, session scopes and `context_notes`, plus `docs/demo-assets/skills/lg-intake-checklist/SKILL.md` and the published UC Skills location.
+  * Add `lifecycle.prevent_destroy: true` to the schema resource while doing this.
+* **Post-build 0 (owner request): `${resources...}` references everywhere.** All catalog/schema references in resource definitions must use `${resources.schemas.uw_genie.catalog_name}` / `${resources.schemas.uw_genie.name}`; raw `${var.catalog}`/`${var.schema}` belongs only in the schema resource itself. Status on 2026-11-16: `uw-genie-infra` already follows this (jobs and volume use `${resources.schemas.uw_genie.*}`); `uw-genie-agent` has no schema resource and uses `var.catalog`/`var.schema` plus hard-coded identifiers. Recheck both bundles when switching to development mode.
 
 ## Conventions
 
