@@ -26,12 +26,12 @@ Deploy `uw-genie-agent` to dev so the Genie Agent "Underwriting Genie" is create
 2. Run `databricks bundle deploy --target dev` in `uw-genie-agent/`.
 3. Read back the Genie Agent (warehouse, data sources, column configs).
 4. EXPLAIN every example SQL on the agent's warehouse — all must pass.
-5. Ask the five probe questions (benchmarks 1-5):
+5. Ask the five probe questions (L300-03 §5 benchmarks ★1, ★2, ★3, ★6, ★5; expected values match L300-03 §5 and `docs/demo-assets/nb_quote_scenarios_expected.csv`):
    - "What is the Family rate for Northwind Manufacturing at $250K pooling, base trend, requested plan?" (expected: $2,290.21)
-   - "What is Northwind credibility at $150K, $250K, and $500K pooling points?" (expected: 0.6066, 0.7483, 0.8773)
+   - "What is Northwind credibility at $150K, $250K, and $500K pooling points?" (expected: 0.8854, 0.7483, 0.6261; credibility falls as the pooling point rises)
    - "What is Northwind premium change vs current, base case?" (expected: +2.2%)
    - "Is Northwind v1 submission ready to quote?" (expected: No, BLOCKED)
-   - "How much was removed by pooling at $250K for Northwind?" (expected: $3,681.20)
+   - "How much was removed by pooling at $250K for Northwind?" (expected: $540,000 excess pooled, from 4 v2 large claimants above $250K)
 6. If any check fails, fix the genie bundle within owned_paths, re-validate, and re-deploy.
 7. Record the Genie Agent space ID in the session summary.
 
