@@ -1,6 +1,14 @@
 {
   "version": 1,
   "description": "Underwriting Genie: two Declarative Automation Bundles in one repo. uw-genie-infra: UC schema (hls_fde_dev.uw_genie), volume broker_packages, 2X-Small serverless SQL warehouse, SQL files (DDL, rating function, metric views, tests), notebooks (generate_synthetic_book, upload_packages, reset_demo), jobs setup_demo and reset_demo. uw-genie-agent: the Genie Agent over all tables, metric views and trusted assets (uses the infra schema and warehouse through variables, deploys nothing it does not own). Build 0 (waves 0-0..0-5): two parallel edit waves (infra+agent bundles, then SQL+notebooks), three converge waves (deploy infra + run setup_demo, deploy agent + verify, publish UC skills), one docs wave. Devin monitors at level 4.",
+  "authorization_policy": {
+    "project_schema": "hls_fde_dev.uw_genie",
+    "monitor_may_authorize": [
+      {"action": "jobs.run_now", "scope": "own_runtime_targets"},
+      {"action": "workspace.write", "scope": "owned_paths"},
+      {"action": "uc_skills.publish", "scope": "project_schema"}
+    ]
+  },
   "workflow": {"mode": "git"},
   "repo_root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie",
   "bundle_root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie",
@@ -226,7 +234,11 @@
           "owned_paths": ["docs/demo-assets/skills/**"],
           "max_attempts": 3,
           "timeout_minutes": 60,
-          "depends_on": ["06"]
+          "depends_on": ["06"],
+          "authorizations": [
+            {"action": "uc_skills.publish", "target": "hls_fde_dev.uw_genie", "reason": "publish 4 demo skills (lg-intake-checklist, experience-rating-explainer, nb-quote-artifact, uw-morning-brief)"},
+            {"action": "workspace.write", "target": "/Workspace/Users/matthew.giglia@databricks.com/.assistant/skills/**", "reason": "copy SKILL.md files to workspace skills folder"}
+          ]
         }
       ]
     },
