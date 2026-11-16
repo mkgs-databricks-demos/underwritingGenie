@@ -1,10 +1,28 @@
 # R1-08 Intake checklist, broker package and demo-setup fixes
 
-**Status:** Open (item 1 is a design bug; fix before relying on beat 2b)
-**Origin:** Owner's Genie One test of `lg-intake-checklist` with the `northwind_v1` package (zip), 2026-11-16 (chat `4fbc87afae364d29bdcda97dbaedecd2`)
+**Status:** Open. Item 1 is a design bug, **confirmed by the v2 test**: beat 2b (AC-2b-1) cannot pass until it is fixed.
+**Origin:** Owner's Genie One test of `lg-intake-checklist` with the `northwind_v1` package (zip), then `northwind_v2` in the same chat, 2026-11-16 (chat `4fbc87afae364d29bdcda97dbaedecd2`)
 **Related:** R1-06 (artifact readiness reads the findings)
 
-## Test result
+## v2 test result (confirms item 1)
+
+Genie returned **BLOCKED** on IC-01 alone: "24 consecutive incurred months (Jul 2024 - Jun 2026), but the last incurred month is about 5 months before submission (limit is 3)". Every other blocking item moved to PRESENT. Evidence verified against `northwind_v2/`:
+
+* IC-01: `claims_experience_incurred.csv` has 24 rows, Jul 2024 - Jun 2026, all `basis = INCURRED`, `paid_through = 2026-08-01`.
+* IC-02: present; `lag_report.csv` shows Jan - Jun 2026 at 99.4% down to 89.3% paid.
+* IC-03: 420 of 420 employees complete (EE 168 / ES 76 / EC 59 / EF 117); 560 dependents.
+* IC-04: LC-01 RESOLVED, LC-02 ACTIVE, LC-03 ONGOING, LC-04 RESOLVED.
+* IC-05: both benefit summaries. IC-07: $612.00 PMPM in the email.
+* Warnings open: IC-08 (renewal +14.2% reported, no exhibit) and IC-10 (prior plan changes not stated), as predicted in items 3 and 5 below.
+
+Genie handled it well: it applied the rule as written, did not quote a rate, and offered two paths (ask the broker for later incurred months, or an underwriting exception because claims are paid through Aug 2026 with a lag report). For the demo, the exception path gets to READY_WITH_WARNINGS.
+
+Two more inconsistencies this exposed:
+
+* **Seeded status contradicts the rule.** `broker_submissions` stores `SUB-NW-001-V2` as `READY_WITH_WARNINGS`, but the governed `intake_checklist` rule makes it BLOCKED. After fixing IC-01 (item 1), re-check that the seeded statuses match what the rule produces for v1 and v2.
+* **Submission date source.** Genie measured recency from today (2026-11-16) instead of the submission's received date (2026-11-13 15:40 UTC in `broker_submissions.received_ts`). The result is the same here, but the skill should use the received date (or the email date) so the check is reproducible.
+
+## v1 test result
 
 BLOCKED, with all 5 seeded gaps and exact file evidence, and no rate quoted. Verified against the files in `/Volumes/hls_fde_dev/uw_genie/broker_packages/northwind_v1/` and `intake_checklist`:
 
