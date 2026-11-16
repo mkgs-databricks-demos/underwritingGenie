@@ -100,13 +100,13 @@ S2 checks: Northwind paid_to_date sum 10,480,000.00; tier counts 168/76/59/117; 
 * `docs/design/L300-01..05` — data model, rating spec, metric views/agent config, skills, broker docs
 * `docs/demo-assets/nb_quote_scenarios_expected.csv` — golden 18-scenario results
 * `docs/diagrams/render_diagrams.py` — Playwright + local mermaid.js renderer
-* `docs/requests/build-1/INDEX.md` — detailed build 1 requests (R1-01..R1-09); source for the build 1 plan
+* `docs/requests/build-1/INDEX.md` — detailed build 1 requests (R1-01..R1-10); source for the build 1 plan
 
 ## Known gaps / open items
 
 * Naming sweep done 2026-11-15: docs now use "Underwriting Genie" (not "Underwriting Cockpit"); two bundles `uw-genie-infra` and `uw-genie-agent`; catalog/schema `hls_fde_dev.uw_genie`. File name `L400-03_dab_deployment_and_reset.md` kept to avoid breaking links; historical session logs left as written.
 * Artifact form controls are undocumented; fallback comparison panel defined.
-* ★7/★8 benchmark expected values to be recorded after S5.
+* ★7/★8 benchmarks recorded 2026-11-16 in L300-03 §5: ★7 = 3 as of 2026-11-16 (date-dependent, see R1-10); ★8 = Q1 2027 premium at risk $25,303,698.74 uncapped vs $23,031,131.29 at a 12% cap (LR 88.2% vs 88.7%).
 * Optional: internal field brief HTML rendering.
 * **Build 1 requests (owner, 2026-11-16): full detail in [`docs/requests/build-1/`](docs/requests/build-1/INDEX.md).** Write the build 1 plan from these files; keep only one-line pointers here.
   * R1-01: switch infra `dev` back to `mode: development` (schema becomes `dev_matthew_giglia_uw_genie`); dev stays destroyable, no `prevent_destroy` on dev.
@@ -118,6 +118,7 @@ S2 checks: Northwind paid_to_date sum 10,480,000.00; tier counts 168/76/59/117; 
   * R1-07: `experience-rating-explainer` fixes (tier rates, trend years, loss-ratio framing, list completeness) and the L200-07 beat 2b drivers prompt.
   * R1-08: intake fixes; **IC-01 rule vs v2 data is a design bug** (v2 strictly fails the 3-month rule); v1 has 6 blocking findings; IC-10; Gmail draft scope; write `submission_findings`.
   * R1-09: governed path for benefit changes (no relativity model today; unknown plans return 0 rows; `rate_renewal` has no plan parameter and defaults a missing relativity to 1.0); needs an actuarial decision.
+  * R1-10: governed `demo_as_of_date` for "next N days" windows (★7 changes with the run date today; example SQL has no lower bound).
 
 ## Conventions
 
