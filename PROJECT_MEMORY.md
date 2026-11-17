@@ -66,7 +66,7 @@ D1 folder name updated in docs to the actual repo `underwritingGenie/` (original
 |---|---|---|
 | UC schema | `hls_fde_dev.uw_genie` | `483077d3-6960-4824-9586-30917977d687` |
 | UC volume (managed) | `hls_fde_dev.uw_genie.broker_packages` | `bb8d00f0-34a0-4596-b78e-5e9a925a9829` |
-| SQL warehouse (serverless 2X-Small) | `[dev matthew_giglia] uw_genie_warehouse` | `dcca64ab7f26cea7` |
+| SQL warehouse (serverless Small, 1-2 clusters, 30 min auto-stop since 2026-11-17) | `[dev matthew_giglia] uw_genie_warehouse` | `dcca64ab7f26cea7` |
 | Job setup_demo | `[dev matthew_giglia] Underwriting Genie: Setup Demo` | `989657833792246` (good run `35433824231283`) |
 | Job reset_demo | `[dev matthew_giglia] Underwriting Genie: Reset Demo` | `1105533136205325` |
 | Genie Agent | `[dev matthew_giglia] Underwriting Genie` | `01f1e1554179173991a4a487c2ae28ef` |
@@ -147,6 +147,7 @@ S2 checks: Northwind paid_to_date sum 10,480,000.00; tier counts 168/76/59/117; 
 * Session logs in `docs/sessions/YYYY-MM-DD_<slug>.md` (Goal, Changes, Decisions, Verification, Observations, Follow-ups); update `INDEX.md` newest first.
 * No `hi_genie/` collaboration folder exists yet.
 * **SDK on serverless:** use `WorkspaceClient(host=_host, token=_token)` with credentials from `dbutils.notebook.entry_point`. Default `WorkspaceClient()` auth fails on serverless (no REPL context).
-* **CLI on serverless:** `databricks bundle deploy/run` is blocked. Use web terminal or trigger jobs via REST API (`w.jobs.run_now()`).
+* **CLI on serverless:** running `databricks bundle deploy/run` inside `executeCode` is blocked. From Genie Code, the Databricks CLI tool works (`bundle validate --strict`, `bundle plan`, `bundle deploy --target dev`, with the working directory set to the bundle root; verified 2026-11-17). Jobs can also be triggered via REST API (`w.jobs.run_now()`).
+* **Query history lag:** `system.query.history` can lag over an hour; for near-real-time checks use the SQL query history API (`w.query_history.list(filter_by=..., include_metrics=True)`, which returns `.res` + `next_page_token`).
 * **waves.json converge sessions:** every converge session needs a non-empty `runtime_targets` list; every key in that list must also appear in the wave's `runtime_gate`. Catch both with the pre-flight cell in `Genie Code Session Starter - DO NOT EDIT.ipynb`.
 * **bundle run --var flags:** always pass the same `--var` flags to `bundle run` as to `bundle deploy`. Without `--var=instance_suffix=-uw-genie`, the CLI defaults to the global instance and may trigger a different project's setup job.
