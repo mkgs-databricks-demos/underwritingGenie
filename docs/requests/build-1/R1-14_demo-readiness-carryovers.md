@@ -23,13 +23,14 @@
 2. **Backup quote artifact (L200-05).** Never built; the demo uses the Northwind quote from test chat `04e80baad93c48fc9dfcfe4f9ffda27a` as the backup. Build the purpose-made backup, or record that a pre-built artifact from a dry run is the official backup, with the reset step that keeps it.
 3. **AC-2b-10 (prompt to artifact <= 3 minutes): FAILED, measured 5:35** (owner stopwatch, 2026-11-16, Step 5 exception-and-quote prompt in the real v1 -> v2 flow; first output after about 1 second). Likely split: about 1 minute of agent queries (the comparable exception run that morning ran all its queries between 07:37:59 and 07:38:51 UTC, about 1.4 seconds each, several in parallel) and about 4.5 minutes of Genie writing the artifact HTML (8 sections plus 18 lever scenarios and their build-ups).
    * **Re-measured after sizing up the warehouse (2026-11-16):** `uw_genie_warehouse` changed from 2X-Small / 1 cluster / 10 min auto-stop to Small / up to 2 clusters / 30 min auto-stop (YAML and live; warehouse already running). Same flow and prompt: **3:40, still FAILED** (1:55 faster than 5:35). The saving is larger than the query estimate above, so queries queuing on one small cluster (and possibly a cold start in the first run) were a bigger share than estimated; single runs vary, so treat both numbers as samples. The remaining time is mostly artifact generation.
-   * **Third run on a Large warehouse** (same flow, warehouse running): **4:17, FAILED**, slower than Small. Sizing beyond Small does not help; run-to-run variation in artifact generation (about 3:40 to 4:17 on a warm warehouse) is larger than any further query saving. Keep the warehouse at Small for demos and fix the artifact itself.
+   * **Third run on a Large warehouse** (same flow, warehouse running): **4:17, FAILED**, slower than Small.
+   * **Query history review (SQL query history API, warehouse `dcca64ab7f26cea7`) corrects the estimates above:** in all three runs the Step 5 SQL took only **about 4-6 seconds of query time** (every query 0.3-3.9 s, mostly compilation; Large was not faster per query). Step 5 queries ran in 2-3 waves: run 1 (2X-Small) 05:40:07-05:42:10 UTC with about 1-minute pauses between waves; run 2 (Small) 06:13:50-06:14:16 with 4 s and 21 s pauses; run 3 (Large) 06:30:02-06:30:55 with one about 50 s pause. After the last query, Genie spent a steady **about 3 to 3.5 minutes writing the artifact** (estimate; prompt send times not recorded). So the warehouse size did not cause the 5:35 -> 3:40 change; Genie's reasoning pauses between query waves vary run to run, and artifact writing alone exceeds 3:00. **The warehouse can go back to its original size**; the fix is the artifact (below). (The "about 1 minute of agent queries" estimate above was the span between query waves, not query time.)
 
-   | Warehouse | Prompt to artifact |
-   | --- | --- |
-   | 2X-Small, 1 cluster (stopped before the run) | 5:35 |
-   | Small, up to 2 clusters (running) | 3:40 |
-   | Large, up to 2 clusters (running) | 4:17 |
+   | Warehouse | Prompt to artifact | Step 5 query time | Query waves (pauses between) |
+   | --- | --- | --- | --- |
+   | 2X-Small, 1 cluster | 5:35 | ~4 s | 3 (~64 s, ~57 s) |
+   | Small, up to 2 clusters | 3:40 | ~6 s | 3 (4 s, 21 s) |
+   | Large, up to 2 clusters | 4:17 | ~4 s | 2 (~50 s) |
 
    Requested:
    * **Artifact template:** ship a fixed HTML / JS template with `nb-quote-artifact` (skill file or Volume) so Genie fills in data instead of writing the page from scratch.
