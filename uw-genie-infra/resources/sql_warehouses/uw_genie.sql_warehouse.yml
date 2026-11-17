@@ -1,13 +1,13 @@
-# Large serverless SQL warehouse for setup/reset SQL tasks and the Genie Agent.
-# Sized up 2026-11-16 (was 2X-Small, 1 cluster, 10 min auto-stop): Genie One runs several
-# agent queries in parallel, and the demo should not wait for a cold start (AC-2b-10, R1-14).
-# Small measured 3:40 prompt-to-artifact (vs 5:35 on 2X-Small); Large is being tested next.
+# Small serverless SQL warehouse for setup/reset SQL tasks and the Genie Agent.
+# 2026-11-16: was 2X-Small / 1 cluster / 10 min auto-stop. Small with up to 2 clusters and a
+# 30 min auto-stop keeps it warm through a demo. A Large test was no faster: query history showed
+# Genie's Step 5 SQL takes ~4-6 s on any size; artifact writing dominates (AC-2b-10, R1-14).
 # Deployed name in dev: "[dev <short_name>] uw_genie_warehouse" (var.name_prefix; uw-genie-agent looks it up by this name).
 resources:
   sql_warehouses:
     uw_genie_warehouse:
       name: ${var.name_prefix}uw_genie_warehouse
-      cluster_size: Large
+      cluster_size: Small
       warehouse_type: PRO
       enable_serverless_compute: true
       min_num_clusters: 1
