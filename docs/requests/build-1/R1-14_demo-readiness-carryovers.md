@@ -23,6 +23,14 @@
 2. **Backup quote artifact (L200-05).** Never built; the demo uses the Northwind quote from test chat `04e80baad93c48fc9dfcfe4f9ffda27a` as the backup. Build the purpose-made backup, or record that a pre-built artifact from a dry run is the official backup, with the reset step that keeps it.
 3. **AC-2b-10 (prompt to artifact <= 3 minutes): FAILED, measured 5:35** (owner stopwatch, 2026-11-16, Step 5 exception-and-quote prompt in the real v1 -> v2 flow; first output after about 1 second). Likely split: about 1 minute of agent queries (the comparable exception run that morning ran all its queries between 07:37:59 and 07:38:51 UTC, about 1.4 seconds each, several in parallel) and about 4.5 minutes of Genie writing the artifact HTML (8 sections plus 18 lever scenarios and their build-ups).
    * **Re-measured after sizing up the warehouse (2026-11-16):** `uw_genie_warehouse` changed from 2X-Small / 1 cluster / 10 min auto-stop to Small / up to 2 clusters / 30 min auto-stop (YAML and live; warehouse already running). Same flow and prompt: **3:40, still FAILED** (1:55 faster than 5:35). The saving is larger than the query estimate above, so queries queuing on one small cluster (and possibly a cold start in the first run) were a bigger share than estimated; single runs vary, so treat both numbers as samples. The remaining time is mostly artifact generation.
+   * **Third run on a Large warehouse** (same flow, warehouse running): **4:17, FAILED**, slower than Small. Sizing beyond Small does not help; run-to-run variation in artifact generation (about 3:40 to 4:17 on a warm warehouse) is larger than any further query saving. Keep the warehouse at Small for demos and fix the artifact itself.
+
+   | Warehouse | Prompt to artifact |
+   | --- | --- |
+   | 2X-Small, 1 cluster (stopped before the run) | 5:35 |
+   | Small, up to 2 clusters (running) | 3:40 |
+   | Large, up to 2 clusters (running) | 4:17 |
+
    Requested:
    * **Artifact template:** ship a fixed HTML / JS template with `nb-quote-artifact` (skill file or Volume) so Genie fills in data instead of writing the page from scratch.
    * **One data payload:** a governed view that returns the whole artifact data set in one query (18 scenarios, 180 build-up rows, claimants, plan designs, readiness), so the template reads one compact JSON block.
