@@ -51,7 +51,17 @@ Close the remaining build 0 tests (AC-0-1 session instruction, AC-2b-10 prompt-t
 * `docs/sessions/2026-11-16_genie-agent-benchmarks.md`, this file, `docs/sessions/INDEX.md`
 * `PROJECT_MEMORY.md`
 
+## Reset Demo run (after the demo, owner go-ahead)
+
+First ever run of `[dev matthew_giglia] Underwriting Genie: Reset Demo` (job `1105533136205325`, run `597932389562387`, `job_parameters` catalog / schema / domain_tag passed explicitly): **SUCCESS in about 1.5 minutes** (`reset_state` 41 s, `build_nb_quote_scenarios` 55 s, `run_tests` 10 s; target < 5 min).
+
+* `reset_state` output: `submission_findings` 0 rows removed (none were written during the demo), `broker_submissions` restored to 25.
+* Before / after snapshot: all 25 table and view row counts identical; Northwind base scenario ($625.32, Z 0.7483, Family $2,290.21, $540,000 pooled), the 18-scenario premium total and the renewal pipeline action total identical; 8 BLOCKED submissions.
+* `mkgs_underwriting` tags survive the `CREATE OR REPLACE` rebuild (totals still 18 core / 2 intake_quote / 5 uw_finance); table comments kept.
+* Agent benchmarks after the reset: **15/15 on values**, names missing on 7 (unchanged).
+* Not checked: UC wikis pasted under R1-12 on `nb_quote_scenarios`, `renewal_scenarios` or `nb_quote_waterfall` may be removed by `CREATE OR REPLACE`; re-paste from R1-12 if so.
+
 ## Not done / open
 
-* Gmail draft with a draft-capable connector (AC-2-4, R1-08); Reset Demo re-run (after demos).
+* Gmail draft (AC-2-4): closed by owner decision (tested in other setups); pre-demo permission check only (R1-08 item 5).
 * Owner's local widget state in `run_genie_benchmarks.ipynb` (a saved `space_id` value) intentionally left uncommitted.
