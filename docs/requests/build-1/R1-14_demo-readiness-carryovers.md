@@ -24,10 +24,11 @@
 3. **Measure AC-2b-10 (prompt to artifact <= 3 minutes)** in the L400-02 dry run, and record the time in L200-07; it was never measured.
 4. **Domain tagging in the setup job.** Today the schema and the `broker_packages` Volume were tagged by hand, and the Genie Agent was tagged by hand in its settings. Have setup tag the schema and Volume with `domain_tag` (`core`), tag the Genie space after deploy (workspace entity-tag API, entity type `geniespaces`), and document the governed-tag prerequisite. Steps in `docs/setup/uc-domain-and-pages/README.md`.
 5. **Demo prompt file per target.** `docs/prompts/genie-one-demo-briefing-artifact.md` hard-codes the dev agent title, space ID, schema and expected numbers. Render it per target with the other skills and prompts (R1-04), and re-check its numbers after R1-10 / R1-11 / R1-13 change the data.
+6. **Session-level instruction (L200-07 §1).** AC-0-1 **passed** on 2026-11-16 (new Genie One chat, four skills on, no `@` mention): Genie replied exactly "Ready.". Genie did not resolve the agent at that point, so the agent-title risk (R1-04) still applies to the first data question. Update the instruction text: name the agent by its rendered per-target title or `@`-mention it; extend the rate rule to renewals (`renewal_scenarios` / `rate_renewal()`) and state the three-tier rule (R1-05); add "show group names, not IDs". Also fix §1 step 5 ("Run the reset job"), which conflicts with keeping the backup artifact (item 2).
 
 ## Files affected
 
-* `docs/demo-assets/skills/uw-morning-brief/SKILL.md`; `docs/design/L200-06_scheduled_morning_brief.md`; `docs/design/L400-02_demo_runbook.md` (dry-run checklist); `docs/design/L200-05_nb_quote_artifact.md` (backup artifact); `docs/design/L200-07_demo_script_and_acceptance.md` (AC-2b-10)
+* `docs/demo-assets/skills/uw-morning-brief/SKILL.md`; `docs/design/L200-06_scheduled_morning_brief.md`; `docs/design/L400-02_demo_runbook.md` (dry-run checklist); `docs/design/L200-05_nb_quote_artifact.md` (backup artifact); `docs/design/L200-07_demo_script_and_acceptance.md` (AC-2b-10; §1 session instruction and step 5)
 * `uw-genie-infra` setup job / SQL (schema and volume tags); `uw-genie-agent` post-deploy step (Genie space tag)
 * `docs/prompts/genie-one-demo-briefing-artifact.md`
 
