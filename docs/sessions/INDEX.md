@@ -1,5 +1,6 @@
 # Session index (newest first)
 
+- 2026-11-17 — **Build 0 close-out** — [Build 0 final summary: what was delivered, every test and its result, exit criteria status, lessons, open items](2026-11-17_build-0-final-summary.md) (summary; points to R1-01..R1-15)
 - 2026-11-17 — Demo readiness — [AC-0-1 pass; AC-2b-10 fails at 5:35 / 3:40 / 4:17 across warehouse sizes, query history shows artifact writing dominates; warehouse kept at Small; benchmark runner moved into the agent bundle](2026-11-17_ac-0-1-ac-2b-10-warehouse-and-runner.md) (owner tests + infra; R1-14, R1-15)
 - 2026-11-16 — Agent benchmarks — [L300-03 §5 benchmarks via the Genie Conversation API: 15/15 on values, names missing on benchmark 7; runner saved](2026-11-16_genie-agent-benchmarks.md) (automated test; R1-15)
 - 2026-11-16 — Genie One test — [Beats 3 and 4: Lakeview renewal passes; decisions to dollars passes on values, AC-4-2 / AC-4-4 not met](2026-11-16_genie-one-test-beats-3-4.md) (manual test; R1-13, R1-14)

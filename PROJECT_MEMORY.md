@@ -11,13 +11,14 @@ Working memory for Genie Code sessions. Read this, then `docs/design/L100_demo_o
 * **License:** MIT (MKG Solutions Databricks Demos)
 * **Purpose:** 12–15 min carrier-neutral, synthetic-data demo of fully insured, experience-rated large group underwriting: intake completeness, a governed NB quote delivered as an interactive Genie Artifact, and decisions → financial outcomes.
 
-## Status (as of 2026-11-16)
+## Status (as of 2026-11-17)
 
 * Design package v1.0-draft complete (53 files under `docs/`); review gate passed; 7 diagrams rendered to SVG/HTML.
 * Build 0 plan complete: `docs/plans/waves.json` (6 waves, 9 sessions), `docs/plans/build-waves.vars.json`, 9 session plan files, Devin monitor prompt.
-* **Build 0 executed** on branch `mg-genie-uw-genie-build-1` (build job `309617019935041`): waves 0-0..0-4 passed (bundles authored, infra deployed + setup_demo green, Genie Agent deployed + 5/5 probes, 4 UC Skills published); wave 0-5 (docs) in build run `1025333002364111`. Architecture: `docs/architecture.md`.
+* **Build 0 executed** on branch `mg-genie-uw-genie-build-1` (build job `309617019935041`): waves 0-0..0-5 all passed (bundles authored, infra deployed + setup_demo green, Genie Agent deployed + 5/5 probes, 4 UC Skills published, docs). Architecture: `docs/architecture.md`.
+* **Build 0 testing complete (2026-11-17):** every beat, the agent benchmarks (15/15 on values) and the first Reset Demo run (about 1.5 min). Exit criteria not met as written (AC-2b-1 and AC-2b-10 fail). One-page record: `docs/sessions/2026-11-17_build-0-final-summary.md`; fixes are R1-01..R1-15.
 * **Devin monitor session:** `691668f25c744b66a13d30d15c94f93b` (level 4).
-* **Next (owner):** merge PR #3 (`mg-genie-uw-genie-build-1` -> `main`, opened by Devin 2026-11-16); check the 4 skills resolve in Genie One (dev: the owner is the only demo user and owns every object, so no grants are needed; the demo-users group grants apply to the `demo` target only); record benchmarks; create the scheduled Morning Brief; build the NB quote artifact; demo target still needs a per-target space file for `hls_fde.uw_genie`.
+* **Next (owner):** merge PR #3 (`mg-genie-uw-genie-build-1` -> `main`, opened by Devin 2026-11-16; branch is about 80 commits ahead), then start build 1 on a new branch from `main`. Decisions needed before the build 1 plan: renewal calibration target (R1-11), demo as-of date (R1-10), benefit relativity ownership (R1-09), off-grid inputs (R1-05). The demo target still needs a per-target space file for `hls_fde.uw_genie` (R1-04). Dev needs no grants (the owner is the only demo user and owns every object).
 
 ## Non-negotiable rules
 
@@ -54,10 +55,10 @@ D1 folder name updated in docs to the actual repo `underwritingGenie/` (original
 * **Notebooks:** `src/notebooks/generate_synthetic_book.py` (seed 2027), `upload_packages.py`, `reset_demo.py`.
 * **Functions:** `rate_new_business`, `rate_renewal` (Lakeview).
 * **Metric views:** `mv_quote_outcomes`, `mv_renewal_book`, `mv_intake_ops` (tag `certified=true`).
-* **Genie Agent:** "Underwriting Genie" — 15 benchmarks (★1–★8 must pass); export to `src/genie/underwriting_genie.geniespace.json`.
+* **Genie Agent:** "Underwriting Genie" — 15 benchmarks (★1–★8 must pass); space file `uw-genie-agent/underwriting_genie.geniespace.json`; benchmark runner `uw-genie-agent/tests/run_genie_benchmarks.ipynb`.
 * **UC Skills:** `lg-intake-checklist`, `experience-rating-explainer`, `nb-quote-artifact`, `uw-morning-brief` (source in `docs/demo-assets/skills/`).
-* **Scheduled task:** "Large Group Underwriting Morning Brief", weekdays 7:00 AM ET.
-* **Artifact:** "Northwind Manufacturing — New Business Quote" (8 sections), backup in shared `genie_artifacts`.
+* **Scheduled task:** "Large Group Underwriting Morning Brief", weekdays 7:00 AM ET — created by hand in Genie One on 2026-11-16 from Prompt A (Active, Mon-Fri 07:00 America/New_York); moving its rules into the skill is R1-14 item 1.
+* **Artifact:** "Northwind Manufacturing — New Business Quote" (8 sections), built live in tests; the purpose-made backup was never built (R1-14 item 2).
 * **Permissions:** demo users group — USE CATALOG/SCHEMA, SELECT, EXECUTE on rating functions, READ VOLUME, CAN RUN on Genie Agent.
 
 **Deployed resource IDs (target `dev`, build 0, verified 2026-11-16):**
@@ -68,7 +69,7 @@ D1 folder name updated in docs to the actual repo `underwritingGenie/` (original
 | UC volume (managed) | `hls_fde_dev.uw_genie.broker_packages` | `bb8d00f0-34a0-4596-b78e-5e9a925a9829` |
 | SQL warehouse (serverless Small, 1-2 clusters, 30 min auto-stop since 2026-11-17) | `[dev matthew_giglia] uw_genie_warehouse` | `dcca64ab7f26cea7` |
 | Job setup_demo | `[dev matthew_giglia] Underwriting Genie: Setup Demo` | `989657833792246` (good run `35433824231283`) |
-| Job reset_demo | `[dev matthew_giglia] Underwriting Genie: Reset Demo` | `1105533136205325` |
+| Job reset_demo | `[dev matthew_giglia] Underwriting Genie: Reset Demo` | `1105533136205325` (first run `597932389562387`, about 1.5 min, 2026-11-17) |
 | Genie Agent | `[dev matthew_giglia] Underwriting Genie` | `01f1e1554179173991a4a487c2ae28ef` |
 | UC Skills | `hls_fde_dev.uw_genie.{lg-intake-checklist, experience-rating-explainer, nb-quote-artifact, uw-morning-brief}` | finalized (session 08) |
 
@@ -93,6 +94,7 @@ S2 checks: Northwind paid_to_date sum 10,480,000.00; tier counts 168/76/59/117; 
 
 ## Key docs
 
+* `docs/sessions/2026-11-17_build-0-final-summary.md` — **build 0 close-out**: delivered, tested, results, lessons, open items
 * `docs/design/L100_demo_overview.md` — demo constitution
 * `docs/design/L400-01_genie_code_build_sessions.md` — session prompts + acceptance
 * `docs/design/L400-03_dab_deployment_and_reset.md` — repo layout, jobs, permissions
@@ -101,7 +103,7 @@ S2 checks: Northwind paid_to_date sum 10,480,000.00; tier counts 168/76/59/117; 
 * `docs/demo-assets/nb_quote_scenarios_expected.csv` — golden 18-scenario results
 * `docs/diagrams/render_diagrams.py` — Playwright + local mermaid.js renderer
 * `docs/requests/build-1/INDEX.md` — detailed build 1 requests (R1-01..R1-15); source for the build 1 plan
-* `docs/setup/uc-domain-and-pages/README.md` — manual setup of the governed domain tag (dev: `mkgs_underwriting`, values core / intake_quote / uw_finance), the Discover "Underwriting" domain and the UC glossary pages; done on dev 2026-11-16 (Genie Agent tagged manually)
+* `docs/setup/uc-domain-and-pages/README.md` — manual setup of the governed domain tag (dev: `mkgs_underwriting`, values core / intake_quote / uw_finance), the Discover domain (dev: `mkgs_underwriting`, because the account already has an "Underwriting" domain) and the UC glossary pages; done on dev 2026-11-16 (Genie Agent tagged manually)
 * `docs/prompts/genie-one-demo-briefing-artifact.md` — Genie One prompts for the Morning Brief routine and the customer-facing demo artifact
 
 ## Known gaps / open items
@@ -118,13 +120,13 @@ S2 checks: Northwind paid_to_date sum 10,480,000.00; tier counts 168/76/59/117; 
   * R1-05: three-tier governed-math rule (decided); governed renewal-offer comparison ($698.90, default -10.5%); open actuarial decision on off-grid inputs.
   * R1-06: `nb-quote-artifact` fixes (plan_designs / plan names / benefits, section 4 wording, claimant excess, readiness from findings, KPI box 5, footnote, notes).
   * R1-07: `experience-rating-explainer` fixes (tier rates, trend years, loss-ratio framing, list completeness) and the L200-07 beat 2b drivers prompt.
-  * R1-08: intake fixes; **IC-01 rule vs v2 data is a design bug** (v2 strictly fails the 3-month rule); v1 has 6 blocking findings; IC-10; Gmail draft scope; write `submission_findings`.
+  * R1-08: intake fixes; **IC-01 rule vs v2 data is a design bug** (v2 strictly fails the 3-month rule); v1 has 6 blocking findings; IC-10; Gmail draft scope (AC-2-4 closed by owner decision 2026-11-17; pre-demo permission check only); write `submission_findings`.
   * R1-09: governed path for benefit changes (no relativity model today; unknown plans return 0 rows; `rate_renewal` has no plan parameter and defaults a missing relativity to 1.0); needs an actuarial decision.
   * R1-10: governed `demo_as_of_date` for "next N days" windows (★7 changes with the run date today; example SQL has no lower bound).
   * R1-11: **renewal rate actions are not governed** (stored `renewal_pipeline` matches live `rate_renewal()` for 1 of 59; calibrate the generator, then populate from the function and re-record ★7/★8); renewal "why" from the governed build-up; Morning Brief must keep blocked submissions with no `groups` row (showed 1 of 8). Owner: fix in build 1, not now.
   * R1-12: UC wiki drafts for all 25 objects in `hls_fde_dev.uw_genie` (no public wiki API: paste per table or fill from Genie Code on the table page); re-apply after R1-01's schema rename and update renewal caveats after R1-11.
   * R1-13: beats 3-4 (both pass on values): fix what-if causes, no reply-text dollar impacts, AE rationale template, one loss-ratio definition (Genie One follows the glossary page), `mv_renewal_book` count measure, chart + 85% MLR floor, number formatting.
-  * R1-14: beats 1-2 carryovers: Morning Brief routine rules into the skill (names, not IDs), backup artifact, measure AC-2b-10, domain tagging in setup, demo prompt file per target.
+  * R1-14: beats 1-2 carryovers: Morning Brief routine rules into the skill (names, not IDs), backup artifact, AC-2b-10 (measured 5:35 / 3:40 / 4:17 on 2X-Small / Small / Large; query history shows about 4-6 s of SQL, artifact writing dominates: artifact template + single payload view), domain tagging in setup, demo prompt file per target, session instruction fixes (AC-0-1 passed).
   * R1-15: agent benchmarks pass 15/15 on values (agent layer is sound); load the 15 with SQL answers into the Genie space, agent instruction to show group names, keep the runner notebook `uw-genie-agent/tests/run_genie_benchmarks.ipynb` (deployed with the agent bundle) as the scripted check.
 
 ## UC glossary pages (domain `mkgs_underwriting`)
