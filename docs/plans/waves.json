@@ -1,0 +1,271 @@
+{
+  "version": 1,
+  "description": "Underwriting Genie: two Declarative Automation Bundles in one repo. uw-genie-infra: UC schema (hls_fde_dev.uw_genie), volume broker_packages, 2X-Small serverless SQL warehouse, SQL files (DDL, rating function, metric views, tests), notebooks (generate_synthetic_book, upload_packages, reset_demo), jobs setup_demo and reset_demo. uw-genie-agent: the Genie Agent over all tables, metric views and trusted assets (uses the infra schema and warehouse through variables, deploys nothing it does not own). Build 0 (waves 0-0..0-5): two parallel edit waves (infra+agent bundles, then SQL+notebooks), three converge waves (deploy infra + run setup_demo, deploy agent + verify, publish UC skills), one docs wave. Devin monitors at level 4.",
+  "authorization_policy": {
+    "project_schema": "hls_fde_dev.uw_genie",
+    "monitor_may_authorize": [
+      {"action": "jobs.run_now", "scope": "own_runtime_targets"},
+      {"action": "workspace.write", "scope": "owned_paths"},
+      {"action": "uc_skills.publish", "scope": "project_schema"}
+    ]
+  },
+  "workflow": {"mode": "git"},
+  "repo_root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie",
+  "bundle_root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie",
+  "branch": "mg-genie-uw-genie-build-1",
+  "bundle_target": "dev",
+  "status_dir": ".build-status",
+  "plans_dir": "docs/plans",
+  "sessions_dir": "docs/sessions",
+  "context_files": [
+    "PROJECT_MEMORY.md",
+    "docs/plans/INDEX.md"
+  ],
+
+  "runtime_targets": {
+    "setup_demo_job": {
+      "type": "job",
+      "name": "[dev matthew_giglia] Underwriting Genie: Setup Demo",
+      "resource_key": "setup_demo",
+      "bundle_root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie/uw-genie-infra",
+      "bundle_target": "dev",
+      "deploy_commands": ["bundle deploy --target dev", "bundle run setup_demo --target dev"],
+      "stability": {"soak_minutes": 0}
+    },
+    "groups_table": {
+      "type": "table",
+      "name": "hls_fde_dev.uw_genie.groups",
+      "required_columns": ["group_id", "group_name", "enrolled_employees", "member_months"],
+      "min_rows": 60
+    },
+    "broker_submissions_table": {
+      "type": "table",
+      "name": "hls_fde_dev.uw_genie.broker_submissions",
+      "required_columns": ["group_id", "package_version", "completeness_status"],
+      "min_rows": 2
+    },
+    "nb_quote_scenarios_table": {
+      "type": "table",
+      "name": "hls_fde_dev.uw_genie.nb_quote_scenarios",
+      "required_columns": ["group_id", "pooling_point", "trend_scenario", "plan_option", "premium_pmpm", "composite_pepm", "credibility", "rate_change_vs_incumbent"],
+      "min_rows": 18
+    },
+    "genie_space": {
+      "type": "genie_space",
+      "name": "[dev matthew_giglia] Underwriting Genie",
+      "resource_key": "underwriting_genie_space",
+      "bundle_root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie/uw-genie-agent",
+      "bundle_target": "dev",
+      "deploy_commands": ["bundle deploy --target dev"],
+      "require_fresh_deployment": false,
+      "check_example_sql": true,
+      "probe_questions": [
+        "What is the Family rate for Northwind Manufacturing at $250K pooling, base trend, requested plan?",
+        "What is Northwind credibility at $150K, $250K, and $500K pooling points?",
+        "What is Northwind premium change vs current, base case?",
+        "Is Northwind v1 submission ready to quote?",
+        "How much was removed by pooling at $250K for Northwind?"
+      ],
+      "probe_mode": "warn"
+    }
+  },
+
+  "waves": [
+    {
+      "wave_id": "0-0",
+      "build": "0",
+      "name": "Foundation: infra bundle (schema, warehouse, jobs, DDL) and agent bundle (parallel)",
+      "validate_bundles": [],
+      "gate": [
+        "uw-genie-infra is NOT in validate_bundles for this wave: job YAMLs reference notebooks (generate_synthetic_book.py, upload_packages.py, reset_demo.py) that are only created in wave 0-1 (sessions 03/05); bundle validate --strict is deferred to wave 0-1",
+        "uw-genie-agent is not in validate_bundles for this wave: its warehouse_id lookup needs the infra warehouse, which wave 0-2 deploys. Session 02 reports bundle validate --strict --target dev --var=warehouse_id=0000000000000000 in its status instead; the agent bundle is validated by waves 0-3 and 0-5",
+        "Files exist: .gitignore (contains .build-status/ and .databricks/), uw-genie-infra/databricks.yml, uw-genie-infra/resources/schemas/uw_genie.schema.yml, uw-genie-infra/resources/sql_warehouses/uw_genie.sql_warehouse.yml, uw-genie-infra/resources/volumes/broker_packages.yml",
+        "Files exist: uw-genie-infra/resources/jobs/setup_demo.job.yml, uw-genie-infra/resources/jobs/reset_demo.job.yml, uw-genie-infra/src/sql/00_ddl.sql",
+        "Files exist: uw-genie-agent/databricks.yml, uw-genie-agent/resources/genie_spaces/underwriting_genie.genie_space.yml",
+        "uw-genie-agent defines no schema, warehouse or job resource",
+        "No file outside each session's owned_paths changed"
+      ],
+      "sessions": [
+        {
+          "session_id": "01",
+          "title": "Infra bundle foundation: databricks.yml, schema, volume, SQL warehouse, jobs, DDL",
+          "plan_file": "build-0/01_infra_bundle.md",
+          "mode": "edit",
+          "scope": "In uw-genie-infra/: write databricks.yml (bundle uw-genie-infra, databricks_cli_version >= 1.23.0, engine direct, include resources/**/*.yml, variables catalog/schema/warehouse_id, targets dev (default, development mode, catalog hls_fde_dev) and demo (production mode, catalog hls_fde), workspace.root_path /Workspace/.bundle/${bundle.name}/${bundle.target}, workspace.sync_mode overwrite, presets.tags per target). Write the schema resource uw_genie (catalog hls_fde_dev, schema uw_genie), the volume broker_packages, the 2X-Small serverless SQL warehouse uw_genie_warehouse, the jobs setup_demo (5 SQL/notebook tasks: create_tables, generate_synthetic_book, upload_packages, build_nb_quote_scenarios, run_tests on the warehouse, max_concurrent_runs 1, queue enabled) and reset_demo (truncate submission_findings, restore broker_submissions statuses, rebuild scenarios, run_tests). Write src/sql/00_ddl.sql from L300-01 (all 18 objects, CREATE OR REPLACE, schema from ${var.catalog}.${var.schema}, all tagged domain=underwriting data_class=synthetic). At the repo root: .gitignore with .build-status/ and .databricks/. Do not deploy. Do not run bundle validate in wave 0-0 — job YAMLs reference notebooks only created in wave 0-1 session 05; validate is deferred to wave 0-1.",
+          "owned_paths": ["uw-genie-infra/databricks.yml", "uw-genie-infra/resources/**", "uw-genie-infra/src/sql/00_ddl.sql", ".gitignore"]
+        },
+        {
+          "session_id": "02",
+          "title": "Agent bundle: databricks.yml and the Genie Agent serialized space file",
+          "plan_file": "build-0/02_agent_bundle.md",
+          "mode": "edit",
+          "scope": "Write the whole uw-genie-agent/ bundle. databricks.yml: bundle uw-genie-agent, databricks_cli_version >= 1.23.0, engine direct, include resources/**/*.yml, same root_path, sync_mode, presets.tags and dev/demo targets as the infra bundle; variables catalog and schema set per target to the infra bundle's deployed schema (dev hls_fde_dev / uw_genie, demo hls_fde / uw_genie) and warehouse_id as a lookup of the infra warehouse by its deployed name per target. resources/genie_spaces/underwriting_genie.genie_space.yml: genie space underwriting_genie_space, title Underwriting Genie, parent_path /Workspace/Users/matthew.giglia@databricks.com/underwritingGenie/.genie_agents, file_path ./underwriting_genie.geniespace.json (serialized space file with data sources: all C1 tables except raw volume, nb_quote_scenarios, nb_quote_waterfall, renewal_scenarios, three metric views; trusted assets: rate_new_business, rate_renewal; instructions from L300-03 section 4; 15 benchmarks from L300-03 section 5; example SQL from L300-03 section 4). This bundle uses the infra schema and warehouse but never defines or deploys them. Do not deploy. The warehouse lookup cannot resolve before wave 0-2 deploys the infra warehouse, so run databricks bundle validate --strict --target dev --var=warehouse_id=0000000000000000 in uw-genie-agent and record the plain validate's lookup error as expected.",
+          "owned_paths": ["uw-genie-agent/**"]
+        }
+      ]
+    },
+    {
+      "wave_id": "0-1",
+      "build": "0",
+      "name": "SQL functions + notebooks: rating function, metric views, synthetic data (parallel)",
+      "validate_bundles": [
+        {"root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie/uw-genie-infra", "target": "dev"}
+      ],
+      "gate": [
+        "databricks bundle validate --strict --target dev passes in uw-genie-infra",
+        "Files exist: uw-genie-infra/src/sql/10_rate_new_business.sql, uw-genie-infra/src/sql/20_metric_views.sql, uw-genie-infra/src/sql/90_tests.sql",
+        "Files exist: uw-genie-infra/src/notebooks/generate_synthetic_book.py, uw-genie-infra/src/notebooks/upload_packages.py, uw-genie-infra/src/notebooks/reset_demo.py",
+        "10_rate_new_business.sql defines function rate_new_business with COMMENTs matching L300-02",
+        "20_metric_views.sql creates renewal_book_scenarios view and three metric views (mv_quote_outcomes, mv_renewal_book, mv_intake_ops) matching L300-03",
+        "90_tests.sql loads nb_quote_scenarios_expected.csv and asserts base row premium_pmpm 625.32, rate_ef 2290.21, credibility 0.7483",
+        "No file outside each session's owned_paths changed"
+      ],
+      "sessions": [
+        {
+          "session_id": "03",
+          "title": "Rating function + golden CSV tests",
+          "plan_file": "build-0/03_rating_function.md",
+          "mode": "edit",
+          "scope": "In uw-genie-infra/src/sql/: write 10_rate_new_business.sql exactly as L300-02 section 1 (SQL table function rate_new_business with COMMENTs), section 2 (scenario materialization and waterfall view nb_quote_waterfall), section 5 (rate_renewal for Lakeview), and section 4 tests in 90_tests.sql comparing to the golden CSV docs/demo-assets/nb_quote_scenarios_expected.csv (load it to a temp view). If LATERAL over the cross join fails, generate the 18-call UNION ALL fallback. Do not deploy or run SQL. Run databricks bundle validate --strict --target dev in uw-genie-infra.",
+          "owned_paths": ["uw-genie-infra/src/sql/10_rate_new_business.sql", "uw-genie-infra/src/sql/90_tests.sql"],
+          "depends_on": ["01"]
+        },
+        {
+          "session_id": "04",
+          "title": "Metric views (3 views + renewal_book_scenarios)",
+          "plan_file": "build-0/04_metric_views.md",
+          "mode": "edit",
+          "scope": "In uw-genie-infra/src/sql/: write 20_metric_views.sql from L300-03 sections 1-2. Create renewal_book_scenarios view (joining renewal_pipeline, persistency_curve), then three metric views with WITH METRICS LANGUAGE YAML: mv_quote_outcomes (over nb_quote_scenarios), mv_renewal_book (over renewal_book_scenarios), mv_intake_ops (over broker_submissions). Add column and measure comments matching semantics/ definitions. Tag metric views certified=true. Do not deploy or run SQL. Run databricks bundle validate --strict --target dev in uw-genie-infra.",
+          "owned_paths": ["uw-genie-infra/src/sql/20_metric_views.sql"],
+          "depends_on": ["01"]
+        },
+        {
+          "session_id": "05",
+          "title": "Notebooks: generate_synthetic_book, upload_packages, reset_demo",
+          "plan_file": "build-0/05_notebooks.md",
+          "mode": "edit",
+          "scope": "In uw-genie-infra/src/notebooks/: write generate_synthetic_book.py (seed 2027, loads all pinned values from L300-01 exactly: Northwind, Lakeview, assumption tables AV-2027.1, intake checklist, persistency; generates 58 random groups plus Northwind and Lakeview for 60 total; adds assertions from L200-01 Testing), upload_packages.py (uploads northwind_v1 and northwind_v2 from demo-assets/broker_packages to the broker_packages volume; verifies v1 contains 5 seeded gaps from L300-05), and reset_demo.py (truncate submission_findings, restore broker_submissions statuses, rebuild scenarios, run_tests). All notebooks use %pip install --upgrade databricks-sdk + dbutils.library.restartPython() as first cell, bundle variables via widgets, and ${var.catalog}.${var.schema} for all table references. Do not deploy or run. Run databricks bundle validate --strict --target dev in uw-genie-infra.",
+          "owned_paths": ["uw-genie-infra/src/notebooks/**"],
+          "depends_on": ["01"]
+        }
+      ]
+    },
+    {
+      "wave_id": "0-2",
+      "build": "0",
+      "name": "Converge infra: deploy uw-genie-infra, run setup_demo, verify tables + data + tests",
+      "validate_bundles": [
+        {"root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie/uw-genie-infra", "target": "dev"}
+      ],
+      "gate": [
+        "databricks bundle validate --strict --target dev passes in uw-genie-infra",
+        "Session 06 status is pass with a final attempt classified stable",
+        "No file outside session 06's owned_paths changed"
+      ],
+      "runtime_gate": ["setup_demo_job", "groups_table", "broker_submissions_table", "nb_quote_scenarios_table"],
+      "sessions": [
+        {
+          "session_id": "06",
+          "title": "Deploy infra: bundle deploy runs setup_demo, fix until all tables and tests pass",
+          "plan_file": "build-0/06_deploy_infra.md",
+          "mode": "converge",
+          "scope": "Deploy uw-genie-infra to dev. The setup_demo job runs create_tables, generate_synthetic_book, upload_packages, build_nb_quote_scenarios, run_tests. Trigger setup_demo job (run-now on job 989657833792246), wait for it, read its output. Verify: groups table has 60 rows; broker_submissions has Northwind v1 BLOCKED and v2 READY_WITH_WARNINGS; nb_quote_scenarios has 18 rows for Northwind with base premium_pmpm 625.32; tests pass (golden CSV comparison). Fix the DDL, SQL, notebooks, or job YAML within owned_paths and repeat until the run succeeds and all tables exist with correct row counts and the tests pass. Run databricks bundle validate --strict --target dev before every deploy.",
+          "context_notes": "setup_demo job_id is 989657833792246. The owner has authorized the session to trigger this job via run-now.",
+          "runtime_targets": ["setup_demo_job"],
+          "owned_paths": ["uw-genie-infra/**"],
+          "max_attempts": 5,
+          "timeout_minutes": 120,
+          "depends_on": ["03", "04", "05"]
+        }
+      ]
+    },
+    {
+      "wave_id": "0-3",
+      "build": "0",
+      "name": "Converge agent: deploy uw-genie-agent, verify Genie Agent with example SQL and probe questions",
+      "validate_bundles": [
+        {"root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie/uw-genie-agent", "target": "dev"}
+      ],
+      "gate": [
+        "databricks bundle validate --strict --target dev passes in uw-genie-agent",
+        "Session 07 status is pass with a final attempt classified stable",
+        "No file outside session 07's owned_paths changed"
+      ],
+      "runtime_gate": ["genie_space"],
+      "sessions": [
+        {
+          "session_id": "07",
+          "title": "Deploy the Genie Agent, fix until tables, example SQL and probe questions resolve",
+          "plan_file": "build-0/07_deploy_agent.md",
+          "mode": "converge",
+          "scope": "Deploy uw-genie-agent to dev so the Genie Agent Underwriting Genie is created or updated. Read it back (warehouse, data sources, column configs). EXPLAIN every example SQL on its warehouse. Ask the five probe questions (benchmarks 1-5). Fix the genie bundle within owned_paths and repeat until the space is on the infra warehouse, all tables and metric views resolve, every example SQL passes EXPLAIN, and probe questions return correct answers. Never deploy uw-genie-infra. Record the space id in the session summary. Run databricks bundle validate --strict --target dev before every deploy.",
+          "runtime_targets": ["genie_space"],
+          "owned_paths": ["uw-genie-agent/**"],
+          "max_attempts": 5,
+          "timeout_minutes": 120,
+          "depends_on": ["02", "06"]
+        }
+      ]
+    },
+    {
+      "wave_id": "0-4",
+      "build": "0",
+      "name": "Publish UC Skills: 4 skills to hls_fde_dev.uw_genie + workspace copy",
+      "runtime_gate": ["genie_space"],
+      "validate_bundles": [
+        {"root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie/uw-genie-infra", "target": "dev"},
+        {"root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie/uw-genie-agent", "target": "dev"}
+      ],
+      "gate": [
+        "databricks bundle validate --strict --target dev passes in both bundles",
+        "Session 08 status is pass",
+        "Files exist: /Workspace/Users/matthew.giglia@databricks.com/.assistant/skills/lg-intake-checklist/SKILL.md, experience-rating-explainer/SKILL.md, nb-quote-artifact/SKILL.md, uw-morning-brief/SKILL.md",
+        "No file outside session 08's owned_paths changed"
+      ],
+      "sessions": [
+        {
+          "session_id": "08",
+          "title": "Publish 4 UC Skills and copy to workspace skills folder",
+          "plan_file": "build-0/08_publish_skills.md",
+          "mode": "converge",
+          "runtime_targets": ["genie_space"],
+          "scope": "Publish the four skills from docs/demo-assets/skills/ to UC Skills at hls_fde_dev.uw_genie using the same method as the genie-build-waves setup job: w.ai_gateway.create_skill(parent=schemas/hls_fde_dev.uw_genie, skill_id=<name>, skill=Skill(comment=...)), w.files.upload(/Skills/hls_fde_dev/uw_genie/<name>/<relpath>, ...), w.ai_gateway.finalize_skill(name=skills/hls_fde_dev.uw_genie.<name>). Copy each SKILL.md to /Workspace/Users/matthew.giglia@databricks.com/.assistant/skills/<name>/SKILL.md. Replace <catalog>.<schema> placeholders with hls_fde_dev.uw_genie in all skill files. Do not deploy bundles.",
+          "context_notes": "The owner has explicitly authorized all UC Skills publish operations: w.ai_gateway.create_skill, w.files.upload to /Skills/hls_fde_dev/uw_genie/, w.ai_gateway.finalize_skill, and copying SKILL.md files to /Workspace/Users/matthew.giglia@databricks.com/.assistant/skills/. Publish all four skills (lg-intake-checklist, experience-rating-explainer, nb-quote-artifact, uw-morning-brief) to hls_fde_dev.uw_genie.",
+          "owned_paths": ["docs/demo-assets/skills/**"],
+          "max_attempts": 3,
+          "timeout_minutes": 60,
+          "depends_on": ["06"],
+          "authorizations": [
+            {"action": "uc_skills.publish", "target": "hls_fde_dev.uw_genie", "reason": "publish 4 demo skills (lg-intake-checklist, experience-rating-explainer, nb-quote-artifact, uw-morning-brief)"},
+            {"action": "workspace.write", "target": "/Workspace/Users/matthew.giglia@databricks.com/.assistant/skills/**", "reason": "copy SKILL.md files to workspace skills folder"}
+          ]
+        }
+      ]
+    },
+    {
+      "wave_id": "0-5",
+      "build": "0",
+      "name": "Docs: README deployed IDs and architecture",
+      "validate_bundles": [
+        {"root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie/uw-genie-infra", "target": "dev"},
+        {"root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie/uw-genie-agent", "target": "dev"}
+      ],
+      "gate": [
+        "databricks bundle validate --strict --target dev passes in both bundles",
+        "README.md lists both bundles and every deployed resource with actual IDs (schema, volume, warehouse, jobs, Genie Agent space ID, UC Skills)",
+        "No file outside session 09's owned_paths changed"
+      ],
+      "sessions": [
+        {
+          "session_id": "09",
+          "title": "Update README and PROJECT_MEMORY with deployed IDs and architecture",
+          "plan_file": "build-0/09_docs.md",
+          "mode": "edit",
+          "scope": "Update README.md with actual deployed resource IDs (job IDs, warehouse ID, Genie Agent space ID, UC Skills) from the wave 0-2, 0-3 and 0-4 session summaries. Update PROJECT_MEMORY.md with the same IDs in the Planned Databricks resources section. Write docs/architecture.md describing the two-bundle split, data flow (DDL -> synthetic data -> rating function -> scenarios -> metric views -> Genie Agent), deploy order (infra first, then agent), and how the agent bundle finds the infra schema and warehouse. Do not deploy. Run databricks bundle validate --strict --target dev in both bundle folders.",
+          "owned_paths": ["README.md", "PROJECT_MEMORY.md", "docs/architecture.md"],
+          "depends_on": ["07", "08"]
+        }
+      ]
+    }
+  ]
+}

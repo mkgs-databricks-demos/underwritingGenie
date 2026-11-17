@@ -1,0 +1,64 @@
+# uw-genie-agent: the "Underwriting Genie" Genie Agent (synthetic, carrier-neutral demo).
+#
+# This bundle USES the schema and SQL warehouse deployed by the sibling bundle
+# uw-genie-infra, but never defines or deploys them. Deploy uw-genie-infra FIRST.
+#   * catalog / schema: set per target to the infra bundle's deployed schema.
+#   * warehouse_id:     lookup of the infra warehouse by its deployed name per target
+#                       (development mode prefixes the name with "[dev <short_name>] ").
+#
+# Only resource: resources/genie_spaces/underwriting_genie.genie_space.yml
+
+bundle:
+  name: uw-genie-agent
+  databricks_cli_version: ">= 1.23.0"
+  engine: direct
+
+include:
+  - resources/**/*.yml
+
+variables:
+  catalog:
+    description: Unity Catalog catalog of the infra bundle's deployed schema
+    default: hls_fde_dev
+  schema:
+    description: Schema deployed by uw-genie-infra (resource uw_genie)
+    default: uw_genie
+  warehouse_id:
+    description: Serverless SQL warehouse deployed by uw-genie-infra (uw_genie_warehouse), resolved by name per target
+
+workspace:
+  root_path: /Workspace/.bundle/${bundle.name}/${bundle.target}
+  sync_mode: overwrite
+
+targets:
+  dev:
+    default: true
+    mode: development
+    # development mode requires a per-user root_path (CLI enforces username in the path)
+    workspace:
+      root_path: ~/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      catalog: hls_fde_dev
+      schema: uw_genie
+      warehouse_id:
+        lookup:
+          warehouse: "[dev ${workspace.current_user.short_name}] uw_genie_warehouse"
+    presets:
+      tags:
+        domain: underwriting
+        data_class: synthetic
+        env: dev
+
+  demo:
+    mode: production
+    variables:
+      catalog: hls_fde
+      schema: uw_genie
+      warehouse_id:
+        lookup:
+          warehouse: uw_genie_warehouse
+    presets:
+      tags:
+        domain: underwriting
+        data_class: synthetic
+        env: demo

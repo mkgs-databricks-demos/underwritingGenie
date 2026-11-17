@@ -1,0 +1,12 @@
+{
+  "project_name": "uw-genie",
+  "instance_suffix": "-uw-genie",
+  "build_root": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie",
+  "build_branch": "mg-genie-uw-genie-build-1",
+  "manifest_path": "/Workspace/Users/matthew.giglia@databricks.com/underwritingGenie/docs/plans/waves.json",
+  "skills_catalog": "hls_fde_dev",
+  "skills_schema": "dev_matthew_giglia_build_waves",
+  "create_skills_schema": "false",
+  "monitor_principal": "72bab3e9-303d-4443-b43e-9eaab474d8bb",
+  "monitor_job_level": "CAN_MANAGE_RUN"
+}

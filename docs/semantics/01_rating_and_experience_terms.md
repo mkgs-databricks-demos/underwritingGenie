@@ -7,14 +7,14 @@ Subdomain: **Rating & Experience**
 ### Experience Period
 - **Definition:** The span of incurred months whose claims are used to rate a group (demo: 24 months, Jul-2024 → Jun-2026).
 - **Business context:** Longer periods add stability; most recent months are least complete.
-- **Data usage:** `claims_monthly.incurred_month`; parameter of `rate_new_business()`
+- **Data usage:** `claims_monthly.incurred_month`
 - **Related terms:** Incurred Claims, Completion Factor, Rating Period
 - **Source:** Research 02
 
 ### Rating Period
 - **Definition:** The 12 months the new rates will apply to (demo: 1/1/2027–12/31/2027).
 - **Business context:** Trend is projected to its midpoint.
-- **Data usage:** `quotes.effective_date`
+- **Data usage:** `groups.effective_date`
 - **Related terms:** Trend Factor, Experience Period
 - **Source:** Research 02
 
@@ -86,7 +86,7 @@ Subdomain: **Rating & Experience**
 - **Business context:** Public 2027 group trend projection ~9%.
 - **Data usage:** `trend_assumptions(scenario, annual_rate)`
 - **Related terms:** Rating Period
-- **Source:** PwC
+- **Source:** Public industry trend projection
 
 ### Plan Relativity
 - **Definition:** Ratio of expected cost of the proposed plan to the base plan.

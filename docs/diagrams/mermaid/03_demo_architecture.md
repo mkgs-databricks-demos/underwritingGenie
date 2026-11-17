@@ -12,7 +12,7 @@ flowchart TB
     PG[UC Pages glossary]
     SK[UC Skills x4]
   end
-  GA[Genie Agent<br/>Large Group Underwriting Cockpit] --> T1 & T2 & FN & MV
+  GA[Genie Agent<br/>Underwriting Genie] --> T1 & T2 & FN & MV
   G1[Genie One chat] --> SK
   G1 --> GA
   G1 --> ART[Artifact: New Business Quote]

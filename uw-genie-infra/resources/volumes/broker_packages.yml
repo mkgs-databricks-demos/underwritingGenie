@@ -1,0 +1,8 @@
+resources:
+  volumes:
+    broker_packages:
+      catalog_name: ${resources.schemas.uw_genie.catalog_name}
+      schema_name: ${resources.schemas.uw_genie.name}
+      name: broker_packages
+      volume_type: MANAGED
+      comment: Broker package PDFs and CSVs (synthetic)

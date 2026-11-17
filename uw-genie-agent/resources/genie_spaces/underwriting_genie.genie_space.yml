@@ -1,0 +1,30 @@
+# C3 — "Underwriting Genie" Genie Agent (synthetic, carrier-neutral).
+# Data sources, instructions, example SQL, trusted functions and the 15 benchmark
+# questions (as sample questions) live in the serialized space file
+# ../../underwriting_genie.geniespace.json (paths are relative to this file).
+#
+# NOTE: the bundle does not substitute ${var.*} inside a file_path space file, so its
+# identifiers are the dev names (hls_fde_dev.uw_genie.*). The demo target (hls_fde)
+# needs a rendered serialized_space or a per-target file before it can deploy.
+#
+# Uses the schema and warehouse deployed by uw-genie-infra; defines neither.
+resources:
+  genie_spaces:
+    underwriting_genie_space:
+      title: Underwriting Genie
+      description: >-
+        Underwriting coworker for Lakeside Health Plan large group business
+        (synthetic). Answers questions about broker submissions, new business
+        quotes, renewals and book outcomes using governed rating results.
+      warehouse_id: ${var.warehouse_id}
+      parent_path: /Workspace/Users/matthew.giglia@databricks.com/underwritingGenie/.genie_agents
+      file_path: ../../underwriting_genie.geniespace.json
+
+targets:
+  dev:
+    resources:
+      genie_spaces:
+        underwriting_genie_space:
+          permissions:
+            - level: CAN_RUN
+              group_name: account users

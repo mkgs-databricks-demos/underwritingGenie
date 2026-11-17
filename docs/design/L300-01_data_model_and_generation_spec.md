@@ -3,7 +3,7 @@
 Matthew Giglia | Field Engineering · v0.1 · 2026-11-15 · Synthetic, carrier-neutral Databricks point of view
 
 
-All objects in `${catalog}.${schema}` (default `lg_underwriting_dev.demo`). All tables tagged `domain=underwriting`, `data_class=synthetic`.
+All objects in `${catalog}.${schema}` (default `hls_fde_dev.uw_genie`). All tables tagged `domain=underwriting`, `data_class=synthetic`.
 
 > See [diagrams/mermaid/06_data_model_er.md](../diagrams/mermaid/06_data_model_er.md).
 

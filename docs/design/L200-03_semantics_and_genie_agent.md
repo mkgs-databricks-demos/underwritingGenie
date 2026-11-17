@@ -3,7 +3,7 @@
 Matthew Giglia | Field Engineering · v0.1 · 2026-11-15 · Synthetic, carrier-neutral Databricks point of view
 
 ## Overview
-Publishes UC Pages glossary (~30 terms from semantics/), three metric views, and the Genie Agent "Large Group Underwriting Cockpit" with instructions, example SQL, trusted assets and a benchmark set.
+Publishes UC Pages glossary (~30 terms from semantics/), three metric views, and the Genie Agent "Underwriting Genie" with instructions, example SQL, trusted assets and a benchmark set.
 
 ## Dependencies
 - C1, C2
@@ -18,7 +18,7 @@ Publishes UC Pages glossary (~30 terms from semantics/), three metric views, and
 | `mv_intake_ops` | submissions, pct_complete_first_pass, open_blocking_items, avg_days_waiting | broker, status, week |
 
 ### Genie Agent
-Name **Large Group Underwriting Cockpit**; tables + metric views above; trusted assets: `rate_new_business`, parameterized example "rate for {group} at {pooling_point}"; instructions in L300-03; ≥15 benchmarks.
+Name **Underwriting Genie**; tables + metric views above; trusted assets: `rate_new_business`, parameterized example "rate for {group} at {pooling_point}"; instructions in L300-03; ≥15 benchmarks.
 
 ## Non-functional requirements
 - Benchmark accuracy ≥ 90% before demo (target 100% on the 8 demo-critical questions).

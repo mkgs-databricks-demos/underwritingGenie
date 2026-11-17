@@ -79,7 +79,7 @@ measures:
 ## 3. UC Pages
 Publish every term in `semantics/01–03` as a UC Page under domain **Underwriting**, subdomains Rating & Experience / Intake & Quote / Underwriting Finance; link each to its table/column/measure.
 
-## 4. Genie Agent — "Large Group Underwriting Cockpit"
+## 4. Genie Agent — "Underwriting Genie"
 **Description:** Underwriting coworker for Lakeside Health Plan large group business (synthetic). Answers questions about broker submissions, new business quotes, renewals and book outcomes using governed rating results.
 
 **Data:** all C1 tables (except raw volume), `nb_quote_scenarios`, `nb_quote_waterfall`, `renewal_scenarios`, three metric views. **Trusted assets:** `rate_new_business`, `rate_renewal`, example SQL below.
@@ -113,8 +113,8 @@ Publish every term in `semantics/01–03` as a UC Page under domain **Underwriti
 | ★4 | Northwind premium PMPM on the alternate plan, base case | $589.02 |
 | ★5 | How much was removed by pooling at $250K? | $540,000 |
 | ★6 | Is Northwind's v1 submission ready to quote? | Blocked |
-| ★7 | Renewals in next 90 days with rate action > 15% | (count from generated book — record after S2) |
-| ★8 | Q1 2027 premium at risk with 12% cap vs uncapped | (record after S2) |
+| ★7 | Renewals in next 90 days with rate action > 15% | **3** as of 2026-11-16 (Yarrow Software +16.3%, Cedar Ridge Contractors +16.2%, Birchwood Wholesale +15.4%). Date-dependent, see note below |
+| ★8 | Q1 2027 premium at risk with 12% cap vs uncapped | 31 groups, $147,589,959.48 renewing: uncapped **$25,303,698.74** (LR 88.2%) vs 12% cap **$23,031,131.29** (LR 88.7%); cap keeps ~$2.27M, 9 groups capped |
 | 9 | IBNR for Northwind | $110,477 |
 | 10 | Northwind member months | 23,520 |
 | 11 | Northwind manual rate, base | $590.45 |
@@ -122,3 +122,8 @@ Publish every term in `semantics/01–03` as a UC Page under domain **Underwriti
 | 13 | Which brokers have the most blocked submissions? | from book |
 | 14 | Target loss ratio | 88% |
 | 15 | Highest-premium scenario for Northwind | 500K / high / requested, $656.55 |
+
+**Benchmark notes (recorded 2026-11-16).**
+
+* ★7 and ★8 were computed from the deployed `hls_fde_dev.uw_genie` book (setup_demo run of 2026-11-16). ★8 comes from `mv_renewal_book` (`Renewal Quarter` = `2027-Q1`) and matched an independent calculation from `renewal_pipeline` + `persistency_curve` to the cent.
+* ★7 is **date-dependent**: example SQL 5 uses `current_date()` and has no lower bound. The book has 7 renewals above 15% (Jan 1, Feb 1 x2, Mar 1, Apr 1, May 1, Jun 1, 2027), so the expected count is 3 (Nov 3-30, 2026), 4 (from Dec 1), 5 (from Jan 1, 2027), 6 (from Jan 31) and 7 (from Mar 3), and past renewals keep counting. Pinning the as-of date is build 1 request [R1-10](../requests/build-1/R1-10_benchmark-as-of-date.md); until then, re-check ★7 on the day of the dry run.
